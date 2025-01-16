@@ -1,8 +1,16 @@
+/* =========================================
+    ESTILOS GERAIS
+   ========================================= */
+
 body {
     font-family: sans-serif;
     background-color: #f2f2f2;
     font-size: 1rem; /* Tamanho de fonte base */
 }
+
+/* =========================================
+    CONTAINER
+   ========================================= */
 
 .container {
     max-width: 95%;
@@ -13,6 +21,10 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* =========================================
+    TÍTULOS
+   ========================================= */
+
 h1, h2 {
     color: #006400;
     text-align: center;
@@ -22,6 +34,30 @@ h1, h2 {
 h2 {
     font-size: 1.4rem; /* Subtítulo um pouco menor */
 }
+
+/* =========================================
+    IMAGEM LOGO
+   ========================================= */
+
+header img {
+    display: block; /* Faz o logo ocupar a linha inteira */
+    height: 120px; /* Tamanho para dispositivos móveis */
+    margin: 0 auto 20px; /* Centraliza e adiciona margem inferior */
+}
+
+/* Media query para telas maiores (computadores) */
+@media (min-width: 769px) {
+    header img {
+        height: 30px; /* Tamanho reduzido para computadores (25% do tamanho original) */
+        /* Mantém as margens automáticas para continuar centralizando */
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* =========================================
+    GRUPOS DE ENTRADA
+   ========================================= */
 
 .input-group {
     margin-bottom: 10px;
@@ -50,6 +86,10 @@ label {
     font-size: 1.875rem; /* Ajuste para o mesmo tamanho do campo de entrada */
 }
 
+/* =========================================
+    BOTÕES
+   ========================================= */
+
 /* Botão "Adicionar" maior */
 .button-green.aumentado {
     padding: 15px 30px; /* Aumentei o padding */
@@ -75,6 +115,22 @@ label {
     font-size: 1rem; /* Tamanho de fonte padrão para botões */
 }
 
+/* Botão de exclusão de item */
+.botao-excluir {
+    background-color: #dc3545; /* Vermelho */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-left: 10px; /* Espaço à esquerda do botão */
+    padding: 5px 10px; /* Ajuste o padding conforme necessário */
+}
+
+/* =========================================
+    TABELA
+   ========================================= */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -92,12 +148,20 @@ th {
     color: white;
 }
 
+/* =========================================
+    TOTAL
+   ========================================= */
+
 .total {
     margin-top: 20px;
     text-align: right;
     font-size: 18px;
     color: #006400;
 }
+
+/* =========================================
+    BOTÕES (container)
+   ========================================= */
 
 .buttons {
     display: flex;
@@ -106,6 +170,10 @@ th {
     gap: 10px;
     margin-top: 20px;
 }
+
+/* =========================================
+    PAINEL SUPERIOR
+   ========================================= */
 
 /* Painel superior aumentado em 50% */
 #painelTotal {
@@ -123,19 +191,10 @@ th {
     color: #006400;
 }
 
-/* Botão de exclusão de item */
-.botao-excluir {
-    background-color: #dc3545; /* Vermelho */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    margin-left: 10px; /* Espaço à esquerda do botão */
-    padding: 5px 10px; /* Ajuste o padding conforme necessário */
-}
+/* =========================================
+    MEDIA QUERIES (Responsividade)
+   ========================================= */
 
-/* Media Queries */
 @media (max-width: 768px) {
     .container {
         max-width: 100%;

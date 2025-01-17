@@ -70,11 +70,22 @@ const listaSugestoes = [
     "Pão francês", "Pipoca", "Sorvete", "Torrada", "Torta", "Yakult",
 ];
 
-// Configuração do Awesomplete para desconsiderar acentos
+
+// Função para remover acentos de uma string
+function removerAcentos(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+// Configuração do Awesomplete com filtro personalizado
 new Awesomplete(descricaoInput, {
     list: listaSugestoes,
     filter: function(text, input) {
-        return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
+        // Remove os acentos do texto da sugestão e do texto digitado
+        const textSemAcentos = removerAcentos(text.label);
+        const inputSemAcentos = removerAcentos(input);
+
+        // Verifica se o texto da sugestão (sem acentos) contém o texto digitado (sem acentos)
+        return textSemAcentos.toLowerCase().indexOf(inputSemAcentos.toLowerCase()) !== -1;
     },
     replace: function(text) {
         // Pega o texto antes da última vírgula (ou todo o texto se não houver vírgula)

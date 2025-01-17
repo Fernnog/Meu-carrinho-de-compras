@@ -41,17 +41,17 @@ h2 {
 
 header img {
     display: block; /* Faz o logo ocupar a linha inteira */
-    height: 120px; /* Tamanho para dispositivos móveis */
+    width: 95%; /* Ocupa 95% da largura do <header> em dispositivos móveis */
+    max-width: 120px; /* Limita o tamanho máximo em dispositivos móveis */
     margin: 0 auto 20px; /* Centraliza e adiciona margem inferior */
 }
 
 /* Media query para telas maiores (computadores) */
 @media (min-width: 769px) {
     header img {
-        height: 30px; /* Tamanho reduzido para computadores (25% do tamanho original) */
-        /* Mantém as margens automáticas para continuar centralizando */
-        margin-left: auto;
-        margin-right: auto;
+        width: auto; /* Ajusta a largura automaticamente com base na altura */
+        height: 60px; /* Define uma altura fixa para computadores */
+        max-width: 100%; /* Evita que o logo fique maior que o <header> */
     }
 }
 

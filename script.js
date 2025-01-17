@@ -13,17 +13,61 @@ let compras = [];
 
 // Lista de sugestões para o autocomplete
 const listaSugestoes = [
-    "Refresco", "Guardanapo", "Saco de lixo 15 L", "Saco de lixo 30 L",
-    "Sabão em pó", "Amaciante", "Água sanitária", "Sabão para lavar roupas líquido",
-    "Desinfetante", "Detergente", "Sabão em barra", "Escova de dente",
-    "Pasta de dente", "Sabonete", "Shampoo", "Condicionador",
-    "Papel higiênico", "Azeitona", "Óleo de soja", "Ketchup", "Mostarda",
-    "Maionese", "Azeite", "Pipoca", "Achocolatado em pó", "Leite em pó",
-    "Batata palha", "Massa para bolo", "Macarrão espaguete",
-    "Macarrão penne", "Geleia", "Mel", "Biscoito recheado",
-    "Biscoito creme cracker", "Tomate", "Alface", "Cebola", "Laranja",
-    "Banana", "Uva", "Limão", "Manteiga", "Margarina", "Iogurte",
-    "Mortadela", "Mussarela", "Yakult", "Biscoito genérico", "Café", "Miojo"
+    // Limpeza
+    "Água sanitária", "Álcool", "Amaciante", "Desengordurante", "Desinfetante", "Detergente", "Esponja",
+    "Flanela", "Guardanapo", "Lava-louças", "Lava-roupas líquido", "Lava-roupas em pó", "Lustra-móveis",
+    "Multiuso", "Palha de aço", "Pano de chão", "Pano de prato", "Refresco", "Rodo", "Sabão em barra",
+    "Sabão em pó", "Saco de lixo 15 L", "Saco de lixo 30 L", "Saco de lixo 50 L", "Saco de lixo 100 L",
+    "Vassoura",
+
+    // Temperos e Condimentos
+    "Açafrão", "Alecrim", "Alho", "Alho em pó", "Azeite", "Azeite de dendê", "Caldo de carne",
+    "Caldo de galinha", "Caldo de legumes", "Canela", "Cebola", "Cebola em pó", "Coentro", "Colorau",
+    "Cominho", "Cravo", "Curry", "Ervas finas", "Gengibre", "Ketchup", "Louro", "Maionese",
+    "Manjericão", "Mostarda", "Noz-moscada", "Orégano", "Páprica", "Pimenta-do-reino", "Sal",
+    "Sal grosso", "Salsa", "Tempero baiano", "Tempero completo", "Vinagre", "Vinagre balsâmico",
+
+    // Massas e Grãos
+    "Arroz", "Arroz integral", "Aveia", "Biscoito", "Biscoito cream cracker", "Biscoito de água e sal",
+    "Biscoito de maisena", "Biscoito de polvilho", "Biscoito doce", "Biscoito integral",
+    "Biscoito recheado", "Cereal matinal", "Cuscuz", "Ervilha", "Farinha de mandioca", "Farinha de milho",
+    "Farinha de rosca", "Farinha de trigo", "Feijão", "Feijão branco", "Feijão carioca", "Feijão preto",
+    "Fubá", "Granola", "Grão-de-bico", "Lentilha", "Macarrão", "Macarrão espaguete",
+    "Macarrão furadinho", "Macarrão gravatinha", "Macarrão instantâneo (Miojo)", "Macarrão parafuso",
+    "Macarrão penne", "Massa de lasanha", "Massa de pastel", "Massa para bolo", "Milho de pipoca",
+    "Milho verde", "Polenta", "Quinoa",
+
+    // Legumes, Verduras e Frutas
+    "Abacate", "Abacaxi", "Abobrinha", "Alface", "Alho-poró", "Banana", "Batata", "Batata-doce", "Berinjela",
+    "Beterraba", "Brócolis", "Cebola", "Cebolinha", "Cenoura", "Chuchu", "Coentro", "Couve",
+    "Couve-flor", "Espinafre", "Goiaba", "Laranja", "Limão", "Maçã", "Mamão", "Manga", "Maracujá",
+    "Melancia", "Melão", "Morango", "Pepino", "Pera", "Pimentão", "Repolho", "Rúcula", "Salsa",
+    "Tomate", "Uva",
+
+    // Higiene Pessoal
+    "Absorvente", "Algodão", "Aparelho de barbear", "Condicionador", "Cotonete", "Creme de barbear",
+    "Creme dental", "Creme hidratante", "Desodorante", "Escova de cabelo", "Escova de dente", "Fio dental",
+    "Lenço de papel", "Papel higiênico", "Sabonete", "Sabonete líquido", "Shampoo", "Talco",
+
+    // Laticínios e Ovos
+    "Cream cheese", "Iogurte", "Leite", "Leite condensado", "Leite de coco", "Leite em pó", "Manteiga",
+    "Margarina", "Ovos", "Queijo", "Queijo coalho", "Queijo minas", "Queijo mussarela", "Queijo parmesão",
+    "Queijo prato", "Queijo provolone", "Requeijão", "Ricota",
+
+    // Carnes e Frios
+    "Bacon", "Carne bovina", "Carne de porco", "Carne moída", "Frango", "Hambúrguer", "Linguiça",
+    "Linguiça calabresa", "Linguiça toscana", "Mortadela", "Peixe", "Presunto", "Salame", "Salsicha",
+
+    // Bebidas
+    "Água com gás", "Água de coco", "Água mineral", "Café", "Café solúvel", "Cerveja", "Chá",
+    "Refrigerante", "Suco", "Suco concentrado", "Suco de caixinha", "Suco em pó", "Vinho",
+
+    // Outros
+    "Achocolatado em pó", "Adoçante", "Açúcar", "Açúcar mascavo", "Azeitona", "Batata palha",
+    "Biscoito genérico", "Bolo", "Bombom", "Chocolate", "Chocolate em barra", "Chocolate em pó",
+    "Fermento", "Fermento biológico", "Fermento em pó", "Geleia", "Goma de tapioca", "Mel",
+    "Óleo de coco", "Óleo de girassol", "Óleo de soja", "Pão", "Pão de forma", "Pão de queijo",
+    "Pão francês", "Pipoca", "Sorvete", "Torrada", "Torta", "Yakult",
 ];
 
 // Configuração do Awesomplete para desconsiderar acentos

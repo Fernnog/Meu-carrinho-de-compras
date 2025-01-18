@@ -39,19 +39,21 @@ h2 {
     IMAGEM LOGO
    ========================================= */
 
+header {
+    text-align: center; /* Centraliza o conteúdo do cabeçalho */
+}
+
 header img {
-    display: block; /* Faz o logo ocupar a linha inteira */
-    width: 95%; /* Ocupa 95% da largura do <header> em dispositivos móveis */
-    max-width: 120px; /* Limita o tamanho máximo em dispositivos móveis */
-    margin: 0 auto 20px; /* Centraliza e adiciona margem inferior */
+    display: block;
+    width: 142.5px; /* Aumentando em 50% o tamanho original (95% de 120px, que era o max-width anterior) */
+    max-width: 180px; /* Aumentando em 50% o limite anterior (120px) */
+    margin: 0 auto; /* Centraliza a imagem no cabeçalho */
 }
 
 /* Media query para telas maiores (computadores) */
 @media (min-width: 769px) {
     header img {
-        width: auto; /* Ajusta a largura automaticamente com base na altura */
-        height: 60px; /* Define uma altura fixa para computadores */
-        max-width: 100%; /* Evita que o logo fique maior que o <header> */
+        height: 90px; /* Aumentando em 50% a altura anterior (60px) */
     }
 }
 

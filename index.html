@@ -61,16 +61,37 @@
         <table id="listaConferencia">
             <thead>
                 <tr>
+                    <th>Confirmar</th>
                     <th>Descrição</th>
                     <th>Quantidade</th>
                     <th>Valor (R$)</th>
-                    <th>Confirmar</th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
         </table>
-      <button id="confirmarItens" class="button-green aumentado">Confirmar Itens Selecionados</button>
+        <button id="confirmarItens" class="button-green aumentado">Confirmar Itens Selecionados</button>
+    </div>
+
+    <div id="modalEdicao" class="modal">
+        <div class="modal-conteudo">
+            <span class="fechar-modal">×</span>
+            <h2>Editar Item</h2>
+            <div class="input-group">
+                <label for="editarDescricao">Descrição:</label>
+                <input type="text" id="editarDescricao">
+            </div>
+            <div class="input-group">
+                <label for="editarQuantidade">Quantidade:</label>
+                <input type="number" id="editarQuantidade" min="1">
+            </div>
+            <div class="input-group">
+                <label for="editarValor">Valor (R$):</label>
+                <input type="text" id="editarValor">
+            </div>
+            <button id="salvarEdicao" class="button-green">Salvar</button>
+        </div>
+    </div>
 
     <input type="file" id="arquivoImportar" style="display: none;">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -78,4 +99,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-

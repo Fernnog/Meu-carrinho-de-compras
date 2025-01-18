@@ -9,8 +9,13 @@ const importarBtn = document.getElementById('importar');
 const resetarBtn = document.getElementById('resetar');
 const relatorioBtn = document.getElementById('relatorio');
 const arquivoImportarInput = document.getElementById('arquivoImportar');
+const importarListaBtn = document.getElementById('importarLista');
+const arquivoImportarListaInput = document.getElementById('arquivoImportarLista');
+const listaConferenciaTbody = document.getElementById('listaConferencia').getElementsByTagName('tbody')[0];
+const confirmarItensBtn = document.getElementById('confirmarItens');
 
 let compras = [];
+let itensParaConfirmar = [];
 
 // Carrega os dados do localStorage ao iniciar
 carregarDados();
@@ -272,5 +277,86 @@ valorInput.addEventListener('input', function(event) {
     valor = valor.replace(/(\d{1,})(\d{2})$/, "$1.$2");
     valorInput.value = valor;
 });
+
+function importarDadosLista() {
+    arquivoImportarListaInput.click();
+}
+
+arquivoImportarListaInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        try {
+            const dadosImportados = JSON.parse(e.target.result);
+            itensParaConfirmar = dadosImportados.map(item => ({
+                descricao: item.descricao,
+                quantidade: item.quantidade,
+                valor: 0, // Valor inicial é 0, será preenchido pelo usuário
+                confirmado: false
+            }));
+            atualizarListaConferencia();
+        } catch (error) {
+            alert('Erro ao importar o arquivo.');
+        }
+    };
+
+    reader.readAsText(file);
+});
+
+function atualizarListaConferencia() {
+    listaConferenciaTbody.innerHTML = '';
+
+    itensParaConfirmar.forEach((item, index) => {
+        let row = listaConferenciaTbody.insertRow();
+        let descricaoCell = row.insertCell();
+        let quantidadeCell = row.insertCell();
+        let valorCell = row.insertCell();
+        let confirmarCell = row.insertCell();
+
+        descricaoCell.innerHTML = item.descricao;
+        quantidadeCell.innerHTML = item.quantidade;
+
+        let valorInput = document.createElement('input');
+        valorInput.type = 'text';
+        valorInput.value = item.valor.toFixed(2);
+        valorInput.className = 'valor-conferencia';
+        valorInput.oninput = function() {
+            let valor = this.value;
+            valor = valor.replace(/\D/g, '');
+            valor = valor.replace(/(\d{1,})(\d{2})$/, "$1.$2");
+            this.value = valor;
+            item.valor = parseFloat(valor);
+        };
+        valorCell.appendChild(valorInput);
+
+        let confirmarCheckbox = document.createElement('input');
+        confirmarCheckbox.type = 'checkbox';
+        confirmarCheckbox.checked = item.confirmado;
+        confirmarCheckbox.onchange = () => {
+            item.confirmado = confirmarCheckbox.checked;
+        };
+        confirmarCell.appendChild(confirmarCheckbox);
+    });
+}
+
+function confirmarItens() {
+    itensParaConfirmar.forEach(item => {
+        if (item.confirmado && item.valor > 0) {
+            compras.push({
+                descricao: item.descricao,
+                quantidade: item.quantidade,
+                valor: item.valor
+            });
+        }
+    });
+
+    itensParaConfirmar = itensParaConfirmar.filter(item => !item.confirmado);
+    atualizarListaConferencia();
+    atualizarLista();
+}
+
+importarListaBtn.addEventListener('click', importarDadosLista);
+confirmarItensBtn.addEventListener('click', confirmarItens);
 
 atualizarPainelTotal();

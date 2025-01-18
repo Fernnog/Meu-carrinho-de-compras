@@ -6,7 +6,7 @@ const listaComprasTbody = document.getElementById('listaCompras').getElementsByT
 const totalValorSpan = document.getElementById('totalValor');
 const exportarBtn = document.getElementById('exportar');
 const importarBtn = document.getElementById('importar');
-const resetarBtn = document.getElementById('resetar');
+const limparListaBtn = document.getElementById('limparLista');
 const relatorioBtn = document.getElementById('relatorio');
 const arquivoImportarInput = document.getElementById('arquivoImportar');
 const importarListaBtn = document.getElementById('importarLista');
@@ -91,12 +91,12 @@ const listaSugestoes = [
 // Configuração do Awesomplete para desconsiderar acentos
 new Awesomplete(descricaoInput, {
     list: listaSugestoes,
-    filter: function(text, input) {
+    filter: function (text, input) {
         return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
     },
-    replace: function(text) {
+    replace: function (text) {
         // Pega o texto antes da última vírgula (ou todo o texto se não houver vírgula)
-        var before = this.input.value.match(/^.+,\s*|/)[0]; 
+        var before = this.input.value.match(/^.+,\s*|/)[0];
         // Se houver texto antes (ou seja, mais de um item sendo digitado), adiciona a vírgula
         if (before) {
             this.input.value = before + text + ", ";
@@ -108,11 +108,11 @@ new Awesomplete(descricaoInput, {
 });
 
 // Adiciona um ouvinte de eventos 'awesomplete-selectcomplete' ao campo de descrição
-descricaoInput.addEventListener('awesomplete-selectcomplete', function(event) {
+descricaoInput.addEventListener('awesomplete-selectcomplete', function (event) {
     quantidadeInput.focus(); // Move o foco para o campo de quantidade
 });
 
-quantidadeInput.addEventListener('keyup', function(event) {
+quantidadeInput.addEventListener('keyup', function (event) {
     if (event.key === "Enter") {
         valorInput.focus();
     }
@@ -169,7 +169,7 @@ function adicionarItem() {
 
     if (descricao && !isNaN(valor) && !isNaN(quantidade)) {
         const valorFormatado = valor.toFixed(2);
-        compras.push({ descricao, quantidade, valor: parseFloat(valorFormatado)});
+        compras.push({ descricao, quantidade, valor: parseFloat(valorFormatado) });
         atualizarLista();
         descricaoInput.value = '';
         quantidadeInput.value = '1'; // Reset para o valor padrão
@@ -196,11 +196,11 @@ function importarDados() {
     arquivoImportarInput.click();
 }
 
-arquivoImportarInput.addEventListener('change', function(e) {
+arquivoImportarInput.addEventListener('change', function (e) {
     const file = e.target.files[0];
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         try {
             compras = JSON.parse(e.target.result);
             atualizarLista();
@@ -213,15 +213,15 @@ arquivoImportarInput.addEventListener('change', function(e) {
     reader.readAsText(file);
 });
 
-function resetarDados() {
-    if (confirm('Deseja exportar os dados antes de resetar?')) {
+function limparDados() {
+    if (confirm('Deseja exportar os dados antes de limpar?')) {
         exportarDados();
     }
 
-    if (confirm('Tem certeza que deseja resetar os lançamentos?')) {
+    if (confirm('Tem certeza que deseja limpar os lançamentos?')) {
         compras = [];
         atualizarLista();
-        salvarDados(); // Salva os dados após resetar
+        salvarDados(); // Salva os dados após limpar
     }
 }
 
@@ -274,22 +274,22 @@ function carregarDados() {
 adicionarBtn.addEventListener('click', adicionarItem);
 exportarBtn.addEventListener('click', exportarDados);
 importarBtn.addEventListener('click', importarDados);
-resetarBtn.addEventListener('click', resetarDados);
+limparListaBtn.addEventListener('click', limparDados);
 relatorioBtn.addEventListener('click', gerarRelatorio);
 
-descricaoInput.addEventListener('keyup', function(event) {
+descricaoInput.addEventListener('keyup', function (event) {
     if (event.key === "Enter") {
         adicionarItem();
     }
 });
 
-valorInput.addEventListener('keyup', function(event) {
+valorInput.addEventListener('keyup', function (event) {
     if (event.key === "Enter") {
         adicionarItem();
     }
 });
 
-valorInput.addEventListener('input', function(event) {
+valorInput.addEventListener('input', function (event) {
     let valor = valorInput.value;
     valor = valor.replace(/\D/g, '');
     valor = valor.replace(/(\d{1,})(\d{2})$/, "$1.$2");
@@ -300,11 +300,11 @@ function importarDadosLista() {
     arquivoImportarListaInput.click();
 }
 
-arquivoImportarListaInput.addEventListener('change', function(e) {
+arquivoImportarListaInput.addEventListener('change', function (e) {
     const file = e.target.files[0];
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         try {
             const data = e.target.result;
             const workbook = XLSX.read(data, { type: 'binary' });
@@ -321,13 +321,18 @@ arquivoImportarListaInput.addEventListener('change', function(e) {
             })).filter(item => item.descricao !== undefined && item.quantidade !== undefined); // Filtra linhas inválidas
 
             atualizarListaConferencia();
+
+            // Mostra a tabela, o botão e o título após a importação
+            document.getElementById('listaConferencia').style.display = 'table';
+            document.getElementById('confirmarItens').style.display = 'block';
+            document.getElementById('tituloConferencia').style.display = 'block'; // Mostrar o título
         } catch (error) {
             console.error("Erro ao importar o arquivo:", error);
             alert('Erro ao importar o arquivo.');
         }
     };
 
-    reader.onerror = function(ex) {
+    reader.onerror = function (ex) {
         console.error("Erro ao ler o arquivo:", ex);
         alert('Erro ao ler o arquivo.');
     };
@@ -361,15 +366,24 @@ function atualizarListaConferencia() {
 
         let valorInput = document.createElement('input');
         valorInput.type = 'text';
-        valorInput.value = item.valor.toFixed(2);
+        valorInput.value = item.valor > 0 ? item.valor.toFixed(2) : '';
+        valorInput.placeholder = '0.00';
         valorInput.className = 'valor-conferencia';
-        valorInput.oninput = function() {
+
+        valorInput.addEventListener('focus', function () {
+            if (this.value === '0.00' || this.value === '') {
+                this.value = '';
+            }
+        });
+
+        valorInput.addEventListener('input', function () {
             let valor = this.value;
             valor = valor.replace(/\D/g, '');
             valor = valor.replace(/(\d{1,})(\d{2})$/, "$1.$2");
             this.value = valor;
-            item.valor = parseFloat(valor);
-        };
+            item.valor = parseFloat(valor) || 0;
+        });
+
         valorCell.appendChild(valorInput);
     });
 }
@@ -389,6 +403,11 @@ function confirmarItens() {
     atualizarListaConferencia();
     atualizarLista();
     salvarDados();
+
+    // Oculta a tabela, o botão e o título após a confirmação
+    document.getElementById('listaConferencia').style.display = 'none';
+    document.getElementById('confirmarItens').style.display = 'none';
+    document.getElementById('tituloConferencia').style.display = 'none';
 }
 
 importarListaBtn.addEventListener('click', importarDadosLista);

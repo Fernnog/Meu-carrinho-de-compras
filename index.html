@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-
     <title>Minhas compras de Mercado</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
     <header>
@@ -23,6 +21,10 @@
             <input type="text" id="descricao" placeholder="Descrição do item">
         </div>
         <div class="input-group">
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" id="quantidade" value="1" min="1">
+        </div>
+        <div class="input-group">
             <label for="valor">Valor (R$):</label>
             <input type="text" id="valor" placeholder="0.00">
         </div>
@@ -33,6 +35,7 @@
             <thead>
                 <tr>
                     <th>Descrição</th>
+                    <th>Quantidade</th>
                     <th>Valor (R$)</th>
                 </tr>
             </thead>

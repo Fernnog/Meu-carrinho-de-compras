@@ -9,10 +9,10 @@
 <body>
     <header>
         <img src="logo.png" alt="Logo do Meu Carrinho de Compras">
+        <h1>Minhas compras de Mercado</h1>
     </header>
 
     <div class="container">
-        <h1>Minhas compras de Mercado</h1>
         <div id="painelTotal">
             Total: R$ <span id="totalValorPainel">0.00</span>
         </div>
@@ -37,6 +37,7 @@
                     <th>Descrição</th>
                     <th>Quantidade</th>
                     <th>Valor (R$)</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,6 +54,23 @@
             <button id="resetar" class="button-green">Resetar</button>
             <button id="relatorio" class="button-gold">Relatório Excel</button>
         </div>
+
+        <button id="importarLista" class="button-gold">Importar Lista para Conferência</button>
+        <input type="file" id="arquivoImportarLista" style="display: none;">
+        <h2>Itens Importados para Conferência</h2>
+        <table id="listaConferencia">
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Quantidade</th>
+                    <th>Valor (R$)</th>
+                    <th>Confirmar</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <button id="confirmarItens" class="button-green">Confirmar Itens Selecionados</button>
     </div>
 
     <input type="file" id="arquivoImportar" style="display: none;">

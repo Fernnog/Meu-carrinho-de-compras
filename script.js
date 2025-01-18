@@ -322,10 +322,21 @@ function atualizarListaConferencia() {
 
     itensParaConfirmar.forEach((item, index) => {
         let row = listaConferenciaTbody.insertRow();
+
+        // Cria a célula "Confirmar" primeiro
+        let confirmarCell = row.insertCell();
+        let confirmarCheckbox = document.createElement('input');
+        confirmarCheckbox.type = 'checkbox';
+        confirmarCheckbox.checked = item.confirmado;
+        confirmarCheckbox.onchange = () => {
+            item.confirmado = confirmarCheckbox.checked;
+        };
+        confirmarCell.appendChild(confirmarCheckbox);
+
+        // Depois cria as outras células (Descrição, Quantidade, Valor)
         let descricaoCell = row.insertCell();
         let quantidadeCell = row.insertCell();
         let valorCell = row.insertCell();
-        let confirmarCell = row.insertCell();
 
         descricaoCell.innerHTML = item.descricao;
         quantidadeCell.innerHTML = item.quantidade;
@@ -342,18 +353,10 @@ function atualizarListaConferencia() {
             item.valor = parseFloat(valor);
         };
         valorCell.appendChild(valorInput);
-
-        let confirmarCheckbox = document.createElement('input');
-        confirmarCheckbox.type = 'checkbox';
-        confirmarCheckbox.checked = item.confirmado;
-        confirmarCheckbox.onchange = () => {
-            item.confirmado = confirmarCheckbox.checked;
-        };
-        confirmarCell.appendChild(confirmarCheckbox);
     });
 }
 
-function confirmarItens() {
+    function confirmarItens() {
     itensParaConfirmar.forEach(item => {
         if (item.confirmado && item.valor > 0) {
             compras.push({

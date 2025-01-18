@@ -92,7 +92,7 @@ label {
     BOTÕES
    ========================================= */
 
-/* Botão "Adicionar" maior */
+/* Botão "Adicionar" e "Confirmar Itens Selecionados" maiores */
 .button-green.aumentado {
     padding: 15px 30px; /* Aumentei o padding */
     font-size: 1.5rem; /* Aumentei a fonte em 50% */
@@ -127,6 +127,17 @@ label {
     font-size: 0.8rem;
     margin-left: 10px; /* Espaço à esquerda do botão */
     padding: 5px 10px; /* Ajuste o padding conforme necessário */
+}
+
+/* Estilo para o botão "Importar Lista para Conferência" */
+.button-green-light {
+    background-color: #90EE90; /* Tom de verde mais claro (Light Green) */
+    color: #006400; /* Cor do texto verde escuro para contraste */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
 }
 
 /* =========================================
@@ -172,6 +183,18 @@ th {
     gap: 10px;
     margin-top: 20px;
 }
+
+/* Estilo para o botão "Importar Lista para Conferência" */
+.button-green-light {
+    background-color: #90EE90; /* Tom de verde mais claro (Light Green) */
+    color: #006400; /* Cor do texto verde escuro para contraste */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
 
 /* =========================================
     PAINEL SUPERIOR

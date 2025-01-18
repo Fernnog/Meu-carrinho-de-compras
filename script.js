@@ -17,6 +17,15 @@ const confirmarItensBtn = document.getElementById('confirmarItens');
 let compras = [];
 let itensParaConfirmar = [];
 
+// Variáveis globais para o modal
+const modalEdicao = document.getElementById('modalEdicao');
+const fecharModalBtn = document.getElementsByClassName('fechar-modal')[0];
+const editarDescricaoInput = document.getElementById('editarDescricao');
+const editarQuantidadeInput = document.getElementById('editarQuantidade');
+const editarValorInput = document.getElementById('editarValor');
+const salvarEdicaoBtn = document.getElementById('salvarEdicao');
+let itemEditandoIndex = null; // Variável para armazenar o índice do item sendo editado
+
 // Carrega os dados do localStorage ao iniciar
 carregarDados();
 
@@ -128,20 +137,29 @@ function atualizarLista() {
         let botaoExcluir = document.createElement('button');
         botaoExcluir.className = 'botao-excluir';
         botaoExcluir.innerHTML = '-';
-        botaoExcluir.setAttribute('onclick', '');
         botaoExcluir.addEventListener('click', () => {
             compras.splice(index, 1);
             atualizarLista();
+            salvarDados();
+        });
+
+        // Cria o botão "Mais" para editar o item
+        let botaoEditar = document.createElement('button');
+        botaoEditar.className = 'botao-editar';
+        botaoEditar.innerHTML = 'Mais'; // Ou um ícone de edição, se preferir
+        botaoEditar.addEventListener('click', () => {
+            abrirModalEdicao(index);
         });
 
         acoesCell.appendChild(botaoExcluir);
+        acoesCell.appendChild(botaoEditar); // Adiciona o botão "Mais" depois do botão "Excluir"
 
         total += compra.valor * compra.quantidade;
     });
 
     totalValorSpan.innerHTML = total.toFixed(2);
     atualizarPainelTotal();
-    salvarDados(); 
+    salvarDados();
 }
 
 function adicionarItem() {
@@ -356,7 +374,7 @@ function atualizarListaConferencia() {
     });
 }
 
-    function confirmarItens() {
+function confirmarItens() {
     itensParaConfirmar.forEach(item => {
         if (item.confirmado && item.valor > 0) {
             compras.push({
@@ -375,5 +393,51 @@ function atualizarListaConferencia() {
 
 importarListaBtn.addEventListener('click', importarDadosLista);
 confirmarItensBtn.addEventListener('click', confirmarItens);
+
+function abrirModalEdicao(index) {
+    itemEditandoIndex = index;
+    const item = compras[index];
+
+    editarDescricaoInput.value = item.descricao;
+    editarQuantidadeInput.value = item.quantidade;
+    editarValorInput.value = item.valor.toFixed(2);
+
+    modalEdicao.style.display = 'block';
+}
+
+function fecharModal() {
+    modalEdicao.style.display = 'none';
+}
+
+function salvarEdicao() {
+    const novaDescricao = editarDescricaoInput.value;
+    const novaQuantidade = parseInt(editarQuantidadeInput.value);
+    const novoValor = parseFloat(editarValorInput.value.replace(/[^0-9.]/g, ''));
+
+    if (novaDescricao && !isNaN(novaQuantidade) && !isNaN(novoValor)) {
+        compras[itemEditandoIndex] = {
+            descricao: novaDescricao,
+            quantidade: novaQuantidade,
+            valor: novoValor
+        };
+
+        atualizarLista();
+        fecharModal();
+        salvarDados();
+    } else {
+        alert('Por favor, preencha todos os campos corretamente.');
+    }
+}
+
+// Event listeners para o modal
+fecharModalBtn.addEventListener('click', fecharModal);
+salvarEdicaoBtn.addEventListener('click', salvarEdicao);
+
+// Fechar o modal quando o usuário clicar fora dele
+window.addEventListener('click', (event) => {
+    if (event.target === modalEdicao) {
+        fecharModal();
+    }
+});
 
 atualizarPainelTotal();

@@ -53,10 +53,10 @@
             <button id="importar" class="button-gold">Importar</button>
             <button id="resetar" class="button-green">Resetar</button>
             <button id="relatorio" class="button-gold">Relatório Excel</button>
+            <button id="importarLista" class="button-green-light">Importar Lista para Conferência</button>
+            <input type="file" id="arquivoImportarLista" style="display: none;">
         </div>
 
-        <button id="importarLista" class="button-gold">Importar Lista para Conferência</button>
-        <input type="file" id="arquivoImportarLista" style="display: none;">
         <h2>Itens Importados para Conferência</h2>
         <table id="listaConferencia">
             <thead>
@@ -70,8 +70,7 @@
             <tbody>
             </tbody>
         </table>
-        <button id="confirmarItens" class="button-green">Confirmar Itens Selecionados</button>
-    </div>
+      <button id="confirmarItens" class="button-green aumentado">Confirmar Itens Selecionados</button>
 
     <input type="file" id="arquivoImportar" style="display: none;">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -79,3 +78,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+

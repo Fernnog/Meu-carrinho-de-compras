@@ -288,20 +288,33 @@ arquivoImportarListaInput.addEventListener('change', function(e) {
 
     reader.onload = function(e) {
         try {
-            const dadosImportados = JSON.parse(e.target.result);
-            itensParaConfirmar = dadosImportados.map(item => ({
-                descricao: item.descricao,
-                quantidade: item.quantidade,
-                valor: 0, // Valor inicial é 0, será preenchido pelo usuário
+            const data = e.target.result;
+            const workbook = XLSX.read(data, { type: 'binary' });
+            const sheetName = workbook.SheetNames[0]; // Pega o nome da primeira aba
+            const worksheet = workbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+            // Processa os dados a partir da linha 2 (índice 1), ignorando a linha de cabeçalho
+            itensParaConfirmar = jsonData.slice(1).map(row => ({
+                descricao: row[0], // Coluna A
+                quantidade: row[1], // Coluna B
+                valor: 0,
                 confirmado: false
-            }));
+            })).filter(item => item.descricao !== undefined && item.quantidade !== undefined); // Filtra linhas inválidas
+
             atualizarListaConferencia();
         } catch (error) {
+            console.error("Erro ao importar o arquivo:", error);
             alert('Erro ao importar o arquivo.');
         }
     };
 
-    reader.readAsText(file);
+    reader.onerror = function(ex) {
+        console.error("Erro ao ler o arquivo:", ex);
+        alert('Erro ao ler o arquivo.');
+    };
+
+    reader.readAsBinaryString(file);
 });
 
 function atualizarListaConferencia() {
@@ -354,6 +367,7 @@ function confirmarItens() {
     itensParaConfirmar = itensParaConfirmar.filter(item => !item.confirmado);
     atualizarListaConferencia();
     atualizarLista();
+    salvarDados();
 }
 
 importarListaBtn.addEventListener('click', importarDadosLista);

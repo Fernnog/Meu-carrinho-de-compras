@@ -1,4 +1,5 @@
 const descricaoInput = document.getElementById('descricao');
+const quantidadeInput = document.getElementById('quantidade');
 const valorInput = document.getElementById('valor');
 const adicionarBtn = document.getElementById('adicionar');
 const listaComprasTbody = document.getElementById('listaCompras').getElementsByTagName('tbody')[0];
@@ -10,6 +11,9 @@ const relatorioBtn = document.getElementById('relatorio');
 const arquivoImportarInput = document.getElementById('arquivoImportar');
 
 let compras = [];
+
+// Carrega os dados do localStorage ao iniciar
+carregarDados();
 
 // Lista de sugestões para o autocomplete
 const listaSugestoes = [
@@ -70,22 +74,11 @@ const listaSugestoes = [
     "Pão francês", "Pipoca", "Sorvete", "Torrada", "Torta", "Yakult",
 ];
 
-
-// Função para remover acentos de uma string
-function removerAcentos(str) {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
-// Configuração do Awesomplete com filtro personalizado
+// Configuração do Awesomplete para desconsiderar acentos
 new Awesomplete(descricaoInput, {
     list: listaSugestoes,
     filter: function(text, input) {
-        // Remove os acentos do texto da sugestão e do texto digitado
-        const textSemAcentos = removerAcentos(text.label);
-        const inputSemAcentos = removerAcentos(input);
-
-        // Verifica se o texto da sugestão (sem acentos) contém o texto digitado (sem acentos)
-        return textSemAcentos.toLowerCase().indexOf(inputSemAcentos.toLowerCase()) !== -1;
+        return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
     },
     replace: function(text) {
         // Pega o texto antes da última vírgula (ou todo o texto se não houver vírgula)
@@ -102,7 +95,13 @@ new Awesomplete(descricaoInput, {
 
 // Adiciona um ouvinte de eventos 'awesomplete-selectcomplete' ao campo de descrição
 descricaoInput.addEventListener('awesomplete-selectcomplete', function(event) {
-    valorInput.focus(); // Move o foco para o campo de valor
+    quantidadeInput.focus(); // Move o foco para o campo de quantidade
+});
+
+quantidadeInput.addEventListener('keyup', function(event) {
+    if (event.key === "Enter") {
+        valorInput.focus();
+    }
 });
 
 function atualizarLista() {
@@ -112,45 +111,48 @@ function atualizarLista() {
     compras.forEach((compra, index) => {
         let row = listaComprasTbody.insertRow();
         let descricaoCell = row.insertCell();
+        let quantidadeCell = row.insertCell();
         let valorCell = row.insertCell();
-        let acoesCell = row.insertCell(); // Nova célula para as ações
+        let acoesCell = row.insertCell();
 
         descricaoCell.innerHTML = compra.descricao;
+        quantidadeCell.innerHTML = compra.quantidade;
         valorCell.innerHTML = compra.valor.toFixed(2);
 
         // Cria o botão de exclusão
         let botaoExcluir = document.createElement('button');
         botaoExcluir.className = 'botao-excluir';
-        botaoExcluir.innerHTML = '-'; // Símbolo de "menos"
-        botaoExcluir.setAttribute('onclick', ''); // Adiciona o atributo onclick vazio
+        botaoExcluir.innerHTML = '-';
+        botaoExcluir.setAttribute('onclick', '');
         botaoExcluir.addEventListener('click', () => {
-            // Remove o item da lista 'compras'
             compras.splice(index, 1);
-            // Atualiza a lista e o total
             atualizarLista();
         });
 
-        acoesCell.appendChild(botaoExcluir); // Adiciona o botão à célula de ações
+        acoesCell.appendChild(botaoExcluir);
 
-        total += compra.valor;
+        total += compra.valor * compra.quantidade;
     });
 
     totalValorSpan.innerHTML = total.toFixed(2);
     atualizarPainelTotal();
+    salvarDados(); 
 }
 
 function adicionarItem() {
     const descricao = descricaoInput.value;
+    const quantidade = parseInt(quantidadeInput.value);
     const valor = parseFloat(valorInput.value);
 
-    if (descricao && !isNaN(valor)) {
+    if (descricao && !isNaN(valor) && !isNaN(quantidade)) {
         const valorFormatado = valor.toFixed(2);
-        compras.push({ descricao, valor: parseFloat(valorFormatado)});
+        compras.push({ descricao, quantidade, valor: parseFloat(valorFormatado)});
         atualizarLista();
         descricaoInput.value = '';
+        quantidadeInput.value = '1'; // Reset para o valor padrão
         valorInput.value = '';
     } else {
-        alert('Por favor, preencha a descrição e o valor corretamente.');
+        alert('Por favor, preencha a descrição, quantidade e o valor corretamente.');
     }
 }
 
@@ -208,8 +210,8 @@ function gerarRelatorio() {
     const ws_name = "RelatorioCompras";
 
     const ws_data = [
-        ["Descrição", "Valor (R$)"],
-        ...compras.map(item => [item.descricao, item.valor.toFixed(2)])
+        ["Descrição", "Quantidade", "Valor (R$)"],
+        ...compras.map(item => [item.descricao, item.quantidade, item.valor.toFixed(2)])
     ];
 
     const ws = XLSX.utils.aoa_to_sheet(ws_data);
@@ -225,9 +227,23 @@ function atualizarPainelTotal() {
     const totalValorPainelSpan = document.getElementById('totalValorPainel');
     let total = 0;
     compras.forEach(compra => {
-        total += compra.valor;
+        total += compra.valor * compra.quantidade;
     });
     totalValorPainelSpan.innerHTML = total.toFixed(2);
+}
+
+// Salva os dados no localStorage
+function salvarDados() {
+    localStorage.setItem('compras', JSON.stringify(compras));
+}
+
+// Carrega os dados do localStorage
+function carregarDados() {
+    const dadosSalvos = localStorage.getItem('compras');
+    if (dadosSalvos) {
+        compras = JSON.parse(dadosSalvos);
+        atualizarLista();
+    }
 }
 
 adicionarBtn.addEventListener('click', adicionarItem);

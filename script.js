@@ -181,6 +181,7 @@ arquivoImportarInput.addEventListener('change', function(e) {
         try {
             compras = JSON.parse(e.target.result);
             atualizarLista();
+            salvarDados(); // Salva os dados após importar
         } catch (error) {
             alert('Erro ao importar o arquivo.');
         }
@@ -197,6 +198,7 @@ function resetarDados() {
     if (confirm('Tem certeza que deseja resetar os lançamentos?')) {
         compras = [];
         atualizarLista();
+        salvarDados(); // Salva os dados após resetar
     }
 }
 

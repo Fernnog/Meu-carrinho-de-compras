@@ -1,133 +1,136 @@
-/* =========================================
-    ESTILOS GERAIS
-   ========================================= */
-
+/* Reset básico */
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: #f2f2f2;
-    font-size: 1rem;
-    line-height: 1.6;
-}
-
-/* =========================================
-    CONTAINER E HEADER
-   ========================================= */
-
-.container {
-    max-width: 95%;
-    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* Estilização do Header */
 header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
-header img {
+.logo-container {
+    position: relative;
+    margin: 0 auto;
+    width: 180px;
+    height: 180px;
+}
+
+.logo {
     display: block;
     width: 142.5px;
     max-width: 180px;
     margin: 0 auto;
 }
 
-header img:not([src]) {
-    display: none;
-    background-color: #006400;
-    height: 90px;
-    border-radius: 5px;
-}
-
-@media (min-width: 769px) {
-    header img {
-        height: 90px;
-    }
-}
-
-/* =========================================
-    TÍTULOS
-   ========================================= */
-
-h1, h2 {
-    color: #006400;
-    text-align: center;
+h1 {
     font-size: 1.8rem;
+    margin-top: 10px;
+    color: #2e7d32;
 }
 
-h2 {
-    font-size: 1.4rem;
-    margin-bottom: 15px;
+/* Animação das Moedas */
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
 }
 
-/* =========================================
-    GRUPOS DE ENTRADA (INPUT-GROUP)
-   ========================================= */
+.coin {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: gold;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-.input-group {
-    margin-bottom: 15px;
+.coin1 {
+    left: 20px;
+    top: 20px;
+    animation: float 2s ease-in-out infinite;
+}
+
+.coin2 {
+    left: 40px;
+    top: 30px;
+    animation: float 2s ease-in-out infinite 0.5s;
+}
+
+/* Estilização dos Botões */
+.actions {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-green {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.button-green:hover, .button-green:active {
+    background-color: #45a049;
+}
+
+.button-gold {
+    background-color: #FFD700;
+    color: #333;
+}
+
+.button-gold:hover, .button-gold:active {
+    background-color: #e6c200;
+}
+
+.button-red {
+    background-color: #dc3545;
+    color: white;
+}
+
+.button-red:hover, .button-red:active {
+    background-color: #c82333;
+}
+
+/* Estilização do Input de Voz */
+.voice-input {
+    text-align: center;
 }
 
 label {
     display: block;
+    font-size: 1.2rem;
     margin-bottom: 5px;
-    color: #333;
-    font-size: 1rem;
-    flex: 0 0 120px;
 }
 
-input[type="text"],
-input[type="number"],
-select {
+#vozInput {
+    padding: 8px;
+    font-size: 1rem;
     width: 100%;
-    padding: 12px;
+    max-width: 300px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 1.25rem;
-    box-sizing: border-box;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
-select:focus {
-    outline: none;
-    border-color: #006400;
-    box-shadow: 0 0 5px rgba(0, 100, 0, 0.3);
-}
-
-/* Campo de orçamento */
-#orcamento {
-    width: 100%;
-    max-width: 150px;
-}
-
-/* Botões de microfone (Gboard) */
-#ativarVoz, .mic-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 12px;
-    cursor: pointer;
-    font-size: 1.25rem;
-}
-
-#ativarVoz:hover, .mic-btn:hover {
-    background-color: #0056b3;
-}
-
-/* Feedback do ditado por voz */
 .voz-feedback {
     background-color: #90EE90;
     padding: 8px;
@@ -137,291 +140,4 @@ select:focus {
     display: none;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-}
-
-.voz-feedback:not(:empty) {
-    display: block;
-    opacity: 1;
-}
-
-/* =========================================
-    BOTÕES
-   ========================================= */
-
-.button-green, .button-gold, .button-red {
-    padding: 15px 30px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.25rem;
-    transition: background-color 0.3s;
-}
-
-.button-green {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.button-green:hover {
-    background-color: #45a049;
-}
-
-.button-gold {
-    background-color: #FFD700;
-    color: #333;
-}
-
-.button-gold:hover {
-    background-color: #E6C200;
-}
-
-.button-red {
-    background-color: #dc3545;
-    color: white;
-}
-
-.button-red:hover {
-    background-color: #c82333;
-}
-
-/* Botões de editar e excluir */
-.botao-editar {
-    background-color: #ffc107;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 15px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-.botao-editar:hover {
-    background-color: #e0a800;
-}
-
-.botao-excluir {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 15px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-.botao-excluir:hover {
-    background-color: #c82333;
-}
-
-/* =========================================
-    LISTA DE COMPRAS
-   ========================================= */
-
-#listaCompras {
-    list-style: none;
-    padding: 0;
-    margin-top: 20px;
-}
-
-#listaCompras li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px;
-    background-color: #f8f9fa;
-    margin: 5px 0;
-    border-radius: 5px;
-    font-size: 1.25rem;
-}
-
-/* =========================================
-    TOTAL E PAINEL
-   ========================================= */
-
-.total, #painelTotal {
-    margin-top: 20px;
-    text-align: right;
-    font-size: 1.5rem;
-    color: #006400;
-}
-
-#painelTotal {
-    background-color: #f8f8f8;
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 5px;
-}
-
-#painelTotal #totalValorPainel {
-    font-weight: bold;
-}
-
-/* =========================================
-    BOTÕES (CONTAINER)
-   ========================================= */
-
-.buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-/* =========================================
-    MODAL
-   ========================================= */
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-conteudo {
-    background-color: #fefefe;
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 90%;
-    max-width: 500px;
-    border-radius: 5px;
-    position: relative;
-}
-
-.fechar-modal {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.fechar-modal:hover, .fechar-modal:focus {
-    color: black;
-    text-decoration: none;
-}
-
-/* Ajustes para campos no modal */
-.modal-conteudo .input-group {
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.modal-conteudo input {
-    width: 100%;
-    padding: 12px;
-    font-size: 1.25rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-/* =========================================
-    MEDIA QUERIES (RESPONSIVIDADE)
-   ========================================= */
-
-@media (max-width: 768px) {
-    .container {
-        max-width: 100%;
-        padding: 10px;
-    }
-
-    label {
-        flex: 0 0 100px;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    select,
-    button {
-        padding: 12px;
-        font-size: 1.1rem;
-    }
-
-    .button-green, .button-gold, .button-red {
-        padding: 12px 24px;
-        font-size: 1.1rem;
-    }
-
-    #painelTotal {
-        font-size: 1.2rem;
-        padding: 15px;
-    }
-
-    #listaCompras li {
-        font-size: 1.1rem;
-        padding: 10px;
-    }
-
-    .total, #painelTotal {
-        font-size: 1.2rem;
-    }
-
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    h2 {
-        font-size: 1.2rem;
-    }
-
-    .botao-editar, .botao-excluir {
-        padding: 6px 12px;
-        font-size: 0.9rem;
-        margin-left: 5px;
-    }
-}
-
-@media (max-width: 480px) {
-    .container {
-        padding: 5px;
-    }
-
-    label {
-        flex: 0 0 90px;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    select,
-    button {
-        padding: 10px;
-        font-size: 1rem;
-    }
-
-    .button-green, .button-gold, .button-red {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-    }
-
-    #painelTotal, .total {
-        font-size: 1rem;
-        padding: 10px;
-    }
-
-    #listaCompras li {
-        font-size: 1rem;
-        padding: 8px;
-    }
-
-    .modal-conteudo {
-        margin: 5% auto;
-        width: 95%;
-        padding: 15px;
-    }
-
-    .modal-conteudo input, .mic-btn {
-        padding: 10px;
-        font-size: 1rem;
-    }
 }

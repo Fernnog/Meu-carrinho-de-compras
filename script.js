@@ -1,261 +1,159 @@
-// Arrays para armazenar os itens e categorias
-let compras = JSON.parse(localStorage.getItem('compras')) || [];
-let itensParaConfirmar = []; // Para futura expansão (importação de listas)
-
-// Elementos do DOM
-const vozInput = document.getElementById('vozInput');
-const ativarVoz = document.getElementById('ativarVoz');
+// Seleção de elementos do DOM
+const vozInput = document.querySelector('#vozInput');
 const vozFeedback = document.querySelector('.voz-feedback');
-const listaCompras = document.getElementById('listaCompras');
-const totalValorSpan = document.getElementById('totalValor');
-const totalValorPainelSpan = document.getElementById('totalValorPainel');
-const orcamentoInput = document.getElementById('orcamento');
-const categoriaFiltro = document.getElementById('categoriaFiltro');
-const modalEdicao = document.getElementById('modalEdicao');
+const listaCompras = document.querySelector('#listaCompras');
+const painelTotal = document.querySelector('#painelTotal');
+const orcamentoInput = document.querySelector('#orcamento');
+const categoriaFiltro = document.querySelector('#categoriaFiltro');
+const modal = document.querySelector('.modal');
+const editarDescricao = document.querySelector('#editarDescricao');
+const editarQuantidade = document.querySelector('#editarQuantidade');
+const editarValor = document.querySelector('#editarValor');
+const adicionarItemBtn = document.querySelector('#adicionarItem');
+const salvarEdicaoBtn = document.querySelector('#salvarEdicao');
 const fecharModalBtn = document.querySelector('.fechar-modal');
-const editarDescricao = document.getElementById('editarDescricao');
-const editarQuantidade = document.getElementById('editarQuantidade');
-const editarValor = document.getElementById('editarValor');
-const salvarEdicaoBtn = document.getElementById('salvarEdicao');
-const exportarBtn = document.getElementById('exportar');
-const importarBtn = document.getElementById('importar');
-const limparListaBtn = document.getElementById('limparLista');
-const relatorioBtn = document.getElementById('relatorio');
+const coins = document.querySelectorAll('.coin');
 
+// Lista de compras e índice do item sendo editado
+let compras = JSON.parse(localStorage.getItem('compras')) || [];
 let itemEditandoIndex = null;
 
-// Lista de sugestões para categorias (expandida)
-const categorias = {
-    Alimentos: ['arroz', 'feijão', 'macarrão', 'banana', 'tomate', 'leite', 'ovo'],
-    Limpeza: ['água sanitária', 'detergente', 'vassoura', 'saco de lixo'],
-    'Higiene Pessoal': ['sabonete', 'shampoo', 'desodorante', 'papel higiênico']
-};
-
-// Carregar dados salvos no localStorage
-function carregarDados() {
-    const dadosSalvos = localStorage.getItem('compras');
-    const orcamentoSalvo = localStorage.getItem('orcamento');
-    if (dadosSalvos) compras = JSON.parse(dadosSalvos);
-    if (orcamentoSalvo) orcamentoInput.value = orcamentoSalvo;
-    atualizarLista();
-}
-
-// Salvar dados no localStorage
-function salvarDados() {
-    localStorage.setItem('compras', JSON.stringify(compras));
-    localStorage.setItem('orcamento', orcamentoInput.value);
-}
-
-// Inferir categoria automaticamente com base na descrição
+// Função para inferir categoria automaticamente com base na descrição
 function inferirCategoria(descricao) {
-    descricao = descricao.toLowerCase();
-    for (const [categoria, palavras] of Object.entries(categorias)) {
-        if (palavras.some(palavra => descricao.includes(palavra))) {
-            return categoria;
-        }
+  const categorias = {
+    Alimentos: ['arroz', 'feijão', 'macarrão'],
+    Limpeza: ['detergente', 'vassoura', 'saco de lixo'],
+  };
+  for (const [categoria, palavras] of Object.entries(categorias)) {
+    if (palavras.some(palavra => descricao.toLowerCase().includes(palavra))) {
+      return categoria;
     }
-    return 'Outros'; // Categoria padrão para itens não categorizados
+  }
+  return 'Outros';
 }
 
-// Processar texto ditado (Gboard)
+// Feedback visual no input de voz
 vozInput.addEventListener('input', () => {
-    vozFeedback.textContent = vozInput.value;
-    vozFeedback.style.display = vozInput.value ? 'block' : 'none';
+  vozFeedback.textContent = vozInput.value;
+  if (vozInput.value) {
+    vozFeedback.style.display = 'block';
+    setTimeout(() => {
+      vozFeedback.style.opacity = '1';
+    }, 10);
+  } else {
+    vozFeedback.style.opacity = '0';
+    setTimeout(() => {
+      vozFeedback.style.display = 'none';
+    }, 300);
+  }
 });
 
+// Processar texto ditado e adicionar item
 vozInput.addEventListener('change', () => {
-    const texto = vozInput.value.toLowerCase();
-    const regex = /(\d+)\s*(quilos?|unidades?)?\s*de\s*([\w\s]+)\s*por\s*([\d,]+)\s*(reais)?/;
-    const match = texto.match(regex);
-    if (match) {
-        const quantidade = parseInt(match[1]);
-        const descricao = match[3].trim();
-        const valor = parseFloat(match[4].replace(',', '.'));
-        compras.push({ descricao, quantidade, valor, categoria: inferirCategoria(descricao) });
-        salvarDados();
-        atualizarLista();
-        vozInput.value = '';
-        vozFeedback.textContent = '';
-    } else {
-        alert('Ditado não reconhecido. Tente novamente, por exemplo: "2 quilos de arroz por 5 reais".');
-    }
-});
-
-ativarVoz.addEventListener('click', () => {
-    vozInput.focus(); // Ativa o Gboard para ditado em dispositivos Android
-});
-
-// Atualizar lista de compras
-function atualizarLista(filtrados = compras) {
-    listaCompras.innerHTML = '';
-    let total = 0;
-
-    filtrados.forEach((item, index) => {
-        const li = document.createElement('li');
-        const valorTotalItem = item.quantidade * item.valor;
-        li.innerHTML = `
-            ${item.quantidade}x ${item.descricao} - R$ ${valorTotalItem.toFixed(2).replace('.', ',')} 
-            (${item.categoria})
-            <button class="botao-editar" onclick="editarItem(${index})">Editar</button>
-            <button class="botao-excluir" onclick="excluirItem(${index})">-</button>
-        `;
-        listaCompras.appendChild(li);
-        total += valorTotalItem;
-    });
-
-    totalValorSpan.textContent = total.toFixed(2).replace('.', ',');
-    totalValorPainelSpan.textContent = total.toFixed(2).replace('.', ',');
-    verificarOrcamento(total);
+  const texto = vozInput.value.toLowerCase();
+  const regex = /(\d+)\s*(quilos?|unidades?)?\s*de\s*([\w\s]+)\s*por\s*([\d,]+)\s*(reais)?/;
+  const match = texto.match(regex);
+  if (match) {
+    const quantidade = parseInt(match[1]);
+    const descricao = match[3].trim();
+    const valor = parseFloat(match[4].replace(',', '.'));
+    const categoria = inferirCategoria(descricao);
+    compras.push({ descricao, quantidade, valor, categoria });
+    atualizarLista();
     salvarDados();
+    vozInput.value = '';
+    vozFeedback.textContent = '';
+    animarMoedas(); // Animação ao adicionar item
+  } else {
+    alert('Ditado não reconhecido. Tente novamente, por exemplo: "2 quilos de arroz por 5 reais".');
+  }
+});
+
+// Atualizar a lista de compras na tela
+function atualizarLista() {
+  listaCompras.innerHTML = '';
+  let total = 0;
+  compras.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valor.toFixed(2)} (${item.categoria})`;
+    li.classList.add('fade-in'); // Animação de entrada
+    listaCompras.appendChild(li);
+    total += item.quantidade * item.valor;
+  });
+  painelTotal.textContent = `Total: R$ ${total.toFixed(2)}`;
+  verificarOrcamento(total);
 }
 
-// Verificar orçamento
+// Verificar se o total excede o orçamento
 function verificarOrcamento(total) {
-    const orcamento = parseFloat(orcamentoInput.value.replace(',', '.')) || 0;
-    if (total > orcamento && orcamento > 0) {
-        alert('Orçamento excedido! Total ultrapassou R$ ' + orcamento.toFixed(2).replace('.', ','));
-    }
+  const orcamento = parseFloat(orcamentoInput.value) || 0;
+  if (total > orcamento && orcamento > 0) {
+    alert('Orçamento excedido!');
+  }
 }
 
-// Filtrar por categoria
+// Salvar os dados no localStorage
+function salvarDados() {
+  localStorage.setItem('compras', JSON.stringify(compras));
+}
+
+// Filtrar lista por categoria
 categoriaFiltro.addEventListener('change', () => {
-    const categoria = categoriaFiltro.value;
-    const filtrados = categoria ? compras.filter(item => item.categoria === categoria) : compras;
-    atualizarLista(filtrados);
+  const categoria = categoriaFiltro.value;
+  const filtrados = categoria ? compras.filter(item => item.categoria === categoria) : compras;
+  atualizarListaFiltrada(filtrados);
 });
 
-// Editar item
+// Atualizar lista filtrada
+function atualizarListaFiltrada(filtrados) {
+  listaCompras.innerHTML = '';
+  filtrados.forEach((item) => {
+    const li = document.createElement('li');
+    li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valor.toFixed(2)} (${item.categoria})`;
+    li.classList.add('fade-in');
+    listaCompras.appendChild(li);
+  });
+}
+
+// Abrir modal para editar item
 function editarItem(index) {
-    itemEditandoIndex = index;
-    const item = compras[index];
-    editarDescricao.value = item.descricao;
-    editarQuantidade.value = item.quantidade;
-    editarValor.value = item.valor.toFixed(2).replace('.', ',');
-    modalEdicao.style.display = 'block';
+  itemEditandoIndex = index;
+  const item = compras[index];
+  editarDescricao.value = item.descricao;
+  editarQuantidade.value = item.quantidade;
+  editarValor.value = item.valor.toFixed(2);
+  modal.style.display = 'block';
 }
 
-// Salvar edição
+// Salvar edição do item
 salvarEdicaoBtn.addEventListener('click', () => {
-    if (itemEditandoIndex !== null) {
-        const novaDescricao = editarDescricao.value;
-        const novaQuantidade = parseInt(editarQuantidade.value) || 1;
-        const novoValor = parseFloat(editarValor.value.replace(',', '.')) || 0;
-
-        if (novaDescricao && !isNaN(novaQuantidade) && !isNaN(novoValor)) {
-            compras[itemEditandoIndex] = {
-                descricao: novaDescricao,
-                quantidade: novaQuantidade,
-                valor: novoValor,
-                categoria: inferirCategoria(novaDescricao)
-            };
-            modalEdicao.style.display = 'none';
-            atualizarLista();
-        } else {
-            alert('Por favor, preencha todos os campos corretamente.');
-        }
-        itemEditandoIndex = null;
-    }
+  if (itemEditandoIndex !== null) {
+    const novaDescricao = editarDescricao.value;
+    const novaQuantidade = parseInt(editarQuantidade.value) || 1;
+    const novoValor = parseFloat(editarValor.value) || 0;
+    const novaCategoria = inferirCategoria(novaDescricao);
+    compras[itemEditandoIndex] = { descricao: novaDescricao, quantidade: novaQuantidade, valor: novoValor, categoria: novaCategoria };
+    modal.style.display = 'none';
+    atualizarLista();
+    salvarDados();
+  }
 });
-
-// Excluir item
-function excluirItem(index) {
-    if (confirm('Deseja excluir este item?')) {
-        compras.splice(index, 1);
-        atualizarLista();
-    }
-}
 
 // Fechar modal
 fecharModalBtn.addEventListener('click', () => {
-    modalEdicao.style.display = 'none';
-    itemEditandoIndex = null;
+  modal.style.display = 'none';
 });
 
-// Fechar modal ao clicar fora
-window.addEventListener('click', (event) => {
-    if (event.target === modalEdicao) {
-        modalEdicao.style.display = 'none';
-        itemEditandoIndex = null;
-    }
-});
+// Animação das moedas ao adicionar item
+function animarMoedas() {
+  coins.forEach((coin, index) => {
+    coin.style.opacity = 0;
+    setTimeout(() => {
+      coin.style.transition = 'opacity 0.5s';
+      coin.style.opacity = 1;
+    }, index * 200);
+  });
+}
 
-// Formatar valor em tempo real
-editarValor.addEventListener('input', function() {
-    let valor = this.value;
-    valor = valor.replace(/\D/g, '');
-    valor = valor.replace(/(\d{1,})(\d{2})$/, "$1,$2");
-    this.value = valor;
-});
-
-// Exportar dados para JSON
-exportarBtn.addEventListener('click', () => {
-    const dataAtual = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const nomeArquivo = `${dataAtual}_Compras_no_mercado.json`;
-
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(compras));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", nomeArquivo);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-});
-
-// Importar dados de JSON
-importarBtn.addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                compras = JSON.parse(e.target.result);
-                atualizarLista();
-                salvarDados();
-            } catch (error) {
-                alert('Erro ao importar o arquivo JSON.');
-            }
-        };
-        reader.readAsText(file);
-    };
-    input.click();
-});
-
-// Limpar lista
-limparListaBtn.addEventListener('click', () => {
-    if (confirm('Deseja exportar os dados antes de limpar?')) {
-        exportarBtn.click();
-    }
-    if (confirm('Tem certeza que deseja limpar a lista?')) {
-        compras = [];
-        atualizarLista();
-        salvarDados();
-    }
-});
-
-// Gerar relatório Excel
-relatorioBtn.addEventListener('click', () => {
-    if (compras.length === 0) {
-        alert('Não há dados para gerar o relatório.');
-        return;
-    }
-
-    const wb = XLSX.utils.book_new();
-    const wsName = "RelatorioCompras";
-    const wsData = [
-        ["Descrição", "Quantidade", "Valor (R$)", "Categoria"],
-        ...compras.map(item => [item.descricao, item.quantidade, item.valor.toFixed(2), item.categoria])
-    ];
-
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
-    XLSX.utils.book_append_sheet(wb, ws, wsName);
-
-    const dataAtual = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const nomeArquivo = `${dataAtual}_RelatorioCompras.xlsx`;
-    XLSX.writeFile(wb, nomeArquivo);
-});
-
-// Inicializar ao carregar a página
-carregarDados();
+// Carregar a lista ao iniciar a página
+atualizarLista();

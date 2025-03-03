@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Compras de Mercado</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="imagens/carrinho.png" alt="Carrinho de Compras" class="logo">
+            <div class="coin coin1"></div>
+            <div class="coin coin2"></div>
+        </div>
+        <h1>Minhas Compras de Mercado</h1>
+    </header>
+
+    <main>
+        <section class="actions">
+            <button class="button-green">Salvar</button>
+            <button class="button-gold">Importar</button>
+            <button class="button-red">Limpar Lista</button>
+            <button class="button-green">Relatório Excel</button>
+        </section>
+
+        <section class="voice-input">
+            <label for="vozInput">Adicionar Item por Voz:</label>
+            <input type="text" id="vozInput" placeholder="Dite aqui..." aria-label="Digite o item para adicionar por voz">
+            <div class="voz-feedback"></div>
+        </section>
+
+        <section class="budget-filter">
+            <label for="orcamento">Orçamento:</label>
+            <input type="number" id="orcamento" placeholder="Defina seu orçamento">
+            <label for="categoriaFiltro">Filtrar por Categoria:</label>
+            <select id="categoriaFiltro">
+                <option value="">Todas as Categorias</option>
+                <option value="Alimentos">Alimentos</option>
+                <option value="Limpeza">Limpeza</option>
+                <option value="Outros">Outros</option>
+                <!-- Add more categories as needed -->
+            </select>
+        </section>
+
+        <section class="shopping-list">
+            <h2>Lista de Compras</h2>
+            <ul id="listaCompras">
+                <!-- Shopping list items will be added here by JavaScript -->
+            </ul>
+            <div id="painelTotal">Total: R$ 0.00</div>
+        </section>
+    </main>
+
+    <div class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="fechar-modal">&times;</span>
+            <h2>Editar Item</h2>
+            <label for="editarDescricao">Descrição:</label>
+            <input type="text" id="editarDescricao">
+            <label for="editarQuantidade">Quantidade:</label>
+            <input type="number" id="editarQuantidade">
+            <label for="editarValor">Valor:</label>
+            <input type="number" id="editarValor" step="0.01">
+            <button id="salvarEdicao">Salvar Edição</button>
+        </div>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>

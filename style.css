@@ -1,0 +1,263 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 20px;
+}
+
+/* Estilização do Header */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-container {
+    position: relative;
+    margin: 0 auto;
+    width: 180px;
+    height: 180px;
+}
+
+.logo {
+    display: block;
+    width: 142.5px;
+    max-width: 180px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 1.8rem;
+    margin-top: 10px;
+    color: #2e7d32;
+}
+
+/* Animação das Moedas */
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.coin {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: gold;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.coin1 {
+    left: 20px;
+    top: 20px;
+    animation: float 2s ease-in-out infinite;
+}
+
+.coin2 {
+    left: 40px;
+    top: 30px;
+    animation: float 2s ease-in-out infinite 0.5s;
+}
+
+/* Estilização dos Botões */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-green {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.button-green:hover, .button-green:active {
+    background-color: #45a049;
+}
+
+.button-gold {
+    background-color: #FFD700;
+    color: #333;
+}
+
+.button-gold:hover, .button-gold:active {
+    background-color: #e6c200;
+}
+
+.button-red {
+    background-color: #dc3545;
+    color: white;
+}
+
+.button-red:hover, .button-red:active {
+    background-color: #c82333;
+}
+
+/* Estilização do Input de Voz */
+.voice-input {
+    text-align: center;
+    margin-bottom: 20px; /* Added margin */
+}
+
+label {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+#vozInput {
+    padding: 8px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.voz-feedback {
+    background-color: #90EE90;
+    padding: 8px;
+    font-size: 1.25rem;
+    margin-top: 5px;
+    border-radius: 5px;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* New Styles for Budget, Filter, List, and Modal */
+.budget-filter, .shopping-list {
+    text-align: center;
+    margin-bottom: 20px; /* Added margin */
+}
+
+.budget-filter label, .shopping-list label {
+    display: inline-block; /* Display labels inline with inputs/select */
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+.budget-filter input[type="number"], .budget-filter select {
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#listaCompras {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+#listaCompras li {
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    opacity: 0; /* For fade-in animation */
+    transform: translateY(10px); /* For fade-in animation */
+    transition: opacity 0.5s, transform 0.5s; /* For fade-in animation */
+}
+
+#listaCompras li.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#painelTotal {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    display: flex; /* Use flexbox to center modal content */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    width: 80%; /* Adjust width as needed */
+    max-width: 500px;
+    position: relative; /* To position close button */
+}
+
+.fechar-modal {
+    color: #aaa;
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.fechar-modal:hover,
+.fechar-modal:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Media Query for smaller screens (Android specific or general mobile) */
+@media (max-width: 480px) { /* Adjust breakpoint as needed */
+    body {
+        padding: 10px; /* Reduce padding for smaller screens */
+    }
+    h1 {
+        font-size: 1.5rem; /* Smaller header for mobile */
+    }
+    .actions button {
+        padding: 8px 16px; /* Smaller buttons */
+        font-size: 0.9rem;
+    }
+    #vozInput, .budget-filter input[type="number"], .budget-filter select {
+        padding: 6px; /* Smaller input/select padding */
+        font-size: 0.9rem;
+    }
+    .logo-container {
+        width: 150px; /* Smaller logo container */
+        height: 150px;
+    }
+    .logo {
+        max-width: 150px; /* Smaller logo */
+    }
+    .coin {
+        width: 15px; /* Smaller coins */
+        height: 15px;
+    }
+}

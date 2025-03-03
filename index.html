@@ -1,104 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Minhas compras de Mercado</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
+    <title>Minhas Compras de Mercado</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-          <!-- Logo -->
-    <div class="logo-container">
-        <img src="logo.png" alt="Logo" class="logo">
-    </div>
-       <h1>Minhas compras de Mercado</h1>
+        <div class="logo-container">
+            <img src="logo.png" alt="Logo" class="logo">
+        </div>
+        <h1>Minhas Compras de Mercado</h1>
     </header>
 
     <div class="container">
+        <!-- Painel de Orçamento -->
+        <div class="input-group">
+            <label for="orcamento">Orçamento (R$):</label>
+            <input type="text" id="orcamento" placeholder="200,00">
+        </div>
+
+        <!-- Campo de Entrada por Voz -->
+        <div class="input-group">
+            <label for="vozInput">Adicionar Item (Dite: "2 quilos de arroz por 5 reais"):</label>
+            <input type="text" id="vozInput" placeholder="Dite: '2 quilos de arroz por 5 reais'">
+            <button id="ativarVoz">🎤</button>
+            <div class="voz-feedback"></div>
+        </div>
+
+        <!-- Filtro por Categoria -->
+        <div class="input-group">
+            <label for="categoriaFiltro">Filtrar por Categoria:</label>
+            <select id="categoriaFiltro">
+                <option value="">Todas</option>
+                <option value="Alimentos">Alimentos</option>
+                <option value="Limpeza">Limpeza</option>
+                <option value="Higiene Pessoal">Higiene Pessoal</option>
+            </select>
+        </div>
+
         <div id="painelTotal">
-            Total: R$ <span id="totalValorPainel">0.00</span>
+            Total: R$ <span id="totalValorPainel">0,00</span>
         </div>
-        <div class="input-group">
-            <label for="descricao">Descrição:</label>
-            <input type="text" id="descricao" placeholder="Descrição do item">
-        </div>
-        <div class="input-group">
-            <label for="quantidade">Quantidade:</label>
-            <input type="number" id="quantidade" value="1" min="1" inputmode="numeric">
-        </div>
-        <div class="input-group">
-            <label for="valor">Valor (R$):</label>
-            <input type="text" id="valor" placeholder="0.00" inputmode="decimal" oninput="formatarValor(this)">
-        </div>
-        <button id="adicionar" class="button-green aumentado">Adicionar</button>
 
         <h2>Itens no Carrinho</h2>
-        <table id="listaCompras">
-            <thead>
-                <tr>
-                    <th>Descrição</th>
-                    <th>Quantidade</th>
-                    <th>Valor (R$)</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-
+        <ul id="listaCompras"></ul>
         <div class="total">
-            Total: R$ <span id="totalValor">0.00</span>
+            Total: R$ <span id="totalValor">0,00</span>
         </div>
 
+        <!-- Modal de Edição -->
+        <div id="modalEdicao" class="modal">
+            <div class="modal-conteudo">
+                <span class="fechar-modal">×</span>
+                <h2>Editar Item</h2>
+                <div class="input-group">
+                    <label for="editarDescricao">Descrição:</label>
+                    <input type="text" id="editarDescricao" placeholder="Descrição">
+                    <button class="mic-btn" onclick="document.getElementById('editarDescricao').focus()">🎤</button>
+                </div>
+                <div class="input-group">
+                    <label for="editarQuantidade">Quantidade:</label>
+                    <input type="number" id="editarQuantidade" placeholder="Quantidade" min="1">
+                    <button class="mic-btn" onclick="document.getElementById('editarQuantidade').focus()">🎤</button>
+                </div>
+                <div class="input-group">
+                    <label for="editarValor">Valor (R$):</label>
+                    <input type="text" id="editarValor" placeholder="0,00">
+                    <button class="mic-btn" onclick="document.getElementById('editarValor').focus()">🎤</button>
+                </div>
+                <button id="salvarEdicao" class="button-green">Salvar</button>
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
         <div class="buttons">
             <button id="exportar" class="button-gold">Exportar</button>
             <button id="importar" class="button-gold">Importar</button>
             <button id="limparLista" class="button-green">Limpar Lista</button>
             <button id="relatorio" class="button-gold">Relatório Excel</button>
-            <button id="importarLista" class="button-green-light">Importar Lista para Conferência</button>
-            <input type="file" id="arquivoImportarLista" style="display: none;">
-        </div>
-
-        <h2 id="tituloConferencia" style="display: none;">Itens Importados para Conferência</h2>
-        <table id="listaConferencia" style="display: none;">
-            <thead>
-                <tr>
-                    <th>✅</th>
-                    <th>Descrição</th>
-                    <th>Quantidade</th>
-                    <th>Valor (R$)</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-        <button id="confirmarItens" class="button-green aumentado" style="display: none;">Confirmar Itens Selecionados</button>
-    </div>
-
-    <div id="modalEdicao" class="modal">
-        <div class="modal-conteudo">
-            <span class="fechar-modal">×</span>
-            <h2>Editar Item</h2>
-            <div class="input-group">
-                <label for="editarDescricao">Descrição:</label>
-                <input type="text" id="editarDescricao">
-            </div>
-            <div class="input-group">
-                <label for="editarQuantidade">Quantidade:</label>
-                <input type="number" id="editarQuantidade" min="1" inputmode="numeric">
-            </div>
-            <div class="input-group">
-                <label for="editarValor">Valor (R$):</label>
-                <input type="text" id="editarValor" inputmode="decimal" oninput="formatarValor(this)">
-            </div>
-            <button id="salvarEdicao" class="button-green">Salvar</button>
         </div>
     </div>
 
-    <input type="file" id="arquivoImportar" style="display: none;">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -154,9 +154,14 @@ select:focus {
     border: none;
     border-radius: 5px;
     padding: 12px;
+    width: 48px; /* Tamanho fixo para uniformidade */
+    height: 48px;
     cursor: pointer;
     font-size: 1.25rem;
     transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #ativarVoz:hover, .mic-btn:hover {
@@ -168,26 +173,36 @@ select:focus {
 }
 
 .action-btn {
-    background-color: #28a745;
-    color: white;
     border: none;
     border-radius: 5px;
     padding: 12px;
+    width: 48px; /* Mesmo tamanho do #ativarVoz */
+    height: 48px;
     cursor: pointer;
     font-size: 1.25rem;
     transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.action-btn:hover {
-    background-color: #218838;
+#inserirItem {
+    background-color: #007bff; /* Igual ao microfone */
+    color: white;
 }
 
-.action-btn:active {
-    background-color: #1e7e34;
+#inserirItem:hover {
+    background-color: #0056b3;
+}
+
+#inserirItem:active {
+    background-color: #003d7a;
 }
 
 #limparInput {
     background-color: #dc3545;
+    color: white;
+    font-weight: bold; /* Sinal de menos mais grosso */
 }
 
 #limparInput:hover {
@@ -520,6 +535,13 @@ select:focus {
     #vozInput {
         width: 100%;
         margin-bottom: 5px;
+    }
+
+    #ativarVoz, .action-btn {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+        font-size: 1rem;
     }
 
     .button-green, .button-gold, .button-red {

@@ -20,8 +20,8 @@ const importarBtn = document.querySelector('#importar');
 const limparListaBtn = document.querySelector('#limparLista');
 const relatorioBtn = document.querySelector('#relatorio');
 const coins = document.querySelectorAll('.coin');
-const barraProgresso = document.getElementById('barraProgresso'); // Adicionado
-const porcentagemProgresso = document.getElementById('porcentagemProgresso'); // Adicionado
+const barraProgresso = document.getElementById('barraProgresso');
+const porcentagemProgresso = document.getElementById('porcentagemProgresso');
 
 
 // Lista de compras e índice do item sendo editado
@@ -82,71 +82,59 @@ function parseNumber(texto) {
     return numerosEscritos[texto] || parseInt(texto) || 1;
 }
 
-// Função para processar e adicionar item
+// Função para processar e adicionar item (VERSÃO CORRIGIDA E REFORÇADA)
 function processarEAdicionarItem(texto) {
     texto = texto.toLowerCase().trim();
 
-    const regexMarcadores = /^quantidade\s+(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s+descrição\s+([\w\s]+)\s+preço\s+([\d,\s]+)(?:\s*(reais|real))?$/;
+    const regexMarcadores = /^quantidade\s+(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s+descrição\s+([\w\s]+?)\s+preço\s+([\d,\s]+)(?:\s*(reais|real))?$/i;
     const matchMarcadores = texto.match(regexMarcadores);
 
-    const regexNatural = /^(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s*([\w\s]+(?:de\s[\w\s]+)?)(?:\s*(kg|quilos?|unidades?|biscoitos?))?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/;
+    const regexNatural = /^(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s*([\w\s]+(?:de\s[\w\s]+)?)(?:\s*(kg|quilos?|unidades?|biscoitos?))?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/i;
     const matchNatural = texto.match(regexNatural);
 
+
+    let quantidade, descricao, valorUnitario;
+
     if (matchMarcadores) {
-        const quantidade = parseNumber(matchMarcadores[1]);
-        const descricao = matchMarcadores[2].trim();
-        const valorUnitario = parseFloat(matchMarcadores[3].replace(/\s/g, '').replace(',', '.')) || 0;
+        quantidade = parseNumber(matchMarcadores[1]);
+        descricao = matchMarcadores[2].trim();  // .trim() aqui é importante!
+        valorUnitario = parseFloat(matchMarcadores[3].replace(/\s/g, '').replace(',', '.')) || 0;
 
-        if (valorUnitario <= 0) {
-            // Mensagem de erro mais detalhada
-            mostrarFeedbackErro('Valor unitário inválido. Insira um valor maior que zero.');
-            return;
-        }
-         if (!descricao) {
-            mostrarFeedbackErro('A descrição não pode estar vazia.');
-            return;
-        }
-
-
-        const categoria = inferirCategoria(descricao);
-        const novoItem = { descricao, quantidade, valorUnitario, categoria };
-        compras.push(novoItem);
-        atualizarLista();
-        salvarDados();
-        vozInput.value = '';
-        mostrarFeedbackSucesso('Item adicionado!');
-        animarMoedas();
-        // animarItemAdicionado(novoItem);  // Removido: a animação agora é feita em atualizarLista
     } else if (matchNatural) {
-        const quantidade = parseNumber(matchNatural[1]);
-        let descricao = matchNatural[2].trim().replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').replace(/^de\s/, '').trim();
-        const valorUnitario = parseFloat(matchNatural[4].replace(/\s/g, '').replace(',', '.')) || 0;
-
-         if (!descricao) {
-            mostrarFeedbackErro('A descrição não pode estar vazia.');
-            return;
-        }
-
-        if (valorUnitario <= 0) {
-            mostrarFeedbackErro('Valor unitário inválido. Insira um valor maior que zero.');
-            return;
-        }
-
-        const categoria = inferirCategoria(descricao);
-        const novoItem = { descricao, quantidade, valorUnitario, categoria };
-        compras.push(novoItem);
-        atualizarLista();
-        salvarDados();
-        vozInput.value = '';
-        mostrarFeedbackSucesso('Item adicionado!');
-        animarMoedas();
-        // animarItemAdicionado(novoItem); // Removido: a animação agora é feita em atualizarLista
+        quantidade = parseNumber(matchNatural[1]);
+        descricao = matchNatural[2].trim().replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').replace(/^de\s/, '').trim();
+        valorUnitario = parseFloat(matchNatural[4].replace(/\s/g, '').replace(',', '.')) || 0;
 
     } else {
-        // Mensagem de erro mais detalhada
-        mostrarFeedbackErro('Ditado não reconhecido. Tente: "quantidade 2 descrição biscoitos preço 2,35" ou "dois biscoitos por 2,35 cada".');
+        // NENHUM PADRÃO RECONHECIDO
+        mostrarFeedbackErro('Formato de comando de voz não reconhecido. Use "quantidade X descrição Y preço Z" ou "X [produto] por Z".');
+        return;
     }
+
+
+    // VALIDAÇÕES (agora centralizadas, após o parsing)
+    if (!descricao) {
+        mostrarFeedbackErro('A descrição não pode estar vazia.');
+        return;
+    }
+
+    if (valorUnitario <= 0) {
+        mostrarFeedbackErro('Valor unitário inválido. Insira um valor maior que zero.');
+        return;
+    }
+
+    // CRIAÇÃO DO ITEM E ADIÇÃO (se chegou aqui, passou nas validações)
+    const categoria = inferirCategoria(descricao);
+    const novoItem = { descricao, quantidade, valorUnitario, categoria };
+    compras.push(novoItem);
+    atualizarLista();
+    salvarDados();
+    vozInput.value = '';
+    mostrarFeedbackSucesso('Item adicionado!');
+    animarMoedas();
 }
+
+
 
 // Funções auxiliares para feedback (evita repetição)
 function mostrarFeedbackSucesso(mensagem) {

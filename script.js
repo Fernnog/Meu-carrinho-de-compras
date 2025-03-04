@@ -94,7 +94,7 @@ function parseNumber(texto) {
     return numerosEscritos[texto] || parseInt(texto) || 1; // Default para 1 se não reconhecido
 }
 
-// Processar texto ditado e adicionar item (atualizado para comandos naturais e baseados em marcadores)
+// Processar texto ditado e adicionar item
 vozInput.addEventListener('change', () => {
     const texto = vozInput.value.toLowerCase().trim();
 
@@ -102,26 +102,24 @@ vozInput.addEventListener('change', () => {
     const regexMarcadores = /^quantidade\s+(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s+descrição\s+([\w\s]+)\s+preço\s+([\d,\s]+)(?:\s*(reais|real))?$/;
     const matchMarcadores = texto.match(regexMarcadores);
 
-    // Regex para comando natural (e.g., "dois biscoitos por 2,35 cada" ou "2 kg de arroz a 2,35 reais")
+    // Regex para comando natural: "dois biscoitos por 2,35 cada"
     const regexNatural = /^(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s*([\w\s]+(?:de\s[\w\s]+)?)(?:\s*(kg|quilos?|unidades?|biscoitos?))?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/;
     const matchNatural = texto.match(regexNatural);
 
     if (matchMarcadores) {
-        // Processar comando com marcadores
         const quantidadeStr = matchMarcadores[1];
-        const quantidade = parseNumber(quantidadeStr); // Converte "2" ou "dois" para número
-        const descricao = matchMarcadores[2].trim(); // "biscoitos"
-        const unitPriceStr = matchMarcadores[3].replace(/\s/g, '').replace(',', '.'); // "2,35" -> "2.35"
-        const unitPrice = parseFloat(unitPriceStr) || 0;
+        const quantidade = parseNumber(quantidadeStr);
+        const descricao = matchMarcadores[2].trim();
+        const unitPriceStr = matchMarcadores[3].replace(/\s/g, '').replace(',', '.');
+        const valorUnitario = parseFloat(unitPriceStr) || 0;
 
-        if (unitPrice <= 0) {
+        if (valorUnitario <= 0) {
             alert('Valor unitário inválido. Insira um valor maior que zero.');
             return;
         }
 
-        const valor = quantidade * unitPrice; // 2 * 2.35 = 4.70
-        const categoria = inferirCategoria(descricao); // "Alimentos" para "biscoitos"
-        const novoItem = { descricao, quantidade, valor, categoria };
+        const categoria = inferirCategoria(descricao);
+        const novoItem = { descricao, quantidade, valorUnitario, categoria };
         compras.push(novoItem);
         atualizarLista();
         salvarDados();
@@ -132,23 +130,21 @@ vozInput.addEventListener('change', () => {
         vozFeedback.classList.add('success-fade');
         setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
     } else if (matchNatural) {
-        // Processar comando natural
         const quantidadeStr = matchNatural[1];
         const quantidade = parseNumber(quantidadeStr);
         let descricao = matchNatural[2].trim();
         descricao = descricao.replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').trim();
         descricao = descricao.replace(/^de\s/, '').trim();
         const unitPriceStr = matchNatural[4].replace(/\s/g, '').replace(',', '.');
-        const unitPrice = parseFloat(unitPriceStr) || 0;
+        const valorUnitario = parseFloat(unitPriceStr) || 0;
 
-        if (unitPrice <= 0) {
+        if (valorUnitario <= 0) {
             alert('Valor unitário inválido. Insira um valor maior que zero.');
             return;
         }
 
-        const valor = quantidade * unitPrice;
         const categoria = inferirCategoria(descricao);
-        const novoItem = { descricao, quantidade, valor, categoria };
+        const novoItem = { descricao, quantidade, valorUnitario, categoria };
         compras.push(novoItem);
         atualizarLista();
         salvarDados();
@@ -159,7 +155,7 @@ vozInput.addEventListener('change', () => {
         vozFeedback.classList.add('success-fade');
         setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
     } else {
-        alert('Ditado não reconhecido. Tente novamente, por exemplo: "quantidade 2 descrição biscoitos preço 2,35" ou "dois biscoitos por 2,35 cada".');
+        alert('Ditado não reconhecido. Tente: "quantidade 2 descrição biscoitos preço 2,35" ou "dois biscoitos por 2,35 cada".');
         vozFeedback.classList.add('error-fade');
         setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
     }
@@ -183,7 +179,7 @@ function animarMoedas() {
 // Animação para item adicionado na lista
 function animarItemAdicionado(item) {
     const li = document.createElement('li');
-    li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valor.toFixed(2).replace('.', ',')} (${item.categoria})`;
+    li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valorUnitario.toFixed(2).replace('.', ',')} (${item.categoria})`;
     li.classList.add('fade-in');
     li.addEventListener('click', () => editarItem(compras.length - 1));
     listaCompras.appendChild(li);
@@ -196,11 +192,11 @@ function atualizarLista(filtrados = compras) {
     let total = 0;
     filtrados.forEach((item, index) => {
         const li = document.createElement('li');
-        li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valor.toFixed(2).replace('.', ',')} (${item.categoria})`;
+        li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valorUnitario.toFixed(2).replace('.', ',')} (${item.categoria})`;
         li.classList.add('fade-in');
         li.addEventListener('click', () => editarItem(index));
         listaCompras.appendChild(li);
-        total += item.quantidade * item.valor;
+        total += item.quantidade * item.valorUnitario;
     });
     totalValorPainel.textContent = total.toFixed(2).replace('.', ',');
     totalValor.textContent = total.toFixed(2).replace('.', ',');
@@ -235,7 +231,7 @@ function editarItem(index) {
     const item = compras[index];
     editarDescricao.value = item.descricao;
     editarQuantidade.value = item.quantidade;
-    editarValor.value = item.valor.toFixed(2).replace('.', ',');
+    editarValor.value = item.valorUnitario.toFixed(2).replace('.', ',');
     modalEdicao.style.display = 'block';
     modalEdicao.classList.add('slide-in');
 }
@@ -245,13 +241,13 @@ salvarEdicaoBtn.addEventListener('click', () => {
     if (itemEditandoIndex !== null) {
         const novaDescricao = editarDescricao.value;
         const novaQuantidade = parseInt(editarQuantidade.value) || 1;
-        const novoValor = parseFloat(editarValor.value.replace(',', '.')) || 0;
-        if (novoValor <= 0) {
-            alert('Valor inválido. Insira um valor maior que zero.');
+        const novoValorUnitario = parseFloat(editarValor.value.replace(',', '.')) || 0;
+        if (novoValorUnitario <= 0) {
+            alert('Valor unitário inválido. Insira um valor maior que zero.');
             return;
         }
         const novaCategoria = inferirCategoria(novaDescricao);
-        compras[itemEditandoIndex] = { descricao: novaDescricao, quantidade: novaQuantidade, valor: novoValor, categoria: novaCategoria };
+        compras[itemEditandoIndex] = { descricao: novaDescricao, quantidade: novaQuantidade, valorUnitario: novoValorUnitario, categoria: novaCategoria };
         modalEdicao.style.display = 'none';
         modalEdicao.classList.remove('slide-in');
         atualizarLista();
@@ -357,8 +353,8 @@ relatorioBtn.addEventListener('click', () => {
     const wb = XLSX.utils.book_new();
     const wsName = "RelatorioCompras";
     const wsData = [
-        ["Descrição", "Quantidade", "Valor (R$)", "Categoria"],
-        ...compras.map(item => [item.descricao, item.quantidade, item.valor.toFixed(2), item.categoria])
+        ["Descrição", "Quantidade", "Valor Unitário (R$)", "Categoria"],
+        ...compras.map(item => [item.descricao, item.quantidade, item.valorUnitario.toFixed(2), item.categoria])
     ];
     const ws = XLSX.utils.aoa_to_sheet(wsData);
     XLSX.utils.book_append_sheet(wb, ws, wsName);
@@ -378,10 +374,18 @@ document.addEventListener('DOMContentLoaded', () => {
     animarMoedas();
 });
 
-// Função auxiliar para carregar dados salvos
+// Função auxiliar para carregar dados salvos e converter formato antigo
 function carregarDados() {
     const orcamentoSalvo = localStorage.getItem('orcamento');
     if (orcamentoSalvo) orcamentoInput.value = orcamentoSalvo.replace('.', ',');
+    compras = JSON.parse(localStorage.getItem('compras')) || [];
+    compras.forEach(item => {
+        if (item.valor && !item.valorUnitario) {
+            item.valorUnitario = item.valor / item.quantidade;
+            delete item.valor;
+        }
+    });
+    salvarDados();
 }
 
 // Estilos dinâmicos para animações (necessitam de CSS correspondente)

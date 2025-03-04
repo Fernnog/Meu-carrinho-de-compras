@@ -23,24 +23,33 @@ const relatorioBtn = document.querySelector('#relatorio');
 const barraProgresso = document.getElementById('barraProgresso');
 const porcentagemProgresso = document.getElementById('porcentagemProgresso');
 
-
 // Lista de compras e índice do item sendo editado
 let compras = JSON.parse(localStorage.getItem('compras')) || [];
 let itemEditandoIndex = null;
 
-// Lista de sugestões para autocomplete
+// Lista de sugestões para autocomplete (expandida)
 const listaSugestoes = [
-    "Água sanitária", "Detergente", "Vassoura", "Saco de lixo",
-    "Arroz", "Feijão", "Macarrão", "Banana", "Tomate", "Biscoito",
-    "Sabonete", "Shampoo", "Desodorante", "Papel higiênico"
+    "Água sanitária", "Detergente", "Vassoura", "Saco de lixo", "Sabão em pó", "Amaciante", "Esponja", "Papel toalha",
+    "Arroz", "Feijão", "Macarrão", "Banana", "Tomate", "Biscoito", "Leite", "Queijo", "Manteiga", "Pão", "Café",
+    "Açúcar", "Óleo de cozinha", "Farinha de trigo", "Ovos", "Carne bovina", "Frango", "Peixe", "Batata", "Cebola",
+    "Alho", "Maçã", "Laranja", "Uva", "Morango", "Cenoura", "Beterraba", "Brócolis", "Espinafre", "Iogurte",
+    "Refrigerante", "Suco", "Cerveja", "Vinho", "Sabonete", "Shampoo", "Desodorante", "Papel higiênico",
+    "Escova de dente", "Creme dental", "Fio dental", "Absorvente", "Preservativo", "Pilhas", "Lâmpadas",
+    "Fósforos", "Velas"
 ];
 
 // Função para inferir categoria automaticamente
 function inferirCategoria(descricao) {
     const categorias = {
-        Alimentos: ['arroz', 'feijão', 'macarrão', 'banana', 'tomate', 'biscoito'],
-        Limpeza: ['água sanitária', 'detergente', 'vassoura', 'saco de lixo'],
-        'Higiene Pessoal': ['sabonete', 'shampoo', 'desodorante', 'papel higiênico']
+        Alimentos: ['arroz', 'feijão', 'macarrão', 'banana', 'tomate', 'biscoito', 'leite', 'queijo', 'manteiga', 'pão',
+            'café', 'açúcar', 'óleo', 'farinha', 'ovos', 'carne', 'frango', 'peixe', 'batata', 'cebola', 'alho',
+            'maçã', 'laranja', 'uva', 'morango', 'cenoura', 'beterraba', 'brócolis', 'espinafre', 'iogurte',
+            'refrigerante', 'suco', 'cerveja', 'vinho'],
+        Limpeza: ['água sanitária', 'detergente', 'vassoura', 'saco de lixo', 'sabão em pó', 'amaciante', 'esponja',
+            'papel toalha'],
+        'Higiene Pessoal': ['sabonete', 'shampoo', 'desodorante', 'papel higiênico', 'escova de dente', 'creme dental',
+            'fio dental', 'absorvente', 'preservativo'],
+        Outros: ['pilhas', 'lâmpadas', 'fósforos', 'velas']
     };
     descricao = descricao.toLowerCase();
     for (const [categoria, palavras] of Object.entries(categorias)) {
@@ -48,7 +57,7 @@ function inferirCategoria(descricao) {
             return categoria;
         }
     }
-    return 'Outros';
+    return 'Outros'; // Já está implementado para itens não mapeados
 }
 
 // Configurar autocomplete com Awesomplete
@@ -62,6 +71,24 @@ new Awesomplete(vozInput, {
         this.input.value = before ? before + text + ", " : text;
     },
     minChars: 1
+});
+
+// Traduz a mensagem do Awesomplete
+document.addEventListener('DOMContentLoaded', () => {
+    const awesompleteMessage = document.querySelector('.awesomplete > ul:empty::before');
+    if (awesompleteMessage) {
+        awesompleteMessage.textContent = 'Digite 1 ou mais caracteres para resultados.';
+    } else {
+        // Caso o elemento não seja encontrado diretamente, observamos mudanças
+        const observer = new MutationObserver(() => {
+            const message = document.querySelector('.awesomplete > ul:empty::before');
+            if (message) {
+                message.textContent = 'Digite 1 ou mais caracteres para resultados.';
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
 });
 
 // Feedback visual em tempo real
@@ -141,8 +168,6 @@ function processarEAdicionarItem(texto) {
     //Removido, pois as moedas foram retiradas animarMoedas();
 }
 
-
-
 // Funções auxiliares para feedback (evita repetição)
 function mostrarFeedbackSucesso(mensagem) {
     vozFeedback.textContent = mensagem;
@@ -161,7 +186,7 @@ function mostrarFeedbackErro(mensagem) {
 // Botão de microfone para ativar ditado
 ativarVoz.addEventListener('click', () => {
     vozInput.focus();
-     mostrarFeedbackSucesso('Fale agora...');
+    mostrarFeedbackSucesso('Fale agora...');
 });
 
 // Botão para inserir item
@@ -177,10 +202,9 @@ inserirItem.addEventListener('click', () => {
 limparInput.addEventListener('click', () => {
     vozInput.value = '';
     mostrarFeedbackSucesso('Campo limpo!'); // Usa a função auxiliar
-
 });
 
-//Removido, pois não será mais utiizado, animação das moedas
+//Removido, pois não será mais utilizado, animação das moedas
 /*function animarMoedas() {
     coins.forEach((coin, index) => {
         coin.style.opacity = 0;
@@ -214,7 +238,6 @@ function atualizarLista(filtrados = compras) {
         listaCompras.appendChild(li);
         total += item.quantidade * item.valorUnitario;
         setTimeout(() => li.style.opacity = 1, 10);
-
     });
     totalValorPainel.textContent = total.toFixed(2).replace('.', ',');
     totalValor.textContent = total.toFixed(2).replace('.', ',');
@@ -225,7 +248,7 @@ function atualizarLista(filtrados = compras) {
 listaCompras.addEventListener('click', (event) => {
     if (event.target.classList.contains('excluir-item')) {
         const index = parseInt(event.target.dataset.index);
-         if (confirm(`Tem certeza que deseja excluir "${compras[index].descricao}"?`)) {
+        if (confirm(`Tem certeza que deseja excluir "${compras[index].descricao}"?`)) {
             compras.splice(index, 1);
             atualizarLista();
             salvarDados();
@@ -234,8 +257,6 @@ listaCompras.addEventListener('click', (event) => {
         }
     }
 });
-
-
 
 // Verificar orçamento e atualizar barra de progresso (CORRIGIDO)
 function verificarOrcamento(total) {
@@ -250,35 +271,31 @@ function verificarOrcamento(total) {
 
         // Muda a cor da barra dependendo da porcentagem
         if (porcentagem > 80) {
-          barraProgresso.style.setProperty('--webkit-progress-value-background-color', 'orange', 'important');
+            barraProgresso.style.setProperty('--webkit-progress-value-background-color', 'orange', 'important');
         }
-         if (porcentagem >= 100) {
-           barraProgresso.style.setProperty('--webkit-progress-value-background-color', 'red', 'important');
+        if (porcentagem >= 100) {
+            barraProgresso.style.setProperty('--webkit-progress-value-background-color', 'red', 'important');
         }
-        if(porcentagem <= 80){
-           barraProgresso.style.setProperty('--webkit-progress-value-background-color', '#4CAF50', 'important');
+        if (porcentagem <= 80) {
+            barraProgresso.style.setProperty('--webkit-progress-value-background-color', '#4CAF50', 'important');
         }
-
     } else {
         barraProgresso.value = 0; // Zera a barra se não houver orçamento
         porcentagemProgresso.textContent = "0%";
-         barraProgresso.style.setProperty('--webkit-progress-value-background-color', '#4CAF50', 'important');
+        barraProgresso.style.setProperty('--webkit-progress-value-background-color', '#4CAF50', 'important');
     }
 
-
     if (total > orcamento && orcamento > 0) {
-       // alert('Orçamento excedido! Total: R$ ' + total.toFixed(2).replace('.', ',')); //Removido, para não ter o Alerta toda hora.
+        // alert('Orçamento excedido! Total: R$ ' + total.toFixed(2).replace('.', ',')); //Removido, para não ter o Alerta toda hora.
         document.querySelector('#painelTotal').style.backgroundColor = '#ffcccc'; // Muda a cor do painel
         setTimeout(() => document.querySelector('#painelTotal').style.backgroundColor = '#f8f8f8', 2000); // Volta ao normal após 2 segundos
     }
 }
 
-
 // Salvar dados no localStorage
 function salvarDados() {
     localStorage.setItem('compras', JSON.stringify(compras));
     localStorage.setItem('orcamento', orcamentoInput.value); // Salva o orçamento também
-
 }
 
 // Filtrar por categoria
@@ -364,7 +381,7 @@ exportarBtn.addEventListener('click', () => {
     downloadAnchor.click();
     downloadAnchor.remove();
     //Removido, pois as moedas foram retiradas animarMoedas();
-     mostrarFeedbackSucesso('Dados exportados com sucesso!');
+    mostrarFeedbackSucesso('Dados exportados com sucesso!');
 });
 
 // Importar dados de JSON
@@ -401,7 +418,7 @@ limparListaBtn.addEventListener('click', () => {
         atualizarLista();
         salvarDados();
         //Removido, pois as moedas foram retiradas animarMoedas();
-         mostrarFeedbackSucesso('Lista limpa!');
+        mostrarFeedbackSucesso('Lista limpa!');
     }
 });
 
@@ -434,7 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Atualiza a barra DEPOIS de carregar os dados e atualizar a lista
     const total = parseFloat(totalValor.textContent.replace(',', '.')) || 0;
     verificarOrcamento(total);
-
 });
 
 // Atualiza a barra de progresso sempre que o orçamento for alterado (CORRIGIDO)
@@ -443,8 +459,6 @@ orcamentoInput.addEventListener('input', () => {
     verificarOrcamento(total);
     salvarDados();
 });
-
-
 
 // Função auxiliar para carregar dados e converter formato antigo
 function carregarDados() {
@@ -458,7 +472,8 @@ function carregarDados() {
         }
     });
     salvarDados();
-}
 
-// Estilos dinâmicos para animações
+    // Estilos dinâmicos para animações
 vozFeedback.classList.add('fade-in');
+Notas:
+        

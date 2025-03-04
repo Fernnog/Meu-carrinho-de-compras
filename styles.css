@@ -153,20 +153,21 @@ select:focus {
 .voice-input {
     position: relative;
 }
-
+/* Centralizar os botões na mesma linha */
 .voice-input-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center; /* Centraliza os botões */
-    gap: 5px;
-    width: 100%;
+    justify-content: center; /* Centraliza horizontalmente */
+    gap: 5px; /* Espaço entre os botões */
+    width: 100%; /* Ocupa toda a largura */
 }
 
 #vozInput {
-    flex: 1;
-    min-width: 0;
-    max-width: 300px;
+    flex: 1; /* O campo de texto ocupa o espaço restante */
+    min-width: 0; /* Importante para o flexbox funcionar corretamente */
+    /*  max-width: 300px;  <-- REMOVA o max-width se quiser que o campo cresça */
 }
+
 
 #ativarVoz, .mic-btn {
     background-color: #007bff;
@@ -670,4 +671,4 @@ select:focus {
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
-}
+                                                                                                                                                                                                                                                                                                                                                                                                         }

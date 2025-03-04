@@ -82,48 +82,55 @@ function parseNumber(texto) {
     return numerosEscritos[texto] || parseInt(texto) || 1;
 }
 
-// Função para processar e adicionar item
+// Função para processar e adicionar item (VERSÃO SUPER TOLERANTE)
 function processarEAdicionarItem(texto) {
     texto = texto.toLowerCase().trim();
 
-    const regexMarcadores = /^quantidade\s+(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s+descrição\s+([\w\s]+?)\s+preço\s+([\d,\s]+)(?:\s*(reais|real))?$/i;
+    // Regex super tolerante para marcadores
+    const regexMarcadores = /^\s*quantidade\s+(.+?)\s+descri[cç][aã]o\s+(.+?)\s+pre[cç]o\s+([\d,\s]+?)(?:\s*(reais|real))?\s*$/i;
     const matchMarcadores = texto.match(regexMarcadores);
 
+    // Regex para o formato natural (mantida, mas você disse que o foco são os marcadores)
     const regexNatural = /^(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s*([\w\s]+(?:de\s[\w\s]+)?)(?:\s*(kg|quilos?|unidades?|biscoitos?))?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/i;
     const matchNatural = texto.match(regexNatural);
-
 
     let quantidade, descricao, valorUnitario;
 
     if (matchMarcadores) {
-        quantidade = parseNumber(matchMarcadores[1]);
-        descricao = matchMarcadores[2].trim();  // .trim() aqui é importante!
+        // 1. QUANTIDADE:  Pega TUDO depois de "quantidade" até "descrição"
+        quantidade = matchMarcadores[1].trim(); // Pega tudo, sem se preocupar com o formato
+        quantidade = parseNumber(quantidade);   // Usa a função parseNumber para converter
+
+        // 2. DESCRIÇÃO: Pega TUDO depois de "descrição" até "preço"
+        descricao = matchMarcadores[2].trim();   // Pega tudo e remove espaços extras
+
+        // 3. PREÇO: Pega TUDO depois de "preço" até o final (ou "reais")
         valorUnitario = parseFloat(matchMarcadores[3].replace(/\s/g, '').replace(',', '.')) || 0;
 
-    } else if (matchNatural) {
-        quantidade = parseNumber(matchNatural[1]);
+        console.log("Marcadores (Super Tolerante):", quantidade, descricao, valorUnitario); // Debug
+
+    } else if (matchNatural) { // Mantido o formato natural, caso precise
+       quantidade = parseNumber(matchNatural[1]);
         descricao = matchNatural[2].trim().replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').replace(/^de\s/, '').trim();
         valorUnitario = parseFloat(matchNatural[4].replace(/\s/g, '').replace(',', '.')) || 0;
+        console.log("Natural:", quantidade, descricao, valorUnitario);
 
     } else {
-        // NENHUM PADRÃO RECONHECIDO
         mostrarFeedbackErro('Formato de comando de voz não reconhecido. Use "quantidade X descrição Y preço Z" ou "X [produto] por Z".');
         return;
     }
 
-
-    // VALIDAÇÕES (agora centralizadas, após o parsing)
+    // VALIDAÇÕES (mantidas)
     if (!descricao) {
         mostrarFeedbackErro('A descrição não pode estar vazia.');
         return;
     }
-
     if (valorUnitario <= 0) {
         mostrarFeedbackErro('Valor unitário inválido. Insira um valor maior que zero.');
         return;
     }
 
-    // CRIAÇÃO DO ITEM E ADIÇÃO (se chegou aqui, passou nas validações)
+    // CRIAÇÃO DO ITEM E ADIÇÃO
     const categoria = inferirCategoria(descricao);
     const novoItem = { descricao, quantidade, valorUnitario, categoria };
     compras.push(novoItem);

@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minhas Compras de Mercado</title>
     <link rel="stylesheet" href="styles.css">
+    <!--  Font Awesome (opcional, para ícones melhores) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body>
     <header>
         <div class="logo-container">
-            <img src="imagens/carrinho.png" alt="Carrinho de Compras" class="logo">
+            <!--  Substitua por um ícone de carrinho de compras mais específico -->
+            <i class="fas fa-shopping-cart logo"></i>
             <div class="coin coin1"></div>
             <div class="coin coin2"></div>
             <div class="coin coin3"></div>
@@ -18,15 +22,19 @@
     </header>
 
     <div class="container">
-    <!-- Painel de Total (movido para cima) -->
+    <!-- Painel de Total -->
     <div id="painelTotal">
         Total: R$ <span id="totalValorPainel">0,00</span>
     </div>
 
-    <!-- Campo de Orçamento -->
+    <!-- Campo de Orçamento e Barra de Progresso -->
     <div class="input-group">
         <label for="orcamento">Orçamento (R$):</label>
         <input type="text" id="orcamento" placeholder="200,00">
+    </div>
+    <div class="progress-bar-container">
+        <progress id="barraProgresso" value="0" max="100"></progress>
+        <span id="porcentagemProgresso">0%</span>
     </div>
 
     <!-- Entrada por Voz com Autocomplete -->
@@ -96,36 +104,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
     <script src="script.js" defer></script>
     <script>
-        (function() {
-            function c() {
-                var b = a.contentDocument || a.contentWindow.document;
-                if (b) {
-                    var d = b.createElement('script');
-                    d.innerHTML = "window.__CF$cv$params={r:'91ae26e31b21bf84',t:'MTc0MTA1NzUyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
-                    b.getElementsByTagName('head')[0].appendChild(d);
-                }
-            }
-            if (document.body) {
-                var a = document.createElement('iframe');
-                a.height = 1;
-                a.width = 1;
-                a.style.position = 'absolute';
-                a.style.top = 0;
-                a.style.left = 0;
-                a.style.border = 'none';
-                a.style.visibility = 'hidden';
-                document.body.appendChild(a);
-                if ('loading' !== document.readyState) c();
-                else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c);
-                else {
-                    var e = document.onreadystatechange || function() {};
-                    document.onreadystatechange = function(b) {
-                        e(b);
-                        'loading' !== document.readyState && (document.onreadystatechange = e, c());
-                    };
-                }
-            }
-        })();
+      //Removido, pois não há utilidade neste trecho.
     </script>
 </body>
 </html>

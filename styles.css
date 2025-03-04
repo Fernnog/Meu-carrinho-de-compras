@@ -22,6 +22,11 @@ header {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.logo {
+    width: 150px; /* Define uma largura fixa */
+    height: auto; /* Mantém a proporção original da imagem */
+}
+
 .logo-container {
     position: relative;
     margin: 0 auto;

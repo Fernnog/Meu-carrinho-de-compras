@@ -30,7 +30,7 @@ header {
 .logo-container {
     position: relative;
     margin: 0 auto;
-    width: 150px; /* Ajuste conforme necessário para o ícone */
+    width: 100%; /* Ajuste conforme necessário para o ícone */
     height: auto; /*  Altura automática para manter a proporção */
 }
 

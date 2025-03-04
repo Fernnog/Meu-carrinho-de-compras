@@ -94,23 +94,24 @@ function parseNumber(texto) {
     return numerosEscritos[texto] || parseInt(texto) || 1; // Default to 1 if not recognized
 }
 
-// Processar texto ditado e adicionar item (atualizado para quantidade, item, unidade e preço unitário, calculando total automaticamente)
+// Processar texto ditado e adicionar item (atualizado para comandos naturais e baseados em marcadores)
 vozInput.addEventListener('change', () => {
     const texto = vozInput.value.toLowerCase().trim();
-    const regex = /^(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s*([\w\s]+(?:de\s[\w\s]+)?)(?:\s*(kg|quilos?|unidades?|biscoitos?))?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/;
-    const match = texto.match(regex);
-    if (match) {
-        // Extrair e converter quantidade (numérica ou escrita)
-        const quantidadeStr = match[1];
+
+    // Tentativa 1: Comando com marcadores (e.g., "quantidade dois descrição biscoitos preço 2,35")
+    const regexMarcadores = /^quantidade\s+(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s+descrição\s+([\w\s]+)\s+preço\s+([\d,]+)(?:\s*(reais|real))?$/;
+    const matchMarcadores = texto.match(regexMarcadores);
+
+    // Tentativa 2: Comando natural (e.g., "dois biscoitos por 2,35 cada" ou "2 kg de arroz a 2,35 reais")
+    const regexNatural = /^(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s*([\w\s]+(?:de\s[\w\s]+)?)(?:\s*(kg|quilos?|unidades?|biscoitos?))?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/;
+    const matchNatural = texto.match(regexNatural);
+
+    if (matchMarcadores) {
+        // Processar comando com marcadores
+        const quantidadeStr = matchMarcadores[1];
         const quantidade = parseNumber(quantidadeStr);
-
-        // Extrair descrição, limpando unidades e "de"
-        let descricao = match[2].trim();
-        descricao = descricao.replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').trim(); // Remover unidades no final
-        descricao = descricao.replace(/^de\s/, '').trim(); // Remover "de" no início, se presente
-
-        // Extrair preço unitário
-        const unitPriceStr = match[4].replace(',', '.');
+        const descricao = matchMarcadores[2].trim();
+        const unitPriceStr = matchMarcadores[3].replace(',', '.');
         const unitPrice = parseFloat(unitPriceStr) || 0;
 
         if (unitPrice <= 0) {
@@ -118,9 +119,37 @@ vozInput.addEventListener('change', () => {
             return;
         }
 
-        // Calcular valor total (quantidade × preço unitário)
         const valor = quantidade * unitPrice;
+        const categoria = inferirCategoria(descricao);
+        const novoItem = { descricao, quantidade, valor, categoria };
+        compras.push(novoItem);
+        atualizarLista();
+        salvarDados();
+        vozInput.value = '';
+        vozFeedback.textContent = '';
+        animarMoedas();
+        animarItemAdicionado(novoItem);
+        vozFeedback.classList.add('success-fade');
+        setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
+    } else if (matchNatural) {
+        // Processar comando natural
+        const quantidadeStr = matchNatural[1];
+        const quantidade = parseNumber(quantidadeStr);
 
+        // Extrair descrição, limpando unidades e "de"
+        let descricao = matchNatural[2].trim();
+        descricao = descricao.replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').trim(); // Remover unidades no final
+        descricao = descricao.replace(/^de\s/, '').trim(); // Remover "de" no início, se presente
+
+        const unitPriceStr = matchNatural[4].replace(',', '.');
+        const unitPrice = parseFloat(unitPriceStr) || 0;
+
+        if (unitPrice <= 0) {
+            alert('Valor unitário inválido. Insira um valor maior que zero.');
+            return;
+        }
+
+        const valor = quantidade * unitPrice;
         const categoria = inferirCategoria(descricao);
         const novoItem = { descricao, quantidade, valor, categoria };
         compras.push(novoItem);
@@ -133,7 +162,7 @@ vozInput.addEventListener('change', () => {
         vozFeedback.classList.add('success-fade');
         setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
     } else {
-        alert('Ditado não reconhecido. Tente novamente, por exemplo: "2 kg de arroz a 2,35 reais", "Dois biscoitos por 2,35 reais cada", ou "1 quilo de feijão por 5,50 reais".');
+        alert('Ditado não reconhecido. Tente novamente, por exemplo: "quantidade dois descrição biscoitos preço 2,35" ou "2 kg de arroz a 2,35 reais".');
         vozFeedback.classList.add('error-fade');
         setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
     }

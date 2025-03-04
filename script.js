@@ -119,9 +119,7 @@ vozInput.addEventListener('change', () => {
             return;
         }
 
-        const valor = quantidade * unitPrice; // 2 * 2.35 = 4.70
-        const categoria = inferirCategoria(descricao); // "Alimentos" para "biscoitos"
-        const novoItem = { descricao, quantidade, valor, categoria };
+        const novoItem = { descricao, quantidade, unitPrice, categoria: inferirCategoria(descricao) };
         compras.push(novoItem);
         atualizarLista();
         salvarDados();
@@ -146,9 +144,7 @@ vozInput.addEventListener('change', () => {
             return;
         }
 
-        const valor = quantidade * unitPrice;
-        const categoria = inferirCategoria(descricao);
-        const novoItem = { descricao, quantidade, valor, categoria };
+        const novoItem = { descricao, quantidade, unitPrice, categoria: inferirCategoria(descricao) };
         compras.push(novoItem);
         atualizarLista();
         salvarDados();
@@ -183,7 +179,7 @@ function animarMoedas() {
 // Animação para item adicionado na lista
 function animarItemAdicionado(item) {
     const li = document.createElement('li');
-    li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valor.toFixed(2).replace('.', ',')} (${item.categoria})`;
+    li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.unitPrice.toFixed(2).replace('.', ',')} (${item.categoria})`;
     li.classList.add('fade-in');
     li.addEventListener('click', () => editarItem(compras.length - 1));
     listaCompras.appendChild(li);
@@ -196,11 +192,11 @@ function atualizarLista(filtrados = compras) {
     let total = 0;
     filtrados.forEach((item, index) => {
         const li = document.createElement('li');
-        li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valor.toFixed(2).replace('.', ',')} (${item.categoria})`;
+        li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.unitPrice.toFixed(2).replace('.', ',')} (${item.categoria})`;
         li.classList.add('fade-in');
         li.addEventListener('click', () => editarItem(index));
         listaCompras.appendChild(li);
-        total += item.quantidade * item.valor;
+        total += item.quantidade * item.unitPrice; // Usar unitPrice para calcular o total
     });
     totalValorPainel.textContent = total.toFixed(2).replace('.', ',');
     totalValor.textContent = total.toFixed(2).replace('.', ',');
@@ -235,7 +231,7 @@ function editarItem(index) {
     const item = compras[index];
     editarDescricao.value = item.descricao;
     editarQuantidade.value = item.quantidade;
-    editarValor.value = item.valor.toFixed(2).replace('.', ',');
+    editarValor.value = item.unitPrice.toFixed(2).replace('.', ','); // Mostrar preço unitário
     modalEdicao.style.display = 'block';
     modalEdicao.classList.add('slide-in');
 }
@@ -245,13 +241,13 @@ salvarEdicaoBtn.addEventListener('click', () => {
     if (itemEditandoIndex !== null) {
         const novaDescricao = editarDescricao.value;
         const novaQuantidade = parseInt(editarQuantidade.value) || 1;
-        const novoValor = parseFloat(editarValor.value.replace(',', '.')) || 0;
-        if (novoValor <= 0) {
-            alert('Valor inválido. Insira um valor maior que zero.');
+        const novoUnitPrice = parseFloat(editarValor.value.replace(',', '.')) || 0;
+        if (novoUnitPrice <= 0) {
+            alert('Preço unitário inválido. Insira um valor maior que zero.');
             return;
         }
         const novaCategoria = inferirCategoria(novaDescricao);
-        compras[itemEditandoIndex] = { descricao: novaDescricao, quantidade: novaQuantidade, valor: novoValor, categoria: novaCategoria };
+        compras[itemEditandoIndex] = { descricao: novaDescricao, quantidade: novaQuantidade, unitPrice: novoUnitPrice, categoria: novaCategoria };
         modalEdicao.style.display = 'none';
         modalEdicao.classList.remove('slide-in');
         atualizarLista();
@@ -357,8 +353,8 @@ relatorioBtn.addEventListener('click', () => {
     const wb = XLSX.utils.book_new();
     const wsName = "RelatorioCompras";
     const wsData = [
-        ["Descrição", "Quantidade", "Valor (R$)", "Categoria"],
-        ...compras.map(item => [item.descricao, item.quantidade, item.valor.toFixed(2), item.categoria])
+        ["Descrição", "Quantidade", "Preço Unitário (R$)", "Categoria"],
+        ...compras.map(item => [item.descricao, item.quantidade, item.unitPrice.toFixed(2), item.categoria])
     ];
     const ws = XLSX.utils.aoa_to_sheet(wsData);
     XLSX.utils.book_append_sheet(wb, ws, wsName);

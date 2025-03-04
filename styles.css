@@ -16,8 +16,9 @@ body {
 /* Estilização do Header e Ilustração */
 header {
     text-align: center;
-    margin-bottom: 30px;
-    padding: 20px;
+    margin: 0 auto; /* Centraliza o header horizontalmente */
+    width: 100%; /* Garante que ocupe toda a largura */
+    padding: 10px 0; /* Reduz padding para evitar deslocamentos em telas pequenas */
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -25,8 +26,10 @@ header {
 /* Estilização específica para o logotipo, isolada de outros elementos */
 .logo-container {
     width: 100%;
-    text-align: center; /* Centraliza o conteúdo (logotipo) */
+    text-align: center; /* Centraliza o logotipo */
     padding: 10px 0; /* Espaço vertical fixo */
+    display: flex; /* Usa flex para melhor controle */
+    justify-content: center; /* Centraliza o logotipo horizontalmente */
 }
 
 .logo {
@@ -43,16 +46,6 @@ header {
     text-align: center; /* Centraliza o logotipo */
     padding: 10px 0; /* Espaço vertical fixo, sem impactar outros elementos */
     line-height: 0; /* Remove espaçamento vertical extra dentro do contêiner */
-}
-
-/* Header ajustado para evitar impactos na página */
-header {
-    text-align: center; /* Mantém centralização */
-    margin-bottom: 30px; /* Espaço padrão abaixo do header */
-    padding: 20px; /* Espaço interno padrão */
-    background-color: #fff; /* Fundo original */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra padrão */
-    width: 100%; /* Garante que o header ocupe toda a largura */
 }
 
 /* Título (h1) para evitar interferência com o logotipo */
@@ -81,6 +74,10 @@ h1 {
 
     h1 {
         font-size: 1.2rem; /* Ajusta ainda mais o título */
+    }
+
+    header {
+        padding: 5px 0; /* Reduz ainda mais o padding em telas muito pequenas */
     }
 }
 
@@ -662,9 +659,46 @@ select:focus {
     color: #666; /* Cor mais suave */
 }
 
-/* Aviso discreto para importação */
-.import-info {
-    font-size: 0.8rem; /* Tamanho pequeno */
-    color: #666; /* Cor discreta */
-    margin-left: 10px; /* Espaço à esquerda do botão */
-    }
+/* Estilização do Modal de Aviso de Importação */
+.import-info-modal {
+    display: none;
+}
+
+.import-info-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* Posiciona mais alto na tela */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 300px; /* Tamanho pequeno para pop-up discreta */
+    border-radius: 5px;
+    text-align: center;
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+}
+
+.import-info-content p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#continuarImport {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #FFD700;
+    color: #333;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+#continuarImport:hover {
+    background-color: #E6C200;
+}
+
+#continuarImport:active {
+    background-color: #D4A600;
+    transform: scale(0.98);
+}

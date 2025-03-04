@@ -67,7 +67,6 @@
         <div class="buttons">
             <button id="exportar" class="button-gold">Exportar</button>
             <button id="importar" class="button-gold">Importar</button>
-            <small class="import-info">Planilha deve ter: Descrição, Quantidade, Valor Unitário (R$), Categoria.</small>
             <button id="limparLista" class="button-red">Limpar Lista</button>
             <button id="relatorio" class="button-gold">Relatório Excel</button>
         </div>
@@ -93,6 +92,15 @@
                     <button class="mic-btn" onclick="document.getElementById('editarValor').focus()">🎤</button>
                 </div>
                 <button id="salvarEdicao" class="button-green">Salvar</button>
+            </div>
+        </div>
+
+        <!-- Novo Modal para Aviso de Importação -->
+        <div id="modalImportInfo" class="modal import-info-modal">
+            <div class="modal-content import-info-content">
+                <span class="fechar-modal">×</span>
+                <p>Planilha deve ter: Descrição, Quantidade, Valor Unitário (R$), Categoria.</p>
+                <button id="continuarImport" class="button-gold">Continuar</button>
             </div>
         </div>
     </div>

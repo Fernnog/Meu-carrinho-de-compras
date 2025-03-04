@@ -1,6 +1,8 @@
 // Seleção de elementos do DOM
 const vozInput = document.querySelector('#vozInput');
 const ativarVoz = document.querySelector('#ativarVoz');
+const inserirItem = document.querySelector('#inserirItem');
+const limparInput = document.querySelector('#limparInput');
 const vozFeedback = document.querySelector('.voz-feedback');
 const listaCompras = document.querySelector('#listaCompras');
 const totalValorPainel = document.querySelector('#totalValorPainel');
@@ -23,13 +25,10 @@ const coins = document.querySelectorAll('.coin');
 let compras = JSON.parse(localStorage.getItem('compras')) || [];
 let itemEditandoIndex = null;
 
-// Lista de sugestões para autocomplete (expandidas)
+// Lista de sugestões para autocomplete
 const listaSugestoes = [
-    // Limpeza
     "Água sanitária", "Detergente", "Vassoura", "Saco de lixo",
-    // Alimentos
     "Arroz", "Feijão", "Macarrão", "Banana", "Tomate", "Biscoito",
-    // Higiene Pessoal
     "Sabonete", "Shampoo", "Desodorante", "Papel higiênico"
 ];
 
@@ -57,31 +56,17 @@ new Awesomplete(vozInput, {
     },
     replace: function(text) {
         const before = this.input.value.match(/^.+,\s*|/)[0];
-        if (before) {
-            this.input.value = before + text + ", ";
-        } else {
-            this.input.value = text;
-        }
+        this.input.value = before ? before + text + ", " : text;
     },
     minChars: 1
 });
 
-// Feedback visual no input de voz
+// Feedback visual em tempo real
 vozInput.addEventListener('input', () => {
-    vozFeedback.textContent = vozInput.value;
-    if (vozInput.value) {
-        vozFeedback.classList.add('fade-in');
-        vozFeedback.style.display = 'block';
-        setTimeout(() => {
-            vozFeedback.style.opacity = '1';
-        }, 10);
-    } else {
-        vozFeedback.style.opacity = '0';
-        setTimeout(() => {
-            vozFeedback.style.display = 'none';
-            vozFeedback.classList.remove('fade-in');
-        }, 300);
-    }
+    vozFeedback.textContent = vozInput.value || '';
+    vozFeedback.style.display = vozInput.value ? 'block' : 'none';
+    vozFeedback.style.opacity = vozInput.value ? '1' : '0';
+    vozFeedback.classList.toggle('fade-in', !!vozInput.value);
 });
 
 // Função auxiliar para converter números escritos em português para numéricos
@@ -91,30 +76,28 @@ function parseNumber(texto) {
         'seis': 6, 'sete': 7, 'oito': 8, 'nove': 9, 'dez': 10
     };
     texto = texto.toLowerCase().trim();
-    return numerosEscritos[texto] || parseInt(texto) || 1; // Default para 1 se não reconhecido
+    return numerosEscritos[texto] || parseInt(texto) || 1;
 }
 
-// Processar texto ditado e adicionar item
-vozInput.addEventListener('change', () => {
-    const texto = vozInput.value.toLowerCase().trim();
+// Função para processar e adicionar item
+function processarEAdicionarItem(texto) {
+    texto = texto.toLowerCase().trim();
 
-    // Regex para comando com marcadores: "quantidade 2 descrição biscoitos preço 2,35"
     const regexMarcadores = /^quantidade\s+(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s+descrição\s+([\w\s]+)\s+preço\s+([\d,\s]+)(?:\s*(reais|real))?$/;
     const matchMarcadores = texto.match(regexMarcadores);
 
-    // Regex para comando natural: "dois biscoitos por 2,35 cada"
     const regexNatural = /^(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s*([\w\s]+(?:de\s[\w\s]+)?)(?:\s*(kg|quilos?|unidades?|biscoitos?))?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/;
     const matchNatural = texto.match(regexNatural);
 
     if (matchMarcadores) {
-        const quantidadeStr = matchMarcadores[1];
-        const quantidade = parseNumber(quantidadeStr);
+        const quantidade = parseNumber(matchMarcadores[1]);
         const descricao = matchMarcadores[2].trim();
-        const unitPriceStr = matchMarcadores[3].replace(/\s/g, '').replace(',', '.');
-        const valorUnitario = parseFloat(unitPriceStr) || 0;
+        const valorUnitario = parseFloat(matchMarcadores[3].replace(/\s/g, '').replace(',', '.')) || 0;
 
         if (valorUnitario <= 0) {
             alert('Valor unitário inválido. Insira um valor maior que zero.');
+            vozFeedback.classList.add('error-fade');
+            setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
             return;
         }
 
@@ -124,22 +107,20 @@ vozInput.addEventListener('change', () => {
         atualizarLista();
         salvarDados();
         vozInput.value = '';
-        vozFeedback.textContent = '';
+        vozFeedback.textContent = 'Item adicionado!';
+        vozFeedback.classList.add('success-fade');
         animarMoedas();
         animarItemAdicionado(novoItem);
-        vozFeedback.classList.add('success-fade');
         setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
     } else if (matchNatural) {
-        const quantidadeStr = matchNatural[1];
-        const quantidade = parseNumber(quantidadeStr);
-        let descricao = matchNatural[2].trim();
-        descricao = descricao.replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').trim();
-        descricao = descricao.replace(/^de\s/, '').trim();
-        const unitPriceStr = matchNatural[4].replace(/\s/g, '').replace(',', '.');
-        const valorUnitario = parseFloat(unitPriceStr) || 0;
+        const quantidade = parseNumber(matchNatural[1]);
+        let descricao = matchNatural[2].trim().replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').replace(/^de\s/, '').trim();
+        const valorUnitario = parseFloat(matchNatural[4].replace(/\s/g, '').replace(',', '.')) || 0;
 
         if (valorUnitario <= 0) {
             alert('Valor unitário inválido. Insira um valor maior que zero.');
+            vozFeedback.classList.add('error-fade');
+            setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
             return;
         }
 
@@ -149,23 +130,51 @@ vozInput.addEventListener('change', () => {
         atualizarLista();
         salvarDados();
         vozInput.value = '';
-        vozFeedback.textContent = '';
+        vozFeedback.textContent = 'Item adicionado!';
+        vozFeedback.classList.add('success-fade');
         animarMoedas();
         animarItemAdicionado(novoItem);
-        vozFeedback.classList.add('success-fade');
         setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
     } else {
         alert('Ditado não reconhecido. Tente: "quantidade 2 descrição biscoitos preço 2,35" ou "dois biscoitos por 2,35 cada".');
+        vozFeedback.textContent = 'Erro: comando inválido!';
+        vozFeedback.classList.add('error-fade');
+        setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
+    }
+}
+
+// Botão de microfone para ativar ditado
+ativarVoz.addEventListener('click', () => {
+    vozInput.focus();
+    vozFeedback.textContent = 'Fale agora...';
+    vozFeedback.classList.add('fade-in');
+});
+
+// Botão para inserir item
+inserirItem.addEventListener('click', () => {
+    if (vozInput.value.trim()) {
+        processarEAdicionarItem(vozInput.value);
+    } else {
+        vozFeedback.textContent = 'Digite ou dite algo primeiro!';
         vozFeedback.classList.add('error-fade');
         setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
     }
 });
 
-ativarVoz.addEventListener('click', () => {
-    vozInput.focus(); // Ativa o Gboard para ditado em dispositivos Android
+// Botão para limpar o campo
+limparInput.addEventListener('click', () => {
+    vozInput.value = '';
+    vozFeedback.textContent = 'Campo limpo!';
+    vozFeedback.classList.add('success-fade');
+    vozFeedback.style.opacity = '1';
+    setTimeout(() => {
+        vozFeedback.classList.remove('success-fade');
+        vozFeedback.style.opacity = '0';
+        vozFeedback.style.display = 'none';
+    }, 1000);
 });
 
-// Animação das moedas ao adicionar item
+// Animação das moedas
 function animarMoedas() {
     coins.forEach((coin, index) => {
         coin.style.opacity = 0;
@@ -176,7 +185,7 @@ function animarMoedas() {
     });
 }
 
-// Animação para item adicionado na lista
+// Animação para item adicionado
 function animarItemAdicionado(item) {
     const li = document.createElement('li');
     li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valorUnitario.toFixed(2).replace('.', ',')} (${item.categoria})`;
@@ -186,7 +195,7 @@ function animarItemAdicionado(item) {
     setTimeout(() => li.classList.remove('fade-in'), 500);
 }
 
-// Atualizar lista de compras com filtro por categoria
+// Atualizar lista de compras
 function atualizarLista(filtrados = compras) {
     listaCompras.innerHTML = '';
     let total = 0;
@@ -203,11 +212,11 @@ function atualizarLista(filtrados = compras) {
     verificarOrcamento(total);
 }
 
-// Verificar e alertar sobre orçamento
+// Verificar orçamento
 function verificarOrcamento(total) {
     const orcamento = parseFloat(orcamentoInput.value.replace(',', '.')) || 0;
     if (total > orcamento && orcamento > 0) {
-        alert('Orçamento excedido! Total ultrapassou R$ ' + orcamento.toFixed(2).replace('.', ','));
+        alert('Orçamento excedido! Total: R$ ' + total.toFixed(2).replace('.', ','));
         document.querySelector('#painelTotal').style.backgroundColor = '#ffcccc';
         setTimeout(() => document.querySelector('#painelTotal').style.backgroundColor = '#f8f8f8', 2000);
     }
@@ -225,7 +234,7 @@ categoriaFiltro.addEventListener('change', () => {
     atualizarLista(filtrados);
 });
 
-// Editar item no modal
+// Editar item
 function editarItem(index) {
     itemEditandoIndex = index;
     const item = compras[index];
@@ -374,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
     animarMoedas();
 });
 
-// Função auxiliar para carregar dados salvos e converter formato antigo
+// Função auxiliar para carregar dados e converter formato antigo
 function carregarDados() {
     const orcamentoSalvo = localStorage.getItem('orcamento');
     if (orcamentoSalvo) orcamentoInput.value = orcamentoSalvo.replace('.', ',');
@@ -388,5 +397,5 @@ function carregarDados() {
     salvarDados();
 }
 
-// Estilos dinâmicos para animações (necessitam de CSS correspondente)
-vozFeedback.classList.add('fade-in'); // Para animações de entrada/saída
+// Estilos dinâmicos para animações
+vozFeedback.classList.add('fade-in');

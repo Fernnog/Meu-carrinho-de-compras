@@ -153,7 +153,7 @@ select:focus {
 .voice-input {
     position: relative;
 }
-/* Centralizar os botões na mesma linha */
+/* Centralizar os botões na mesma linha (JÁ ESTÁ CORRETO) */
 .voice-input-wrapper {
     display: flex;
     align-items: center;
@@ -165,12 +165,13 @@ select:focus {
 #vozInput {
     flex: 1; /* O campo de texto ocupa o espaço restante */
     min-width: 0; /* Importante para o flexbox funcionar corretamente */
-    /*  max-width: 300px;  <-- REMOVA o max-width se quiser que o campo cresça */
 }
 
 
-#ativarVoz, .mic-btn {
-    background-color: #007bff;
+/* Estilos GERAIS para os botões (mantém o tamanho grande) */
+#ativarVoz, .mic-btn, .action-btn {
+    /* ... (seus estilos atuais, como padding: 24px, width: 96px, etc.) ... */
+     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
@@ -193,20 +194,7 @@ select:focus {
     background-color: #003d7a;
 }
 
-.action-btn {
-    border: none;
-    border-radius: 5px;
-    padding: 24px; /* Dobro do original */
-    width: 96px; /* Dobro do original */
-    height: 96px;
-    cursor: pointer;
-    font-size: 1.5rem; /* Um tique maior */
-    transition: background-color 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+/* Estilos mantidos para os botões individuais */
 #inserirItem {
     background-color: #007bff; /* Igual ao microfone */
     color: white;
@@ -529,7 +517,84 @@ select:focus {
 }
 
 
+/* MEDIA QUERY para telas menores (ajusta o tamanho dos botões) */
+@media (max-width: 480px) {  /* Você pode ajustar o valor 480px se necessário */
+    #ativarVoz, .mic-btn, .action-btn {
+        /* Reduz o tamanho */
+        padding: 12px;  /* Metade do tamanho original */
+        width: 60px;   /* Ajuste conforme necessário */
+        height: 60px;  /* Ajuste conforme necessário */
+        font-size: 1rem; /* Reduz a fonte */
+    }
+      .voice-input-wrapper {
+        gap: 2px; /* Reduz o espaço entre os botões */
+    }
+        /* Ajustes para responsividade do botão de excluir */
+     #listaCompras .excluir-item {
+        padding: 4px 8px; /* Ainda menor em telas menores */
+        font-size: 0.9rem; /* Ainda menor em telas menores */
+    }
+
+        .container {
+        padding: 5px;
+    }
+
+    label {
+        font-size: 0.85rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    button {
+        padding: 8px;
+        font-size: 1rem;
+    }
+
+    .voice-input-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #vozInput {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+
+    #painelTotal {
+        font-size: 2rem; /* Ajuste proporcional */
+    }
+
+    .button-green, .button-gold, .button-red {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    #listaCompras li {
+        font-size: 1rem;
+        padding: 8px;
+    }
+
+    .logo-container {
+        width: 150px;
+        height: 150px;
+    }
+
+    /* Ajuste para o ícone em telas menores */
+    .fa-shopping-cart.logo {
+        font-size: 4rem; /* Menor em telas menores */
+    }
+
+    .coin {
+        width: 15px;
+        height: 15px;
+    }
+
+}
+
 /* Media Queries para Responsividade */
+/*Acima estão as alterações*/
 @media (max-width: 768px) {
     .container {
         max-width: 100%;
@@ -596,79 +661,10 @@ select:focus {
     }
 }
 
-@media (max-width: 480px) {
-    .container {
-        padding: 5px;
-    }
 
-    label {
-        font-size: 0.85rem;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    select,
-    button {
-        padding: 8px;
-        font-size: 1rem;
-    }
-
-    .voice-input-wrapper {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    #vozInput {
-        width: 100%;
-        margin-bottom: 5px;
-    }
-
-    #ativarVoz, .action-btn {
-        width: 80px; /* Ajuste para telas pequenas, ainda maior que antes */
-        height: 80px;
-        padding: 20px;
-        font-size: 1.25rem;
-    }
-
-    #painelTotal {
-        font-size: 2rem; /* Ajuste proporcional */
-    }
-
-    .button-green, .button-gold, .button-red {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-    }
-
-    #listaCompras li {
-        font-size: 1rem;
-        padding: 8px;
-    }
-
-    .logo-container {
-        width: 150px;
-        height: 150px;
-    }
-
-    /* Ajuste para o ícone em telas menores */
-    .fa-shopping-cart.logo {
-        font-size: 4rem; /* Menor em telas menores */
-    }
-
-    .coin {
-        width: 15px;
-        height: 15px;
-    }
-
-    /* Ajustes para responsividade do botão de excluir */
-    #listaCompras .excluir-item {
-        padding: 3px 6px;  /* Ainda menor em telas menores */
-        font-size: 0.8rem; /* Ainda menor em telas menores */
-        margin-left: 5px; /* Reduz o espaço em telas menores */
-    }
-}
 
 /* Animações Adicionais */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
-                                                                                                                                                                                                                                                                                                                                                                                                         }
+}

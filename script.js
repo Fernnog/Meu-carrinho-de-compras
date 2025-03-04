@@ -84,24 +84,41 @@ vozInput.addEventListener('input', () => {
     }
 });
 
-// Processar texto ditado e adicionar item (atualizado para quantidade, item e preço unitário, calculando total automaticamente)
+// Função auxiliar para converter números escritos em português para numéricos
+function parseNumber(texto) {
+    const numerosEscritos = {
+        'um': 1, 'dois': 2, 'três': 3, 'quatro': 4, 'cinco': 5,
+        'seis': 6, 'sete': 7, 'oito': 8, 'nove': 9, 'dez': 10
+    };
+    texto = texto.toLowerCase().trim();
+    return numerosEscritos[texto] || parseInt(texto) || 1; // Default to 1 if not recognized
+}
+
+// Processar texto ditado e adicionar item (atualizado para quantidade, item, unidade e preço unitário, calculando total automaticamente)
 vozInput.addEventListener('change', () => {
     const texto = vozInput.value.toLowerCase().trim();
-    const regex = /^(\d+)\s*([\w\s]+)(?:\s*(quilos?|unidades?|biscoitos?)?)?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/;
+    const regex = /^(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s*([\w\s]+(?:de\s[\w\s]+)?)(?:\s*(kg|quilos?|unidades?|biscoitos?))?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/;
     const match = texto.match(regex);
     if (match) {
-        const quantidadeStr = match[1] || '1'; // Quantidade, default to 1 if not specified
-        const quantidade = parseInt(quantidadeStr) || 1; // Ensure valid quantity
-        const descricao = match[2].trim().replace(/(quilos?|unidades?|biscoitos?)$/, '').trim(); // Clean up unit words
-        const unitPriceStr = match[3].replace(',', '.'); // Convert to decimal for calculation
-        const unitPrice = parseFloat(unitPriceStr) || 0; // Unit price per item
+        // Extrair e converter quantidade (numérica ou escrita)
+        const quantidadeStr = match[1];
+        const quantidade = parseNumber(quantidadeStr);
+
+        // Extrair descrição, limpando unidades e "de"
+        let descricao = match[2].trim();
+        descricao = descricao.replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').trim(); // Remover unidades no final
+        descricao = descricao.replace(/^de\s/, '').trim(); // Remover "de" no início, se presente
+
+        // Extrair preço unitário
+        const unitPriceStr = match[4].replace(',', '.');
+        const unitPrice = parseFloat(unitPriceStr) || 0;
 
         if (unitPrice <= 0) {
             alert('Valor unitário inválido. Insira um valor maior que zero.');
             return;
         }
 
-        // Calculate total value (quantidade × unitPrice)
+        // Calcular valor total (quantidade × preço unitário)
         const valor = quantidade * unitPrice;
 
         const categoria = inferirCategoria(descricao);
@@ -116,7 +133,7 @@ vozInput.addEventListener('change', () => {
         vozFeedback.classList.add('success-fade');
         setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
     } else {
-        alert('Ditado não reconhecido. Tente novamente, por exemplo: "2 biscoitos a 2,35 reais" ou "1 quilo de arroz por 5,50 reais cada".');
+        alert('Ditado não reconhecido. Tente novamente, por exemplo: "2 kg de arroz a 2,35 reais", "Dois biscoitos por 2,35 reais cada", ou "1 quilo de feijão por 5,50 reais".');
         vozFeedback.classList.add('error-fade');
         setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
     }

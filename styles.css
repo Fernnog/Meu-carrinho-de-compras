@@ -26,57 +26,33 @@ header {
     position: relative;
     margin: 0 auto;
     width: 180px; /* Ajuste conforme necessário para o ícone */
-    height: 180px; /* Ajuste conforme necessário para o ícone */
+    height: auto; /*  Altura automática para manter a proporção */
 }
 
 /* Estilo para o ícone (Font Awesome) */
 .fa-shopping-cart.logo {
     display: block;
-    font-size: 5rem; /* Ajuste o tamanho conforme necessário */
+    font-size: 4rem; /* Ajuste o tamanho conforme necessário */
     margin: 0 auto;
-    color: #006400; /* Cor do ícone */
+    margin-bottom: 0.5rem; /* Espaço entre o ícone e o título */
+    color: #006400; /* Cor do ícone (verde escuro) */
 }
 
 
 h1 {
     font-size: 1.8rem;
-    margin-top: 10px;
+     /* margin-top: 10px; <-- Remova o margin-top se o ícone já estiver espaçado */
     color: #006400;
 }
 
-/* Animações das Moedas */
-@keyframes float {
-    0% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-10px) rotate(180deg); }
-    100% { transform: translateY(0) rotate(360deg); }
-}
-
-.coin {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: #FFD700;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    opacity: 0;
-}
-
-.coin1 {
-    left: 20px;
-    top: 20px;
-    animation: float 2s ease-in-out infinite;
-}
-
-.coin2 {
-    left: 40px;
-    top: 30px;
-    animation: float 2s ease-in-out infinite 0.5s;
-}
-
-.coin3 {
-    left: 60px;
-    top: 10px;
-    animation: float 2s ease-in-out infinite 1s;
+/* Linha delicada */
+.header-divider {
+    border: none; /* Remove a borda padrão */
+    border-top: 1px solid #8cb0c0; /* Linha fina com a cor desejada */
+    margin: 1rem 0; /* Espaço acima e abaixo da linha */
+    width: 80%; /* Largura da linha (opcional) */
+    margin-left: auto; /* Centraliza a linha */
+    margin-right: auto;
 }
 
 /* Estilização do Container Principal */
@@ -194,18 +170,18 @@ select:focus {
     background-color: #003d7a;
 }
 
-/* Estilos mantidos para os botões individuais */
+/* Estilos para o botão inserir, mudando a cor */
 #inserirItem {
-    background-color: #007bff; /* Igual ao microfone */
+   /* background-color: #007bff;  <-- Remova ou comente esta linha */
+    background-color: #8cb0c0; /* Nova cor de fundo */
     color: white;
 }
 
 #inserirItem:hover {
-    background-color: #0056b3;
+    background-color: #7aa7b7; /* Um tom um pouco mais escuro para o hover */
 }
-
 #inserirItem:active {
-    background-color: #003d7a;
+     background-color: #6895a5;
 }
 
 #limparInput {
@@ -586,10 +562,7 @@ select:focus {
         font-size: 4rem; /* Menor em telas menores */
     }
 
-    .coin {
-        width: 15px;
-        height: 15px;
-    }
+     /*Retirado as moedas*/
 
 }
 
@@ -648,23 +621,4 @@ select:focus {
         margin: 5% auto;
         width: 95%;
         padding: 15px;
-    }
-
-    .modal-content input, .mic-btn, .action-btn {
-        padding: 10px;
-        font-size: 1rem;
-    }
-     /* Ajustes para responsividade do botão de excluir */
-     #listaCompras .excluir-item {
-        padding: 4px 8px; /* Ainda menor em telas menores */
-        font-size: 0.9rem; /* Ainda menor em telas menores */
-    }
-}
-
-
-
-/* Animações Adicionais */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+    

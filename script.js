@@ -20,6 +20,9 @@ const importarBtn = document.querySelector('#importar');
 const limparListaBtn = document.querySelector('#limparLista');
 const relatorioBtn = document.querySelector('#relatorio');
 const coins = document.querySelectorAll('.coin');
+const barraProgresso = document.getElementById('barraProgresso'); // Adicionado
+const porcentagemProgresso = document.getElementById('porcentagemProgresso'); // Adicionado
+
 
 // Lista de compras e índice do item sendo editado
 let compras = JSON.parse(localStorage.getItem('compras')) || [];
@@ -95,11 +98,15 @@ function processarEAdicionarItem(texto) {
         const valorUnitario = parseFloat(matchMarcadores[3].replace(/\s/g, '').replace(',', '.')) || 0;
 
         if (valorUnitario <= 0) {
-            alert('Valor unitário inválido. Insira um valor maior que zero.');
-            vozFeedback.classList.add('error-fade');
-            setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
+            // Mensagem de erro mais detalhada
+            mostrarFeedbackErro('Valor unitário inválido. Insira um valor maior que zero.');
             return;
         }
+         if (!descricao) {
+            mostrarFeedbackErro('A descrição não pode estar vazia.');
+            return;
+        }
+
 
         const categoria = inferirCategoria(descricao);
         const novoItem = { descricao, quantidade, valorUnitario, categoria };
@@ -107,20 +114,21 @@ function processarEAdicionarItem(texto) {
         atualizarLista();
         salvarDados();
         vozInput.value = '';
-        vozFeedback.textContent = 'Item adicionado!';
-        vozFeedback.classList.add('success-fade');
+        mostrarFeedbackSucesso('Item adicionado!');
         animarMoedas();
-        animarItemAdicionado(novoItem);
-        setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
+        // animarItemAdicionado(novoItem);  // Removido: a animação agora é feita em atualizarLista
     } else if (matchNatural) {
         const quantidade = parseNumber(matchNatural[1]);
         let descricao = matchNatural[2].trim().replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').replace(/^de\s/, '').trim();
         const valorUnitario = parseFloat(matchNatural[4].replace(/\s/g, '').replace(',', '.')) || 0;
 
+         if (!descricao) {
+            mostrarFeedbackErro('A descrição não pode estar vazia.');
+            return;
+        }
+
         if (valorUnitario <= 0) {
-            alert('Valor unitário inválido. Insira um valor maior que zero.');
-            vozFeedback.classList.add('error-fade');
-            setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
+            mostrarFeedbackErro('Valor unitário inválido. Insira um valor maior que zero.');
             return;
         }
 
@@ -130,24 +138,35 @@ function processarEAdicionarItem(texto) {
         atualizarLista();
         salvarDados();
         vozInput.value = '';
-        vozFeedback.textContent = 'Item adicionado!';
-        vozFeedback.classList.add('success-fade');
+        mostrarFeedbackSucesso('Item adicionado!');
         animarMoedas();
-        animarItemAdicionado(novoItem);
-        setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
+        // animarItemAdicionado(novoItem); // Removido: a animação agora é feita em atualizarLista
+
     } else {
-        alert('Ditado não reconhecido. Tente: "quantidade 2 descrição biscoitos preço 2,35" ou "dois biscoitos por 2,35 cada".');
-        vozFeedback.textContent = 'Erro: comando inválido!';
-        vozFeedback.classList.add('error-fade');
-        setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
+        // Mensagem de erro mais detalhada
+        mostrarFeedbackErro('Ditado não reconhecido. Tente: "quantidade 2 descrição biscoitos preço 2,35" ou "dois biscoitos por 2,35 cada".');
     }
+}
+
+// Funções auxiliares para feedback (evita repetição)
+function mostrarFeedbackSucesso(mensagem) {
+    vozFeedback.textContent = mensagem;
+    vozFeedback.classList.add('success-fade');
+    vozFeedback.classList.remove('error-fade'); // Garante que a classe de erro seja removida
+    setTimeout(() => vozFeedback.classList.remove('success-fade'), 2000);
+}
+
+function mostrarFeedbackErro(mensagem) {
+    vozFeedback.textContent = mensagem;
+    vozFeedback.classList.add('error-fade');
+    vozFeedback.classList.remove('success-fade'); // Garante que a classe de sucesso seja removida
+    setTimeout(() => vozFeedback.classList.remove('error-fade'), 2000);
 }
 
 // Botão de microfone para ativar ditado
 ativarVoz.addEventListener('click', () => {
     vozInput.focus();
-    vozFeedback.textContent = 'Fale agora...';
-    vozFeedback.classList.add('fade-in');
+     mostrarFeedbackSucesso('Fale agora...');
 });
 
 // Botão para inserir item
@@ -155,23 +174,15 @@ inserirItem.addEventListener('click', () => {
     if (vozInput.value.trim()) {
         processarEAdicionarItem(vozInput.value);
     } else {
-        vozFeedback.textContent = 'Digite ou dite algo primeiro!';
-        vozFeedback.classList.add('error-fade');
-        setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
+        mostrarFeedbackErro('Digite ou dite algo primeiro!');
     }
 });
 
 // Botão para limpar o campo
 limparInput.addEventListener('click', () => {
     vozInput.value = '';
-    vozFeedback.textContent = 'Campo limpo!';
-    vozFeedback.classList.add('success-fade');
-    vozFeedback.style.opacity = '1';
-    setTimeout(() => {
-        vozFeedback.classList.remove('success-fade');
-        vozFeedback.style.opacity = '0';
-        vozFeedback.style.display = 'none';
-    }, 1000);
+    mostrarFeedbackSucesso('Campo limpo!'); // Usa a função auxiliar
+
 });
 
 // Animação das moedas
@@ -185,46 +196,90 @@ function animarMoedas() {
     });
 }
 
-// Animação para item adicionado
-function animarItemAdicionado(item) {
-    const li = document.createElement('li');
-    li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valorUnitario.toFixed(2).replace('.', ',')} (${item.categoria})`;
-    li.classList.add('fade-in');
-    li.addEventListener('click', () => editarItem(compras.length - 1));
-    listaCompras.appendChild(li);
-    setTimeout(() => li.classList.remove('fade-in'), 500);
-}
-
 // Atualizar lista de compras
 function atualizarLista(filtrados = compras) {
     listaCompras.innerHTML = '';
     let total = 0;
     filtrados.forEach((item, index) => {
         const li = document.createElement('li');
-        li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valorUnitario.toFixed(2).replace('.', ',')} (${item.categoria})`;
+        // Adiciona o botão de excluir
+        li.innerHTML = `${item.quantidade}x ${item.descricao} - R$ ${item.valorUnitario.toFixed(2).replace('.', ',')} (${item.categoria}) 
+            <button class="excluir-item" data-index="${index}">🗑️</button>`; // Usa o ícone de lixeira
+
         li.classList.add('fade-in');
-        li.addEventListener('click', () => editarItem(index));
+        li.addEventListener('click', (event) => {
+            // Verifica se o clique NÃO foi no botão de excluir
+            if (!event.target.classList.contains('excluir-item')) {
+                editarItem(index);
+            }
+        });
         listaCompras.appendChild(li);
         total += item.quantidade * item.valorUnitario;
+        setTimeout(() => li.style.opacity = 1, 10); // Animação de fade-in
+
     });
     totalValorPainel.textContent = total.toFixed(2).replace('.', ',');
     totalValor.textContent = total.toFixed(2).replace('.', ',');
     verificarOrcamento(total);
 }
 
-// Verificar orçamento
+// Event listener para o botão de excluir (usando delegação de eventos)
+listaCompras.addEventListener('click', (event) => {
+    if (event.target.classList.contains('excluir-item')) {
+        const index = parseInt(event.target.dataset.index);
+         if (confirm(`Tem certeza que deseja excluir "${compras[index].descricao}"?`)) {
+            compras.splice(index, 1);
+            atualizarLista();
+            salvarDados();
+            animarMoedas(); // Anima as moedas após excluir
+            mostrarFeedbackSucesso('Item excluído!');  // Feedback visual
+        }
+    }
+});
+
+
+
+// Verificar orçamento e atualizar barra de progresso
 function verificarOrcamento(total) {
     const orcamento = parseFloat(orcamentoInput.value.replace(',', '.')) || 0;
+    let porcentagem = 0;
+
+    if (orcamento > 0) {
+        porcentagem = (total / orcamento) * 100;
+        porcentagem = Math.min(porcentagem, 100); // Garante que não ultrapasse 100%
+        barraProgresso.value = porcentagem;
+        porcentagemProgresso.textContent = `${porcentagem.toFixed(1)}%`;
+
+        // Muda a cor da barra dependendo da porcentagem
+        if (porcentagem > 80) {
+          barraProgresso.style.setProperty('--webkit-progress-value-background-color', 'orange', 'important');
+        }
+         if (porcentagem >= 100) {
+           barraProgresso.style.setProperty('--webkit-progress-value-background-color', 'red', 'important');
+        }
+        if(porcentagem <= 80){
+          barraProgresso.style.setProperty('--webkit-progress-value-background-color', '#4CAF50', 'important');
+        }
+
+    } else {
+        barraProgresso.value = 0; // Zera a barra se não houver orçamento
+        porcentagemProgresso.textContent = "0%";
+        barraProgresso.style.setProperty('--webkit-progress-value-background-color', '#4CAF50', 'important');
+    }
+
     if (total > orcamento && orcamento > 0) {
-        alert('Orçamento excedido! Total: R$ ' + total.toFixed(2).replace('.', ','));
+        // alert('Orçamento excedido! Total: R$ ' + total.toFixed(2).replace('.', ',')); // Removido o alert.
         document.querySelector('#painelTotal').style.backgroundColor = '#ffcccc';
         setTimeout(() => document.querySelector('#painelTotal').style.backgroundColor = '#f8f8f8', 2000);
     }
 }
 
+
 // Salvar dados no localStorage
 function salvarDados() {
     localStorage.setItem('compras', JSON.stringify(compras));
+    localStorage.setItem('orcamento', orcamentoInput.value); // Salva o orçamento também
+
 }
 
 // Filtrar por categoria
@@ -248,13 +303,24 @@ function editarItem(index) {
 // Salvar edição
 salvarEdicaoBtn.addEventListener('click', () => {
     if (itemEditandoIndex !== null) {
-        const novaDescricao = editarDescricao.value;
+        const novaDescricao = editarDescricao.value.trim();
         const novaQuantidade = parseInt(editarQuantidade.value) || 1;
         const novoValorUnitario = parseFloat(editarValor.value.replace(',', '.')) || 0;
+
+        // Validações mais robustas
+        if (!novaDescricao) {
+            alert('A descrição não pode estar vazia.');
+            return;
+        }
+        if (novaQuantidade <= 0) {
+            alert('A quantidade deve ser maior que zero.');
+            return;
+        }
         if (novoValorUnitario <= 0) {
             alert('Valor unitário inválido. Insira um valor maior que zero.');
             return;
         }
+
         const novaCategoria = inferirCategoria(novaDescricao);
         compras[itemEditandoIndex] = { descricao: novaDescricao, quantidade: novaQuantidade, valorUnitario: novoValorUnitario, categoria: novaCategoria };
         modalEdicao.style.display = 'none';
@@ -262,8 +328,7 @@ salvarEdicaoBtn.addEventListener('click', () => {
         atualizarLista();
         salvarDados();
         animarMoedas();
-        vozFeedback.classList.add('success-fade');
-        setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
+        mostrarFeedbackSucesso('Item editado!');
     }
 });
 
@@ -300,9 +365,7 @@ exportarBtn.addEventListener('click', () => {
     downloadAnchor.click();
     downloadAnchor.remove();
     animarMoedas();
-    vozFeedback.textContent = 'Dados exportados com sucesso!';
-    vozFeedback.classList.add('success-fade');
-    setTimeout(() => vozFeedback.classList.remove('success-fade') && (vozFeedback.textContent = ''), 2000);
+     mostrarFeedbackSucesso('Dados exportados com sucesso!');
 });
 
 // Importar dados de JSON
@@ -319,14 +382,9 @@ importarBtn.addEventListener('click', () => {
                 atualizarLista();
                 salvarDados();
                 animarMoedas();
-                vozFeedback.textContent = 'Dados importados com sucesso!';
-                vozFeedback.classList.add('success-fade');
-                setTimeout(() => vozFeedback.classList.remove('success-fade') && (vozFeedback.textContent = ''), 2000);
+                mostrarFeedbackSucesso('Dados importados!');
             } catch (error) {
-                alert('Erro ao importar o arquivo JSON.');
-                vozFeedback.textContent = 'Erro ao importar!';
-                vozFeedback.classList.add('error-fade');
-                setTimeout(() => vozFeedback.classList.remove('error-fade') && (vozFeedback.textContent = ''), 2000);
+                mostrarFeedbackErro('Erro ao importar o arquivo JSON.');
             }
         };
         reader.readAsText(file);
@@ -344,19 +402,14 @@ limparListaBtn.addEventListener('click', () => {
         atualizarLista();
         salvarDados();
         animarMoedas();
-        vozFeedback.textContent = 'Lista limpa com sucesso!';
-        vozFeedback.classList.add('success-fade');
-        setTimeout(() => vozFeedback.classList.remove('success-fade') && (vozFeedback.textContent = ''), 2000);
+         mostrarFeedbackSucesso('Lista limpa!');
     }
 });
 
 // Gerar relatório Excel
 relatorioBtn.addEventListener('click', () => {
     if (compras.length === 0) {
-        alert('Não há dados para gerar o relatório.');
-        vozFeedback.textContent = 'Nenhum dado para relatório!';
-        vozFeedback.classList.add('error-fade');
-        setTimeout(() => vozFeedback.classList.remove('error-fade') && (vozFeedback.textContent = ''), 2000);
+        mostrarFeedbackErro('Não há dados para gerar o relatório.');
         return;
     }
     const wb = XLSX.utils.book_new();
@@ -371,17 +424,27 @@ relatorioBtn.addEventListener('click', () => {
     const nomeArquivo = `${dataAtual}_RelatorioCompras.xlsx`;
     XLSX.writeFile(wb, nomeArquivo);
     animarMoedas();
-    vozFeedback.textContent = 'Relatório gerado com sucesso!';
-    vozFeedback.classList.add('success-fade');
-    setTimeout(() => vozFeedback.classList.remove('success-fade') && (vozFeedback.textContent = ''), 2000);
+    mostrarFeedbackSucesso('Relatório gerado!');
 });
 
-// Carregar dados ao iniciar
+// Carregar dados ao iniciar e atualizar a barra de progresso
 document.addEventListener('DOMContentLoaded', () => {
     carregarDados();
     atualizarLista();
     animarMoedas();
+      // Atualiza a barra de progresso ao carregar a página
+    const total = parseFloat(totalValor.textContent.replace(',', '.')) || 0;
+    verificarOrcamento(total);
 });
+
+// Atualiza a barra de progresso sempre que o orçamento for alterado
+orcamentoInput.addEventListener('input', () => {
+        const total = parseFloat(totalValor.textContent.replace(',', '.')) || 0;
+        verificarOrcamento(total);
+        salvarDados(); // Para salvar no local storage.
+    });
+
+
 
 // Função auxiliar para carregar dados e converter formato antigo
 function carregarDados() {

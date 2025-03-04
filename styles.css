@@ -22,50 +22,49 @@ header {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilização do contêiner do logotipo */
-.logo-container {
-    width: 100%;
-    text-align: center;
-    padding: 10px 0;
-}
-
-/* Estilização do logotipo */
+/* Estilização específica para o logotipo, sem impactar outros elementos */
 .logo {
-    width: 150px;
-    max-width: 100%;
-    height: auto;
-    display: block;
+    width: 150px; /* Tamanho fixo para o logotipo */
+    height: auto; /* Mantém a proporção original */
+    display: block; /* Garante centralização correta dentro do contêiner */
+    margin: 0 auto; /* Centraliza horizontalmente o logotipo */
 }
 
-/* Media queries para dispositivos móveis (Android) */
+/* Mantém o contêiner do logotipo intacto */
+.logo-container {
+    width: 100%; /* Contêiner usa toda a largura disponível */
+    text-align: center; /* Centraliza o logotipo */
+    padding: 10px 0; /* Espaço vertical para melhor visualização, sem alterar o layout */
+}
+
+/* Garante que o título (h1) e outros elementos no header não sejam afetados */
+header {
+    text-align: center; /* Mantém o alinhamento central do header */
+    margin-bottom: 30px; /* Espaço padrão abaixo do header */
+    padding: 20px; /* Espaço interno padrão, sem mudanças */
+    background-color: #fff; /* Mantém o fundo original */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra padrão, sem alterações */
+}
+
+/* Media queries para dispositivos móveis (Android), ajustando apenas o logotipo */
 @media (max-width: 768px) {
     .logo {
-        width: 120px;
+        width: 120px; /* Reduz o logotipo em telas médias */
     }
 }
 
 @media (max-width: 480px) {
     .logo {
-        width: 100px;
+        width: 100px; /* Reduz ainda mais em telas pequenas */
     }
 }
 
 /* Ajuste para alta densidade de pixels (DPI alto, comum em Android) */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .logo {
-        width: 100px;
-        max-width: 100%;
+        width: 100px; /* Reduz o logotipo em dispositivos com alta densidade */
         height: auto;
     }
-
-
-/* Estilo para o ícone (Font Awesome) */
-.fa-shopping-cart.logo {
-    display: block;
-    font-size: 4rem; /* Ajuste o tamanho conforme necessário */
-    margin: 0 auto;
-    margin-bottom: 0.5rem; /* Espaço entre o ícone e o título */
-    color: #006400; /* Cor do ícone (verde escuro) */
 }
 
 

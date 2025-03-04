@@ -26,11 +26,13 @@
 
         <!-- Entrada por Voz com Autocomplete -->
         <div class="input-group voice-input">
-            <label for="vozInput">Adicionar Item (Dite: "2 quilos de arroz por 5 reais"):</label>
-            <input type="text" id="vozInput" placeholder="Dite aqui ou digite...">
-            <button id="ativarVoz" class="mic-btn">🎤</button>
-            <button id="inserirItem" class="action-btn">⬇️</button>
-            <button id="limparInput" class="action-btn">−</button>
+            <label for="vozInput">Adicionar Item (Ex.: "quantidade 2 descrição biscoito preço 2,50"):</label>
+            <div class="voice-input-wrapper">
+                <input type="text" id="vozInput" placeholder="Dite aqui ou digite...">
+                <button id="ativarVoz" class="mic-btn">🎤</button>
+                <button id="inserirItem" class="action-btn">⬇️</button>
+                <button id="limparInput" class="action-btn">−</button>
+            </div>
             <div class="voz-feedback"></div>
         </div>
 
@@ -125,4 +127,4 @@
         })();
     </script>
 </body>
-                        </html>
+</html>

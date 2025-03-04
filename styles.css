@@ -159,6 +159,38 @@ select:focus {
     background-color: #003d7a;
 }
 
+.action-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 1.25rem;
+    transition: background-color 0.3s;
+    margin-left: 5px;
+}
+
+.action-btn:hover {
+    background-color: #218838;
+}
+
+.action-btn:active {
+    background-color: #1e7e34;
+}
+
+#limparInput {
+    background-color: #dc3545;
+}
+
+#limparInput:hover {
+    background-color: #c82333;
+}
+
+#limparInput:active {
+    background-color: #bd2130;
+}
+
 .voz-feedback {
     background-color: #90EE90;
     padding: 8px;
@@ -170,9 +202,19 @@ select:focus {
     transition: opacity 0.3s ease-in-out;
 }
 
-.voz-feedback:not(:empty) {
+.voz-feedback.fade-in {
     display: block;
     opacity: 1;
+}
+
+.voz-feedback.success-fade {
+    background-color: #28a745;
+    color: white;
+}
+
+.voz-feedback.error-fade {
+    background-color: #dc3545;
+    color: white;
 }
 
 /* Filtro por Categoria */
@@ -430,7 +472,7 @@ select:focus {
         padding: 15px;
     }
 
-    .modal-content input, .mic-btn {
+    .modal-content input, .mic-btn, .action-btn {
         padding: 10px;
         font-size: 1rem;
     }
@@ -488,4 +530,4 @@ select:focus {
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
-    }
+}

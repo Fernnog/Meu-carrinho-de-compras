@@ -28,7 +28,7 @@ const listaSugestoes = [
     // Limpeza
     "Água sanitária", "Detergente", "Vassoura", "Saco de lixo",
     // Alimentos
-    "Arroz", "Feijão", "Macarrão", "Banana", "Tomate",
+    "Arroz", "Feijão", "Macarrão", "Banana", "Tomate", "Biscoito",
     // Higiene Pessoal
     "Sabonete", "Shampoo", "Desodorante", "Papel higiênico"
 ];
@@ -36,7 +36,7 @@ const listaSugestoes = [
 // Função para inferir categoria automaticamente
 function inferirCategoria(descricao) {
     const categorias = {
-        Alimentos: ['arroz', 'feijão', 'macarrão', 'banana', 'tomate'],
+        Alimentos: ['arroz', 'feijão', 'macarrão', 'banana', 'tomate', 'biscoito'],
         Limpeza: ['água sanitária', 'detergente', 'vassoura', 'saco de lixo'],
         'Higiene Pessoal': ['sabonete', 'shampoo', 'desodorante', 'papel higiênico']
     };
@@ -84,15 +84,22 @@ vozInput.addEventListener('input', () => {
     }
 });
 
-// Processar texto ditado e adicionar item
+// Processar texto ditado e adicionar item (versão atualizada para comandos mais naturais)
 vozInput.addEventListener('change', () => {
-    const texto = vozInput.value.toLowerCase();
-    const regex = /(\d+)\s*(quilos?|unidades?)?\s*de\s*([\w\s]+)\s*por\s*([\d,]+)\s*(reais)?/;
+    const texto = vozInput.value.toLowerCase().trim();
+    // Regex atualizada para aceitar comandos como "Biscoito por 2,30", "2 Biscoitos por 4,60", etc.
+    const regex = /^([\w\s]+)(?:\s*(\d+)\s*(quilos?|unidades?|biscoitos?)?)?\s*(?:por|no valor de)\s*([\d,]+)(?:\s*(reais|real))?$/;
     const match = texto.match(regex);
     if (match) {
-        const quantidade = parseInt(match[1]);
-        const descricao = match[3].trim();
-        const valor = parseFloat(match[4].replace(',', '.'));
+        const descricao = match[1].trim();
+        const quantidadeStr = match[2] || '1'; // Quantidade padrão 1 se não especificada
+        const quantidade = parseInt(quantidadeStr) || 1; // Garante quantidade válida
+        const valorStr = match[4].replace(',', '.');
+        const valor = parseFloat(valorStr) || 0;
+        if (valor <= 0) {
+            alert('Valor inválido. Insira um valor maior que zero.');
+            return;
+        }
         const categoria = inferirCategoria(descricao);
         const novoItem = { descricao, quantidade, valor, categoria };
         compras.push(novoItem);
@@ -100,10 +107,14 @@ vozInput.addEventListener('change', () => {
         salvarDados();
         vozInput.value = '';
         vozFeedback.textContent = '';
-        animarMoedas(); // Animação ao adicionar item
-        animarItemAdicionado(novoItem); // Animação para o item adicionado
+        animarMoedas();
+        animarItemAdicionado(novoItem);
+        vozFeedback.classList.add('success-fade'); // Feedback visual de sucesso
+        setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
     } else {
-        alert('Ditado não reconhecido. Tente novamente, por exemplo: "2 quilos de arroz por 5 reais".');
+        alert('Ditado não reconhecido. Tente novamente, por exemplo: "Biscoito por 2,30", "2 Biscoitos por 4,60", ou "Shampoo por 10,50 reais".');
+        vozFeedback.classList.add('error-fade');
+        setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
     }
 });
 
@@ -125,8 +136,9 @@ function animarMoedas() {
 // Animação para item adicionado na lista
 function animarItemAdicionado(item) {
     const li = document.createElement('li');
-    li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valor.toFixed(2)} (${item.categoria})`;
+    li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valor.toFixed(2).replace('.', ',')} (${item.categoria})`;
     li.classList.add('fade-in');
+    li.addEventListener('click', () => editarItem(compras.length - 1));
     listaCompras.appendChild(li);
     setTimeout(() => li.classList.remove('fade-in'), 500);
 }
@@ -137,7 +149,7 @@ function atualizarLista(filtrados = compras) {
     let total = 0;
     filtrados.forEach((item, index) => {
         const li = document.createElement('li');
-        li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valor.toFixed(2)} (${item.categoria})`;
+        li.textContent = `${item.quantidade}x ${item.descricao} - R$ ${item.valor.toFixed(2).replace('.', ',')} (${item.categoria})`;
         li.classList.add('fade-in');
         li.addEventListener('click', () => editarItem(index));
         listaCompras.appendChild(li);
@@ -153,8 +165,8 @@ function verificarOrcamento(total) {
     const orcamento = parseFloat(orcamentoInput.value.replace(',', '.')) || 0;
     if (total > orcamento && orcamento > 0) {
         alert('Orçamento excedido! Total ultrapassou R$ ' + orcamento.toFixed(2).replace('.', ','));
-        painelTotal.style.backgroundColor = '#ffcccc'; // Feedback visual
-        setTimeout(() => painelTotal.style.backgroundColor = '#f8f8f8', 2000);
+        document.querySelector('#painelTotal').style.backgroundColor = '#ffcccc';
+        setTimeout(() => document.querySelector('#painelTotal').style.backgroundColor = '#f8f8f8', 2000);
     }
 }
 
@@ -187,6 +199,10 @@ salvarEdicaoBtn.addEventListener('click', () => {
         const novaDescricao = editarDescricao.value;
         const novaQuantidade = parseInt(editarQuantidade.value) || 1;
         const novoValor = parseFloat(editarValor.value.replace(',', '.')) || 0;
+        if (novoValor <= 0) {
+            alert('Valor inválido. Insira um valor maior que zero.');
+            return;
+        }
         const novaCategoria = inferirCategoria(novaDescricao);
         compras[itemEditandoIndex] = { descricao: novaDescricao, quantidade: novaQuantidade, valor: novoValor, categoria: novaCategoria };
         modalEdicao.style.display = 'none';
@@ -194,6 +210,8 @@ salvarEdicaoBtn.addEventListener('click', () => {
         atualizarLista();
         salvarDados();
         animarMoedas();
+        vozFeedback.classList.add('success-fade');
+        setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
     }
 });
 
@@ -229,6 +247,10 @@ exportarBtn.addEventListener('click', () => {
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
+    animarMoedas();
+    vozFeedback.textContent = 'Dados exportados com sucesso!';
+    vozFeedback.classList.add('success-fade');
+    setTimeout(() => vozFeedback.classList.remove('success-fade') && (vozFeedback.textContent = ''), 2000);
 });
 
 // Importar dados de JSON
@@ -245,8 +267,14 @@ importarBtn.addEventListener('click', () => {
                 atualizarLista();
                 salvarDados();
                 animarMoedas();
+                vozFeedback.textContent = 'Dados importados com sucesso!';
+                vozFeedback.classList.add('success-fade');
+                setTimeout(() => vozFeedback.classList.remove('success-fade') && (vozFeedback.textContent = ''), 2000);
             } catch (error) {
                 alert('Erro ao importar o arquivo JSON.');
+                vozFeedback.textContent = 'Erro ao importar!';
+                vozFeedback.classList.add('error-fade');
+                setTimeout(() => vozFeedback.classList.remove('error-fade') && (vozFeedback.textContent = ''), 2000);
             }
         };
         reader.readAsText(file);
@@ -263,6 +291,10 @@ limparListaBtn.addEventListener('click', () => {
         compras = [];
         atualizarLista();
         salvarDados();
+        animarMoedas();
+        vozFeedback.textContent = 'Lista limpa com sucesso!';
+        vozFeedback.classList.add('success-fade');
+        setTimeout(() => vozFeedback.classList.remove('success-fade') && (vozFeedback.textContent = ''), 2000);
     }
 });
 
@@ -270,6 +302,9 @@ limparListaBtn.addEventListener('click', () => {
 relatorioBtn.addEventListener('click', () => {
     if (compras.length === 0) {
         alert('Não há dados para gerar o relatório.');
+        vozFeedback.textContent = 'Nenhum dado para relatório!';
+        vozFeedback.classList.add('error-fade');
+        setTimeout(() => vozFeedback.classList.remove('error-fade') && (vozFeedback.textContent = ''), 2000);
         return;
     }
     const wb = XLSX.utils.book_new();
@@ -283,17 +318,24 @@ relatorioBtn.addEventListener('click', () => {
     const dataAtual = new Date().toISOString().slice(0, 10).replace(/-/g, '');
     const nomeArquivo = `${dataAtual}_RelatorioCompras.xlsx`;
     XLSX.writeFile(wb, nomeArquivo);
+    animarMoedas();
+    vozFeedback.textContent = 'Relatório gerado com sucesso!';
+    vozFeedback.classList.add('success-fade');
+    setTimeout(() => vozFeedback.classList.remove('success-fade') && (vozFeedback.textContent = ''), 2000);
 });
 
 // Carregar dados ao iniciar
 document.addEventListener('DOMContentLoaded', () => {
     carregarDados();
     atualizarLista();
-    animarMoedas(); // Inicia animações das moedas
+    animarMoedas();
 });
 
 // Função auxiliar para carregar dados salvos
 function carregarDados() {
     const orcamentoSalvo = localStorage.getItem('orcamento');
     if (orcamentoSalvo) orcamentoInput.value = orcamentoSalvo.replace('.', ',');
-                             }
+}
+
+// Estilos dinâmicos para animações (necessitam de CSS correspondente)
+vozFeedback.classList.add('fade-in'); // Para animações de entrada/saída

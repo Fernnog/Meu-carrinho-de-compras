@@ -91,27 +91,27 @@ function parseNumber(texto) {
         'seis': 6, 'sete': 7, 'oito': 8, 'nove': 9, 'dez': 10
     };
     texto = texto.toLowerCase().trim();
-    return numerosEscritos[texto] || parseInt(texto) || 1; // Default to 1 if not recognized
+    return numerosEscritos[texto] || parseInt(texto) || 1; // Default para 1 se não reconhecido
 }
 
 // Processar texto ditado e adicionar item (atualizado para comandos naturais e baseados em marcadores)
 vozInput.addEventListener('change', () => {
     const texto = vozInput.value.toLowerCase().trim();
 
-    // Tentativa 1: Comando com marcadores (e.g., "quantidade dois descrição biscoitos preço 2,35")
-    const regexMarcadores = /^quantidade\s+(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s+descrição\s+([\w\s]+)\s+preço\s+([\d,]+)(?:\s*(reais|real))?$/;
+    // Regex para comando com marcadores: "quantidade 2 descrição biscoitos preço 2,35"
+    const regexMarcadores = /^quantidade\s+(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s+descrição\s+([\w\s]+)\s+preço\s+([\d,\s]+)(?:\s*(reais|real))?$/;
     const matchMarcadores = texto.match(regexMarcadores);
 
-    // Tentativa 2: Comando natural (e.g., "dois biscoitos por 2,35 cada" ou "2 kg de arroz a 2,35 reais")
+    // Regex para comando natural (e.g., "dois biscoitos por 2,35 cada" ou "2 kg de arroz a 2,35 reais")
     const regexNatural = /^(\d+|um|dois|três|quatro|cinco|seis|sete|oito|nove|dez)\s*([\w\s]+(?:de\s[\w\s]+)?)(?:\s*(kg|quilos?|unidades?|biscoitos?))?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/;
     const matchNatural = texto.match(regexNatural);
 
     if (matchMarcadores) {
         // Processar comando com marcadores
         const quantidadeStr = matchMarcadores[1];
-        const quantidade = parseNumber(quantidadeStr);
-        const descricao = matchMarcadores[2].trim();
-        const unitPriceStr = matchMarcadores[3].replace(',', '.');
+        const quantidade = parseNumber(quantidadeStr); // Converte "2" ou "dois" para número
+        const descricao = matchMarcadores[2].trim(); // "biscoitos"
+        const unitPriceStr = matchMarcadores[3].replace(/\s/g, '').replace(',', '.'); // "2,35" -> "2.35"
         const unitPrice = parseFloat(unitPriceStr) || 0;
 
         if (unitPrice <= 0) {
@@ -119,8 +119,8 @@ vozInput.addEventListener('change', () => {
             return;
         }
 
-        const valor = quantidade * unitPrice;
-        const categoria = inferirCategoria(descricao);
+        const valor = quantidade * unitPrice; // 2 * 2.35 = 4.70
+        const categoria = inferirCategoria(descricao); // "Alimentos" para "biscoitos"
         const novoItem = { descricao, quantidade, valor, categoria };
         compras.push(novoItem);
         atualizarLista();
@@ -135,13 +135,10 @@ vozInput.addEventListener('change', () => {
         // Processar comando natural
         const quantidadeStr = matchNatural[1];
         const quantidade = parseNumber(quantidadeStr);
-
-        // Extrair descrição, limpando unidades e "de"
         let descricao = matchNatural[2].trim();
-        descricao = descricao.replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').trim(); // Remover unidades no final
-        descricao = descricao.replace(/^de\s/, '').trim(); // Remover "de" no início, se presente
-
-        const unitPriceStr = matchNatural[4].replace(',', '.');
+        descricao = descricao.replace(/(kg|quilos?|unidades?|biscoitos?)$/, '').trim();
+        descricao = descricao.replace(/^de\s/, '').trim();
+        const unitPriceStr = matchNatural[4].replace(/\s/g, '').replace(',', '.');
         const unitPrice = parseFloat(unitPriceStr) || 0;
 
         if (unitPrice <= 0) {
@@ -162,7 +159,7 @@ vozInput.addEventListener('change', () => {
         vozFeedback.classList.add('success-fade');
         setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
     } else {
-        alert('Ditado não reconhecido. Tente novamente, por exemplo: "quantidade dois descrição biscoitos preço 2,35" ou "2 kg de arroz a 2,35 reais".');
+        alert('Ditado não reconhecido. Tente novamente, por exemplo: "quantidade 2 descrição biscoitos preço 2,35" ou "dois biscoitos por 2,35 cada".');
         vozFeedback.classList.add('error-fade');
         setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
     }

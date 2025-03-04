@@ -84,22 +84,26 @@ vozInput.addEventListener('input', () => {
     }
 });
 
-// Processar texto ditado e adicionar item (versão atualizada para comandos mais naturais)
+// Processar texto ditado e adicionar item (atualizado para quantidade, item e preço unitário, calculando total automaticamente)
 vozInput.addEventListener('change', () => {
     const texto = vozInput.value.toLowerCase().trim();
-    // Regex atualizada para aceitar comandos como "Biscoito por 2,30", "2 Biscoitos por 4,60", etc.
-    const regex = /^([\w\s]+)(?:\s*(\d+)\s*(quilos?|unidades?|biscoitos?)?)?\s*(?:por|no valor de)\s*([\d,]+)(?:\s*(reais|real))?$/;
+    const regex = /^(\d+)\s*([\w\s]+)(?:\s*(quilos?|unidades?|biscoitos?)?)?\s*(?:a|por)\s*([\d,]+)(?:\s*(reais|real))?(?:\s*cada)?$/;
     const match = texto.match(regex);
     if (match) {
-        const descricao = match[1].trim();
-        const quantidadeStr = match[2] || '1'; // Quantidade padrão 1 se não especificada
-        const quantidade = parseInt(quantidadeStr) || 1; // Garante quantidade válida
-        const valorStr = match[4].replace(',', '.');
-        const valor = parseFloat(valorStr) || 0;
-        if (valor <= 0) {
-            alert('Valor inválido. Insira um valor maior que zero.');
+        const quantidadeStr = match[1] || '1'; // Quantidade, default to 1 if not specified
+        const quantidade = parseInt(quantidadeStr) || 1; // Ensure valid quantity
+        const descricao = match[2].trim().replace(/(quilos?|unidades?|biscoitos?)$/, '').trim(); // Clean up unit words
+        const unitPriceStr = match[3].replace(',', '.'); // Convert to decimal for calculation
+        const unitPrice = parseFloat(unitPriceStr) || 0; // Unit price per item
+
+        if (unitPrice <= 0) {
+            alert('Valor unitário inválido. Insira um valor maior que zero.');
             return;
         }
+
+        // Calculate total value (quantidade × unitPrice)
+        const valor = quantidade * unitPrice;
+
         const categoria = inferirCategoria(descricao);
         const novoItem = { descricao, quantidade, valor, categoria };
         compras.push(novoItem);
@@ -109,10 +113,10 @@ vozInput.addEventListener('change', () => {
         vozFeedback.textContent = '';
         animarMoedas();
         animarItemAdicionado(novoItem);
-        vozFeedback.classList.add('success-fade'); // Feedback visual de sucesso
+        vozFeedback.classList.add('success-fade');
         setTimeout(() => vozFeedback.classList.remove('success-fade'), 1000);
     } else {
-        alert('Ditado não reconhecido. Tente novamente, por exemplo: "Biscoito por 2,30", "2 Biscoitos por 4,60", ou "Shampoo por 10,50 reais".');
+        alert('Ditado não reconhecido. Tente novamente, por exemplo: "2 biscoitos a 2,35 reais" ou "1 quilo de arroz por 5,50 reais cada".');
         vozFeedback.classList.add('error-fade');
         setTimeout(() => vozFeedback.classList.remove('error-fade'), 1000);
     }

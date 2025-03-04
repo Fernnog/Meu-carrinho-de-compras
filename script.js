@@ -19,7 +19,7 @@ const exportarBtn = document.querySelector('#exportar');
 const importarBtn = document.querySelector('#importar');
 const limparListaBtn = document.querySelector('#limparLista');
 const relatorioBtn = document.querySelector('#relatorio');
-const coins = document.querySelectorAll('.coin');
+//Removido, pois não será mais utilizado const coins = document.querySelectorAll('.coin');
 const barraProgresso = document.getElementById('barraProgresso');
 const porcentagemProgresso = document.getElementById('porcentagemProgresso');
 
@@ -138,7 +138,7 @@ function processarEAdicionarItem(texto) {
     salvarDados();
     vozInput.value = '';
     mostrarFeedbackSucesso('Item adicionado!');
-    animarMoedas();
+    //Removido, pois as moedas foram retiradas animarMoedas();
 }
 
 
@@ -180,8 +180,8 @@ limparInput.addEventListener('click', () => {
 
 });
 
-// Animação das moedas
-function animarMoedas() {
+//Removido, pois não será mais utiizado, animação das moedas
+/*function animarMoedas() {
     coins.forEach((coin, index) => {
         coin.style.opacity = 0;
         setTimeout(() => {
@@ -189,7 +189,7 @@ function animarMoedas() {
             coin.style.opacity = 1;
         }, index * 200);
     });
-}
+}*/
 
 // Atualizar lista de compras (COM BOTÃO DE EXCLUIR E CORREÇÃO DO EVENTO DE CLIQUE)
 function atualizarLista(filtrados = compras) {
@@ -229,7 +229,7 @@ listaCompras.addEventListener('click', (event) => {
             compras.splice(index, 1);
             atualizarLista();
             salvarDados();
-            animarMoedas();
+            //Removido, pois as moedas foram retiradas animarMoedas();
             mostrarFeedbackSucesso('Item excluído!');
         }
     }
@@ -326,7 +326,7 @@ salvarEdicaoBtn.addEventListener('click', () => {
         modalEdicao.classList.remove('slide-in');
         atualizarLista();
         salvarDados();
-        animarMoedas();
+        //Removido, pois as moedas foram retiradas animarMoedas();
         mostrarFeedbackSucesso('Item editado!');
     }
 });
@@ -363,7 +363,7 @@ exportarBtn.addEventListener('click', () => {
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
-    animarMoedas();
+    //Removido, pois as moedas foram retiradas animarMoedas();
      mostrarFeedbackSucesso('Dados exportados com sucesso!');
 });
 
@@ -380,7 +380,7 @@ importarBtn.addEventListener('click', () => {
                 compras = JSON.parse(e.target.result);
                 atualizarLista();
                 salvarDados();
-                animarMoedas();
+                //Removido, pois as moedas foram retiradas animarMoedas();
                 mostrarFeedbackSucesso('Dados importados!');
             } catch (error) {
                 mostrarFeedbackErro('Erro ao importar o arquivo JSON.');
@@ -400,7 +400,7 @@ limparListaBtn.addEventListener('click', () => {
         compras = [];
         atualizarLista();
         salvarDados();
-        animarMoedas();
+        //Removido, pois as moedas foram retiradas animarMoedas();
          mostrarFeedbackSucesso('Lista limpa!');
     }
 });
@@ -422,7 +422,7 @@ relatorioBtn.addEventListener('click', () => {
     const dataAtual = new Date().toISOString().slice(0, 10).replace(/-/g, '');
     const nomeArquivo = `${dataAtual}_RelatorioCompras.xlsx`;
     XLSX.writeFile(wb, nomeArquivo);
-    animarMoedas();
+    //Removido, pois as moedas foram retiradas animarMoedas();
     mostrarFeedbackSucesso('Relatório gerado!');
 });
 
@@ -430,7 +430,7 @@ relatorioBtn.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     carregarDados();
     atualizarLista();
-    animarMoedas();
+    //Removido, pois as moedas foram retiradas animarMoedas();
     // Atualiza a barra DEPOIS de carregar os dados e atualizar a lista
     const total = parseFloat(totalValor.textContent.replace(',', '.')) || 0;
     verificarOrcamento(total);

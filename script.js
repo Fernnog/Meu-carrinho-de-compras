@@ -82,7 +82,7 @@ function parseNumber(texto) {
     return numerosEscritos[texto] || parseInt(texto) || 1;
 }
 
-// Função para processar e adicionar item (VERSÃO CORRIGIDA E REFORÇADA)
+// Função para processar e adicionar item
 function processarEAdicionarItem(texto) {
     texto = texto.toLowerCase().trim();
 
@@ -184,7 +184,7 @@ function animarMoedas() {
     });
 }
 
-// Atualizar lista de compras
+// Atualizar lista de compras (COM BOTÃO DE EXCLUIR E CORREÇÃO DO EVENTO DE CLIQUE)
 function atualizarLista(filtrados = compras) {
     listaCompras.innerHTML = '';
     let total = 0;
@@ -195,23 +195,26 @@ function atualizarLista(filtrados = compras) {
             <button class="excluir-item" data-index="${index}">🗑️</button>`; // Usa o ícone de lixeira
 
         li.classList.add('fade-in');
+
+        // ADICIONA O EVENT LISTENER *DENTRO* DO LOOP (correção)
         li.addEventListener('click', (event) => {
             // Verifica se o clique NÃO foi no botão de excluir
             if (!event.target.classList.contains('excluir-item')) {
                 editarItem(index);
             }
         });
+
         listaCompras.appendChild(li);
         total += item.quantidade * item.valorUnitario;
-        setTimeout(() => li.style.opacity = 1, 10); // Animação de fade-in
+        setTimeout(() => li.style.opacity = 1, 10);
 
     });
     totalValorPainel.textContent = total.toFixed(2).replace('.', ',');
     totalValor.textContent = total.toFixed(2).replace('.', ',');
-    verificarOrcamento(total);
+    verificarOrcamento(total); // Atualiza a barra de progresso
 }
 
-// Event listener para o botão de excluir (usando delegação de eventos)
+// Event listener para o botão de excluir (USANDO DELEGAÇÃO DE EVENTOS - CORRETO)
 listaCompras.addEventListener('click', (event) => {
     if (event.target.classList.contains('excluir-item')) {
         const index = parseInt(event.target.dataset.index);
@@ -219,15 +222,15 @@ listaCompras.addEventListener('click', (event) => {
             compras.splice(index, 1);
             atualizarLista();
             salvarDados();
-            animarMoedas(); // Anima as moedas após excluir
-            mostrarFeedbackSucesso('Item excluído!');  // Feedback visual
+            animarMoedas();
+            mostrarFeedbackSucesso('Item excluído!');
         }
     }
 });
 
 
 
-// Verificar orçamento e atualizar barra de progresso
+// Verificar orçamento e atualizar barra de progresso (CORRIGIDO)
 function verificarOrcamento(total) {
     const orcamento = parseFloat(orcamentoInput.value.replace(',', '.')) || 0;
     let porcentagem = 0;
@@ -246,19 +249,20 @@ function verificarOrcamento(total) {
            barraProgresso.style.setProperty('--webkit-progress-value-background-color', 'red', 'important');
         }
         if(porcentagem <= 80){
-          barraProgresso.style.setProperty('--webkit-progress-value-background-color', '#4CAF50', 'important');
+           barraProgresso.style.setProperty('--webkit-progress-value-background-color', '#4CAF50', 'important');
         }
 
     } else {
         barraProgresso.value = 0; // Zera a barra se não houver orçamento
         porcentagemProgresso.textContent = "0%";
-        barraProgresso.style.setProperty('--webkit-progress-value-background-color', '#4CAF50', 'important');
+         barraProgresso.style.setProperty('--webkit-progress-value-background-color', '#4CAF50', 'important');
     }
 
+
     if (total > orcamento && orcamento > 0) {
-        // alert('Orçamento excedido! Total: R$ ' + total.toFixed(2).replace('.', ',')); // Removido o alert.
-        document.querySelector('#painelTotal').style.backgroundColor = '#ffcccc';
-        setTimeout(() => document.querySelector('#painelTotal').style.backgroundColor = '#f8f8f8', 2000);
+       // alert('Orçamento excedido! Total: R$ ' + total.toFixed(2).replace('.', ',')); //Removido, para não ter o Alerta toda hora.
+        document.querySelector('#painelTotal').style.backgroundColor = '#ffcccc'; // Muda a cor do painel
+        setTimeout(() => document.querySelector('#painelTotal').style.backgroundColor = '#f8f8f8', 2000); // Volta ao normal após 2 segundos
     }
 }
 
@@ -415,22 +419,23 @@ relatorioBtn.addEventListener('click', () => {
     mostrarFeedbackSucesso('Relatório gerado!');
 });
 
-// Carregar dados ao iniciar e atualizar a barra de progresso
+// Carregar dados ao iniciar e atualizar a barra de progresso (CORRIGIDO)
 document.addEventListener('DOMContentLoaded', () => {
     carregarDados();
     atualizarLista();
     animarMoedas();
-      // Atualiza a barra de progresso ao carregar a página
+    // Atualiza a barra DEPOIS de carregar os dados e atualizar a lista
     const total = parseFloat(totalValor.textContent.replace(',', '.')) || 0;
     verificarOrcamento(total);
+
 });
 
-// Atualiza a barra de progresso sempre que o orçamento for alterado
+// Atualiza a barra de progresso sempre que o orçamento for alterado (CORRIGIDO)
 orcamentoInput.addEventListener('input', () => {
-        const total = parseFloat(totalValor.textContent.replace(',', '.')) || 0;
-        verificarOrcamento(total);
-        salvarDados(); // Para salvar no local storage.
-    });
+    const total = parseFloat(totalValor.textContent.replace(',', '.')) || 0; // Pega o total *atual* da lista
+    verificarOrcamento(total);
+    salvarDados();
+});
 
 
 

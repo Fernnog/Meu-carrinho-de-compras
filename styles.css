@@ -23,12 +23,18 @@ header {
 }
 
 /* Estilização específica para o logotipo, isolada de outros elementos */
+.logo-container {
+    width: 100%;
+    text-align: center; /* Centraliza o conteúdo (logotipo) */
+    padding: 10px 0; /* Espaço vertical fixo */
+}
+
 .logo {
-    width: 150px; /* Tamanho base para o logotipo */
-    max-width: 100%; /* Limita a largura ao contêiner */
-    height: auto; /* Mantém a proporção original */
-    display: block; /* Garante centralização correta */
+    display: block;
     margin: 0 auto; /* Centraliza horizontalmente */
+    width: 150px; /* Tamanho base */
+    max-width: 100%; /* Evita ultrapassar o contêiner */
+    height: auto;
 }
 
 /* Contêiner do logotipo, sem alterar o layout geral */
@@ -84,13 +90,6 @@ h1 {
         width: 100px; /* Reduz o logotipo em dispositivos com alta densidade */
         height: auto;
     }
-}
-
-
-h1 {
-    font-size: 1.8rem;
-     /* margin-top: 10px; <-- Remova o margin-top se o ícone já estiver espaçado */
-    color: #006400;
 }
 
 /* Linha delicada */
@@ -177,7 +176,7 @@ select:focus {
 .voice-input {
     position: relative;
 }
-/* Centralizar os botões na mesma linha (JÁ ESTÁ CORRETO) */
+/* Centralizar os botões na mesma linha */
 .voice-input-wrapper {
     display: flex;
     align-items: center;
@@ -191,11 +190,9 @@ select:focus {
     min-width: 0; /* Importante para o flexbox funcionar corretamente */
 }
 
-
 /* Estilos GERAIS para os botões (mantém o tamanho grande) */
 #ativarVoz, .mic-btn, .action-btn {
-    /* ... (seus estilos atuais, como padding: 24px, width: 96px, etc.) ... */
-     background-color: #007bff;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
@@ -220,7 +217,6 @@ select:focus {
 
 /* Estilos para o botão inserir, mudando a cor */
 #inserirItem {
-   /* background-color: #007bff;  <-- Remova ou comente esta linha */
     background-color: #8cb0c0; /* Nova cor de fundo */
     color: white;
 }
@@ -228,8 +224,9 @@ select:focus {
 #inserirItem:hover {
     background-color: #7aa7b7; /* Um tom um pouco mais escuro para o hover */
 }
+
 #inserirItem:active {
-     background-color: #6895a5;
+    background-color: #6895a5;
 }
 
 #limparInput {
@@ -320,7 +317,7 @@ select:focus {
     border-radius: 5px;
     padding: 5px 10px; /* Menor que os outros botões */
     cursor: pointer;
-    font-size: 1rem;  /* Menor que os outros botões */
+    font-size: 1rem; /* Menor que os outros botões */
     transition: background-color 0.3s;
     margin-left: 10px; /* Espaço entre o texto e o botão */
 }
@@ -332,7 +329,6 @@ select:focus {
 #listaCompras .excluir-item:active {
     background-color: #bd2130;
 }
-
 
 /* Total Geral (mantido abaixo da lista) */
 .total {
@@ -520,14 +516,13 @@ select:focus {
 
 /* Cor para 100% ou mais (vermelho) */
 #barraProgresso[value="100"]::-webkit-progress-value,
-#barraProgresso[value^="100"]::-webkit-progress-value{
+#barraProgresso[value^="100"]::-webkit-progress-value {
     background-color: red;
 }
 
-
 #barraProgresso::-moz-progress-bar { /* Para Firefox */
-  background-color: #4CAF50;
-  border-radius: 5px;
+    background-color: #4CAF50;
+    border-radius: 5px;
 }
 
 #porcentagemProgresso {
@@ -540,26 +535,30 @@ select:focus {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
-
 /* MEDIA QUERY para telas menores (ajusta o tamanho dos botões) */
-@media (max-width: 480px) {  /* Você pode ajustar o valor 480px se necessário */
+@media (max-width: 480px) {  
+    .voice-input-wrapper {
+        flex-direction: row; /* Mantém os botões lado a lado */
+        justify-content: center;
+        gap: 5px;
+    }
     #ativarVoz, .mic-btn, .action-btn {
-        /* Reduz o tamanho */
-        padding: 12px;  /* Metade do tamanho original */
-        width: 60px;   /* Ajuste conforme necessário */
-        height: 60px;  /* Ajuste conforme necessário */
+        padding: 12px; /* Reduz o tamanho (metade do original) */
+        width: 60px; /* Tamanho ajustado */
+        height: 60px;
         font-size: 1rem; /* Reduz a fonte */
     }
-      .voice-input-wrapper {
-        gap: 2px; /* Reduz o espaço entre os botões */
+    #vozInput {
+        width: 100%; /* Garante que o campo de texto ajuste-se */
+        margin-bottom: 0; /* Remove margem extra */
     }
-        /* Ajustes para responsividade do botão de excluir */
-     #listaCompras .excluir-item {
+    /* Ajustes para responsividade do botão de excluir */
+    #listaCompras .excluir-item {
         padding: 4px 8px; /* Ainda menor em telas menores */
         font-size: 0.9rem; /* Ainda menor em telas menores */
     }
 
-        .container {
+    .container {
         padding: 5px;
     }
 
@@ -574,17 +573,6 @@ select:focus {
         padding: 8px;
         font-size: 1rem;
     }
-
-    .voice-input-wrapper {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    #vozInput {
-        width: 100%;
-        margin-bottom: 5px;
-    }
-
 
     #painelTotal {
         font-size: 2rem; /* Ajuste proporcional */
@@ -609,13 +597,9 @@ select:focus {
     .fa-shopping-cart.logo {
         font-size: 4rem; /* Menor em telas menores */
     }
-
-     /*Retirado as moedas*/
-
 }
 
 /* Media Queries para Responsividade */
-/*Acima estão as alterações*/
 @media (max-width: 768px) {
     .container {
         max-width: 100%;
@@ -669,4 +653,18 @@ select:focus {
         margin: 5% auto;
         width: 95%;
         padding: 15px;
-    
+    }
+}
+
+/* Estilização do Autocomplete (Awesomplete) com ajuste para mensagem em português */
+.awesomplete > ul:empty::before {
+    font-size: 0.8rem; /* Tamanho menor para ser mais discreto */
+    color: #666; /* Cor mais suave */
+}
+
+/* Aviso discreto para importação */
+.import-info {
+    font-size: 0.8rem; /* Tamanho pequeno */
+    color: #666; /* Cor discreta */
+    margin-left: 10px; /* Espaço à esquerda do botão */
+    }

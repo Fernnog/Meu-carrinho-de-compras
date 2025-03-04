@@ -384,28 +384,51 @@ exportarBtn.addEventListener('click', () => {
     mostrarFeedbackSucesso('Dados exportados com sucesso!');
 });
 
-// Importar dados de JSON
+// Importar dados de JSON (com aviso em pop-up)
 importarBtn.addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                compras = JSON.parse(e.target.result);
-                atualizarLista();
-                salvarDados();
-                //Removido, pois as moedas foram retiradas animarMoedas();
-                mostrarFeedbackSucesso('Dados importados!');
-            } catch (error) {
-                mostrarFeedbackErro('Erro ao importar o arquivo JSON.');
-            }
+    // Mostra o modal de aviso de importação
+    const modalImportInfo = document.getElementById('modalImportInfo');
+    modalImportInfo.style.display = 'block';
+
+    // Adiciona evento ao botão "Continuar" para prosseguir com a importação
+    const continuarImport = document.getElementById('continuarImport');
+    continuarImport.onclick = () => {
+        modalImportInfo.style.display = 'none';
+        
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    compras = JSON.parse(e.target.result);
+                    atualizarLista();
+                    salvarDados();
+                    //Removido, pois as moedas foram retiradas animarMoedas();
+                    mostrarFeedbackSucesso('Dados importados!');
+                } catch (error) {
+                    mostrarFeedbackErro('Erro ao importar o arquivo JSON.');
+                }
+            };
+            reader.readAsText(file);
         };
-        reader.readAsText(file);
+        input.click();
     };
-    input.click();
+
+    // Fecha o modal ao clicar no "×"
+    const fecharModal = document.querySelector('#modalImportInfo .fechar-modal');
+    fecharModal.onclick = () => {
+        modalImportInfo.style.display = 'none';
+    };
+
+    // Fecha o modal ao clicar fora dele
+    window.addEventListener('click', (event) => {
+        if (event.target === modalImportInfo) {
+            modalImportInfo.style.display = 'none';
+        }
+    });
 });
 
 // Limpar lista
@@ -472,8 +495,7 @@ function carregarDados() {
         }
     });
     salvarDados();
+}
 
-    // Estilos dinâmicos para animações
+// Estilos dinâmicos para animações
 vozFeedback.classList.add('fade-in');
-Notas:
-        

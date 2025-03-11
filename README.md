@@ -10,7 +10,7 @@
 *   **Categorização inteligente:** A aplicação categoriza automaticamente seus itens (Alimentos, Limpeza, Higiene Pessoal, Outros), facilitando a organização da sua lista.
 *   **Controle financeiro integrado:** Defina um orçamento e acompanhe o seu progresso com uma **barra de progresso visual** e alertas de estouro de orçamento.
 *   **Persistência de dados:** Sua lista de compras e orçamento são salvos localmente no seu navegador usando `localStorage`, garantindo que você não perca suas informações.
-*   **Compartilhamento e backup:** Exporte e importe suas listas de compras em formato **XLSX (Excel)** para facilitar o compartilhamento, backup e edição em planilhas.
+*   **Importar Lista:** Importe listas de compras existentes a partir de arquivos **XLSX (Excel)**, utilizando um modelo para facilitar a criação da sua lista.
 *   **Relatórios detalhados:** Gere **relatórios em Excel (.xlsx)** para ter uma visão clara dos seus gastos e itens comprados.
 *   **Interface amigável e responsiva:** Design limpo e otimizado para **smartphones Android**, com animações suaves e feedback visual para uma experiência de usuário agradável.
 
@@ -28,9 +28,8 @@
     *   Defina um orçamento total para suas compras.
     *   Acompanhe o progresso do seu gasto em relação ao orçamento com uma barra de progresso colorida.
     *   Receba alertas visuais caso o valor total da lista exceda o orçamento definido.
-*   **Exportar Lista:** Exporte sua lista de compras completa para um arquivo **XLSX (Excel)** para backup ou compartilhamento.
-*   **Importar Lista:** Importe listas de compras existentes a partir de arquivos **XLSX (Excel)**, facilitando a migração de dados ou o uso de listas preexistentes.
-*   **Limpar Lista:** Remova todos os itens da lista de compras com confirmação, opcionalmente exportando os dados antes de limpar.
+*   **Importar Lista:** Importe listas de compras existentes a partir de arquivos **XLSX (Excel)**, utilizando um modelo de planilha para garantir o formato correto dos dados.
+*   **Limpar Lista:** Remova todos os itens da lista de compras com confirmação.
 *   **Gerar Relatório Excel:** Crie um relatório detalhado da sua lista de compras em formato **XLSX (Excel)**, incluindo descrição, quantidade, valor unitário, categoria e a data de geração do relatório.
 *   **Feedback Visual e Animações:** A aplicação utiliza animações suaves (fade-in, transições) e feedback visual para melhorar a experiência do usuário.
 *   **Botões de Lixeira Dinâmicos:** Os ícones de lixeira ao lado de cada item mudam de cor para indicar o status do valor do item:
@@ -53,7 +52,8 @@ Para utilizar o projeto, você precisará de:
     *   Adicione itens digitando ou por voz.
     *   Defina seu orçamento.
     *   Visualize e edite sua lista de compras.
-    *   Exporte, importe ou limpe a lista.
+-   Exporte, importe ou limpe a lista.  *(Removido "Exportar" aqui)*
++   Importe ou limpe a lista. *(Atualizado para refletir a remoção do "Exportar")*
     *   Gere relatórios em Excel.
 
 3.  **Persistência de Dados:** Seus dados (lista de compras e orçamento) serão salvos automaticamente no `localStorage` do seu navegador. Ao reabrir a página no mesmo navegador e dispositivo, seus dados serão restaurados.

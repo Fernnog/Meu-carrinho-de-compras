@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Compras de Mercado</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" href="imagens/favicon.ico" type="image/x-icon">
+    <!-- Awesomplete CSS (needed if not already included elsewhere) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
+</head>
+<body>
+    <header>
+        <!-- Logo -->
+        <div class="logo-container">
+            <img src="imagens/logo.png" alt="Logo" class="logo">
+        </div>
+        <h1>Minhas compras de Mercado</h1>
+        <hr class="header-divider">
+    </header>
+
+    <div class="container">
+
+        <!-- Campo de Orçamento e Barra de Progresso -->
+        <div class="input-group">
+            <label for="orcamento">Orçamento (R$):</label>
+            <input type="text" id="orcamento" placeholder="200,00">
+        </div>
+        <div class="progress-bar-container">
+            <progress id="barraProgresso" value="0" max="100"></progress>
+            <span id="porcentagemProgresso">0%</span>
+        </div>
+
+        <!-- Botões de Ação Principais (Movidos para cá) -->
+        <div class="top-actions">
+            <button id="importar" class="top-action-btn">
+                <i class="fas fa-file-excel"></i> Importar
+            </button>
+            <button id="relatorio" class="top-action-btn">
+                <i class="fas fa-file-download"></i> Relatório
+            </button>
+            <button id="limparLista" class="top-action-btn danger">
+                <i class="fas fa-trash-alt"></i> Limpar Tudo
+            </button>
+        </div>
+
+        <!-- Painel de Total -->
+        <div id="painelTotal">
+            Total: R$ <span id="totalValorPainel">0,00</span>
+        </div>
+
+        <!-- Painel de Contagem de Itens (Novo) -->
+        <div id="painelContagemItens">
+            Itens: <span id="contagemNomes">0</span> nomes / <span id="contagemUnidades">0</span> unidades
+        </div>
+
+        <!-- Entrada por Voz com Autocomplete -->
+        <div class="input-group voice-input">
+            <label for="vozInput">Adicionar Item (Ex.: "quantidade 2 descrição biscoito preço 2,50"):</label>
+            <div class="voice-input-wrapper">
+                <input type="text" id="vozInput" placeholder="Dite aqui ou digite...">
+                <button id="ativarVoz" class="mic-btn" aria-label="Ativar Ditado por Voz"><i class="fas fa-microphone"></i></button>
+                <button id="inserirItem" class="action-btn" aria-label="Inserir Item"><i class="fas fa-plus"></i></button>
+                <button id="limparInput" class="action-btn danger" aria-label="Limpar Campo"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="voz-feedback"></div>
+        </div>
+
+        <!-- Filtro por Categoria -->
+        <div class="input-group">
+            <label for="categoriaFiltro">Filtrar por Categoria:</label>
+            <select id="categoriaFiltro">
+                <option value="">Todas</option>
+                <option value="Alimentos">Alimentos</option>
+                <option value="Limpeza">Limpeza</option>
+                <option value="Higiene Pessoal">Higiene Pessoal</option>
+                 <option value="Outros">Outros</option> <!-- Adicionado Outros aqui também -->
+            </select>
+        </div>
+
+        <h2>Itens no Carrinho</h2>
+        <ul id="listaCompras"></ul>
+        <div class="total" style="display: none;"> <!-- Mantido oculto, pois o total principal está no painel -->
+            Total: R$ <span id="totalValor">0,00</span>
+        </div>
+
+        <!-- Botões de Ação (Removidos do final) -->
+        <!-- <div class="buttons"> ... </div> -->
+
+        <!-- Modal de Edição -->
+        <div id="modalEdicao" class="modal">
+            <div class="modal-content">
+                <span class="fechar-modal" aria-label="Fechar Modal">×</span>
+                <h2>Editar Item</h2>
+                <div class="input-group">
+                    <label for="editarDescricao">Descrição:</label>
+                    <div class="input-with-mic">
+                        <input type="text" id="editarDescricao" placeholder="Descrição">
+                        <button class="mic-btn modal-mic-btn" data-target="editarDescricao" aria-label="Editar Descrição por Voz"><i class="fas fa-microphone"></i></button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="editarQuantidade">Quantidade:</label>
+                     <div class="input-with-mic">
+                        <input type="number" id="editarQuantidade" placeholder="Quantidade" min="1">
+                        <button class="mic-btn modal-mic-btn" data-target="editarQuantidade" aria-label="Editar Quantidade por Voz"><i class="fas fa-microphone"></i></button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="editarValor">Valor (R$):</label>
+                    <div class="input-with-mic">
+                        <input type="text" id="editarValor" placeholder="0,00" inputmode="decimal"> <!-- Adicionado inputmode -->
+                        <button class="mic-btn modal-mic-btn" data-target="editarValor" aria-label="Editar Valor por Voz"><i class="fas fa-microphone"></i></button>
+                    </div>
+                </div>
+                <button id="salvarEdicao" class="button-green">Salvar</button>
+            </div>
+        </div>
+
+        <!-- Novo Modal para Aviso de Importação -->
+        <div id="modalImportInfo" class="modal import-info-modal">
+            <div class="modal-content import-info-content">
+                <span class="fechar-modal" aria-label="Fechar Modal">×</span>
+                <p>Para importar sua lista de compras, utilize o modelo de planilha Excel (.xlsx) abaixo.</p>
+                <p>A planilha deve conter as seguintes colunas, exatamente nesta ordem:</p>
+                <ul style="text-align:left; margin-left: 20px;">
+                    <li>Descrição</li>
+                    <li>Quantidade</li>
+                    <li>Valor Unitário (R$)</li>
+                    <li>Categoria (Opcional)</li> <!-- Tornar opcional a categoria na importação -->
+                </ul>
+                <p>Baixe o modelo: <a href="modelo_importacao.xlsx" download="modelo_importacao.xlsx"><b>modelo_importacao.xlsx</b></a></p>
+                <button id="continuarImport" class="button-gold">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bibliotecas externas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+    <script src="script.js" defer></script>
+
+    <!-- Script inline removido daqui, pois estava relacionado a Cloudflare e não ao app -->
+</body>
+</html>

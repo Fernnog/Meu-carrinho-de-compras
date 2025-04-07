@@ -1,0 +1,678 @@
+/* --- START OF FILE styles.css --- */
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif; /* Considerar uma fonte mais moderna como 'Roboto', 'Open Sans', etc. */
+}
+
+body {
+    background-color: #f2f2f2;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Estilização do Header com Gradiente */
+header {
+    text-align: center;
+    width: 100%;
+    padding: 10px 0 15px 0; /* Ajuste padding inferior */
+    /* background-color: #fff; */ /* Removido */
+    background: linear-gradient(to bottom, #6ab36a, #3d8b3d); /* Gradiente verde ajustado */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    color: white; /* Texto branco para contraste */
+}
+
+/* Contêiner do Logotipo com Círculo Branco */
+.logo-container {
+    display: inline-flex; /* Para centralizar melhor e aplicar padding */
+    justify-content: center;
+    align-items: center;
+    padding: 8px; /* Espaçamento dentro do círculo */
+    background-color: white;
+    border-radius: 50%; /* Círculo */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    margin-bottom: 8px; /* Espaço abaixo do logo */
+    /* Remover display: flex; e padding: 10px 0; anteriores */
+}
+
+/* Logotipo Responsivo dentro do círculo */
+.logo {
+    width: 18vw;
+    max-width: 120px; /* Reduzido um pouco */
+    min-width: 60px; /* Reduzido um pouco */
+    height: auto;
+    display: block;
+}
+
+h1 {
+    font-size: 1.6rem; /* Levemente menor */
+    color: white; /* Já definido no header, mas reforça */
+    margin-top: 5px;
+    padding: 0 10px; /* Padding lateral para evitar colar nas bordas */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Media Query para Alta Densidade (Ajuste Logo) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo {
+        width: 15vw;
+        max-width: 100px;
+    }
+}
+
+/* Estilização do Container Principal */
+.container {
+    max-width: 95%;
+    margin: 20px auto;
+    padding: 15px; /* Reduzido padding */
+    background-color: #fff;
+    border-radius: 8px; /* Bordas mais arredondadas */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Grupos de Entrada */
+.input-group {
+    margin-bottom: 20px; /* Aumentar espaço entre grupos */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Alinhar itens para ocupar largura */
+    gap: 8px; /* Espaço entre label e input */
+}
+
+label {
+    display: block;
+    margin-bottom: 0; /* Remover margem inferior, usar gap */
+    color: #333;
+    font-size: 0.95rem; /* Levemente menor */
+    font-weight: bold;
+    text-align: left;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea { /* Adicionado textarea */
+    width: 100%;
+    padding: 10px 12px; /* Ajustar padding */
+    border: 1px solid #ccc;
+    border-radius: 6px; /* Bordas consistentes */
+    font-size: 1.1rem; /* Ajustar tamanho da fonte */
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus { /* Adicionado textarea */
+    outline: none;
+    border-color: #3d8b3d; /* Cor do gradiente */
+    box-shadow: 0 0 0 2px rgba(61, 139, 61, 0.2); /* Anel de foco sutil */
+}
+
+/* Campo de Orçamento */
+#orcamento {
+    width: 100%;
+    max-width: 180px; /* Aumentar um pouco */
+    font-size: 1.2rem; /* Maior destaque */
+    text-align: right;
+}
+
+/* Painel de Total */
+#painelTotal {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: 15px; /* Ajustar padding */
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 2.5rem; /* Ajustar tamanho */
+    color: #3d8b3d; /* Cor do gradiente */
+    border-radius: 6px;
+    transition: background-color 0.3s ease-in-out;
+    font-weight: bold;
+}
+
+#painelTotal.estourado { /* Classe para orçamento estourado */
+    background-color: #f8d7da; /* Fundo vermelho claro */
+    color: #721c24; /* Texto vermelho escuro */
+    border-color: #f5c6cb;
+}
+
+/* Entrada de Voz e Ações (Wrapper Flex) */
+.voice-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre input e botões */
+    width: 100%;
+}
+
+#vozInput {
+    flex-grow: 1; /* Ocupa espaço disponível */
+    min-width: 0; /* Necessário para flex-grow funcionar corretamente */
+}
+
+/* Botões Modernos (Voz, Inserir, Limpar Input) */
+#ativarVoz,
+#inserirItem,
+#limparInput,
+.mic-btn { /* Aplicar estilo base ao .mic-btn também */
+    background-color: #007bff; /* Azul padrão inicial */
+    color: white;
+    border: none;
+    border-radius: 6px; /* Consistente */
+    padding: 0; /* Remover padding, controlar tamanho com width/height */
+    width: 48px; /* Tamanho fixo */
+    height: 48px; /* Tamanho fixo */
+    cursor: pointer;
+    font-size: 1.3rem; /* Tamanho do ícone */
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0; /* Impedir que os botões encolham */
+}
+
+#ativarVoz:hover, .mic-btn:hover { background-color: #0056b3; }
+#ativarVoz:active, .mic-btn:active { background-color: #003d7a; transform: scale(0.95); }
+
+/* Cores específicas */
+#ativarVoz { background-color: #17a2b8; } /* Azul claro (info) */
+#ativarVoz:hover { background-color: #138496; }
+#ativarVoz:active { background-color: #117a8b; }
+
+#inserirItem { background-color: #28a745; } /* Verde (success) */
+#inserirItem:hover { background-color: #218838; }
+#inserirItem:active { background-color: #1e7e34; }
+
+#limparInput { background-color: #ffc107; color:#333;} /* Amarelo (warning) */
+#limparInput:hover { background-color: #e0a800; }
+#limparInput:active { background-color: #d39e00; }
+
+/* Botões Mic dentro de modais (se precisar de ajuste específico) */
+.modal-content .mic-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+}
+
+/* Feedback de Voz */
+.voz-feedback {
+    background-color: #e2e3e5; /* Cinza claro */
+    padding: 8px 12px;
+    font-size: 1rem; /* Menor que o input */
+    margin-top: 8px;
+    border-radius: 6px;
+    display: none; /* Começa escondido */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, background-color 0.3s, color 0.3s;
+    width: 100%;
+    text-align: left;
+    border: 1px solid #d6d8db;
+}
+
+.voz-feedback.fade-in { /* Classe para animação */
+    display: block;
+    opacity: 1;
+}
+
+.voz-feedback.success-fade {
+    background-color: #d4edda; /* Verde claro */
+    color: #155724; /* Verde escuro */
+    border-color: #c3e6cb;
+}
+
+.voz-feedback.error-fade {
+    background-color: #f8d7da; /* Vermelho claro */
+    color: #721c24; /* Vermelho escuro */
+    border-color: #f5c6cb;
+}
+
+/* Filtro por Categoria */
+#categoriaFiltro {
+    padding: 10px 12px;
+    font-size: 1.1rem; /* Consistente com inputs */
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    max-width: 250px; /* Limitar largura */
+    background-color: white; /* Fundo branco para destaque */
+}
+
+/* Lista de Itens */
+h2 { /* Título "Itens no Carrinho" */
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+#listaCompras {
+    list-style: none;
+    padding: 0;
+    margin-top: 0; /* Remover margem, H2 já tem */
+}
+
+/* Cabeçalho da Categoria (NOVO) */
+.categoria-header {
+    margin-top: 20px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #3d8b3d; /* Linha verde mais grossa */
+    font-size: 1.15rem;
+    color: #3d8b3d; /* Verde escuro */
+    font-weight: bold;
+}
+/* Não colocar margem no primeiro header */
+#listaCompras h3:first-of-type {
+    margin-top: 0;
+}
+
+
+/* Estilo do Item na Lista (NOVO) */
+.item-lista {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px; /* Ajustar padding */
+    background-color: #fff; /* Fundo branco para itens */
+    margin: 5px 0;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0; /* Borda sutil */
+    font-size: 1.1rem; /* Tamanho do texto do item */
+    opacity: 0; /* Para animação */
+    transition: opacity 0.4s ease-in, background-color 0.2s;
+}
+.item-lista:hover {
+    background-color: #f9f9f9; /* Leve destaque no hover */
+}
+
+.item-lista.fade-in {
+    opacity: 1;
+}
+
+/* Informações do Item (Clicável para Editar) (NOVO) */
+.item-info {
+    flex-grow: 1; /* Ocupa espaço */
+    margin-right: 10px; /* Espaço antes do botão */
+    cursor: pointer; /* Indica que é clicável */
+    color: #333;
+}
+
+/* Botão de Excluir na Lista (REFORMULADO) */
+.excluir-item {
+    background-color: #ffc107; /* Laranja/Amarelo para SEM VALOR (padrão) */
+    color: #333; /* Texto escuro para contraste com amarelo */
+    border: none;
+    border-radius: 5px;
+    padding: 0; /* Controlar com width/height */
+    width: 36px; /* Menor */
+    height: 36px; /* Menor */
+    cursor: pointer;
+    font-size: 1rem; /* Tamanho do ícone */
+    transition: background-color 0.2s, transform 0.1s;
+    flex-shrink: 0; /* Não encolher */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1; /* Alinhar ícone */
+}
+.excluir-item:hover {
+    background-color: #e0a800;
+}
+.excluir-item:active {
+     transform: scale(0.95);
+}
+
+/* Modificador para item COM VALOR (Verde) */
+.excluir-item.com-valor {
+    background-color: #28a745; /* Verde */
+    color: white; /* Texto branco */
+}
+.excluir-item.com-valor:hover {
+    background-color: #218838;
+}
+
+
+/* Total Geral (abaixo da lista) */
+.total {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 1.4rem; /* Maior destaque */
+    color: #3d8b3d; /* Verde escuro */
+    font-weight: bold;
+}
+
+/* Botões de Ação Principais (Importar, Limpar, Relatório, etc.) */
+.buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Quebrar linha em telas pequenas */
+    gap: 10px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee; /* Divisor */
+}
+
+/* Estilo base para botões principais */
+.button-green,
+.button-gold,
+.button-red,
+.button-blue { /* Adicionado azul */
+    padding: 10px 20px; /* Ajustar padding */
+    font-size: 1rem; /* Tamanho padrão */
+    border: none;
+    border-radius: 6px; /* Consistente */
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-transform: uppercase; /* Opcional: caixa alta */
+    letter-spacing: 0.5px; /* Opcional: espaçamento */
+}
+.button-green:hover,
+.button-gold:hover,
+.button-red:hover,
+.button-blue:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+.button-green:active,
+.button-gold:active,
+.button-red:active,
+.button-blue:active {
+    transform: scale(0.97); /* Efeito de clique */
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Cores específicas dos botões principais */
+.button-green { background-color: #28a745; color: white; }
+.button-green:hover { background-color: #218838; }
+
+.button-gold { background-color: #ffc107; color: #333; }
+.button-gold:hover { background-color: #e0a800; }
+
+.button-red { background-color: #dc3545; color: white; }
+.button-red:hover { background-color: #c82333; }
+
+.button-blue { background-color: #007bff; color: white; } /* Novo botão azul */
+.button-blue:hover { background-color: #0056b3; }
+
+/* Modal (Estilo Base) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo mais escuro */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* Centralizar verticalmente */
+    padding: 25px; /* Mais padding */
+    border: none; /* Remover borda padrão */
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px; /* Consistente */
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Animação do Modal */
+@keyframes slideIn {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Botão Fechar Modal */
+.fechar-modal {
+    color: #aaa;
+    position: absolute; /* Posição absoluta */
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+}
+.fechar-modal:hover,
+.fechar-modal:focus {
+    color: #555; /* Mais escuro no hover */
+    text-decoration: none;
+}
+
+/* Título do Modal */
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    color: #333;
+    text-align: center;
+    border-bottom: none; /* Remover borda do H2 */
+}
+
+/* Inputs dentro do Modal */
+.modal-content .input-group { margin-bottom: 15px; }
+.modal-content label { font-size: 0.9rem; }
+.modal-content input,
+.modal-content textarea { /* Aplicar estilo ao textarea também */
+    font-size: 1rem;
+    padding: 8px 10px;
+}
+
+/* Estilização do Autocomplete (Awesomplete) */
+.awesomplete > ul {
+    font-size: 1rem; /* Consistente com inputs */
+    border-radius: 6px;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 2px;
+    position: absolute; /* Garante que fique sobre outros elementos */
+    z-index: 1001; /* Acima do modal se necessário */
+}
+.awesomplete > ul li {
+    padding: 8px 12px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+.awesomplete > ul li:hover,
+.awesomplete > ul li[aria-selected="true"] { /* Destaque no hover e seleção */
+    background-color: #eee;
+}
+.awesomplete mark { /* Estilo do texto destacado */
+    background: #ffc107; /* Amarelo */
+    padding: 0.1em;
+    border-radius: 2px;
+}
+.awesomplete > ul:empty {
+    display: none; /* Não mostrar lista vazia */
+}
+/* Mensagem do Awesomplete quando vazio (ajustar se necessário) */
+/* .awesomplete > ul:empty::before { ... } */
+
+/* Barra de Progresso */
+.progress-bar-container {
+    width: 100%;
+    margin-bottom: 20px; /* Espaço abaixo */
+    position: relative; /* Para posicionar o texto */
+    background-color: #eee; /* Fundo da barra */
+    border-radius: 10px;
+    overflow: hidden; /* Para bordas arredondadas funcionarem */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+#barraProgresso {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 24px; /* Altura da barra */
+    border: none; /* Remover borda padrão */
+    border-radius: 10px; /* Consistente */
+    display: block; /* Para ocupar container */
+}
+
+/* Cor de fundo (track) */
+#barraProgresso::-webkit-progress-bar {
+    background-color: transparent; /* Track é o container agora */
+    border-radius: 10px;
+}
+#barraProgresso::-moz-progress-bar { /* Firefox */
+     border-radius: 10px;
+     transition: background-color 0.3s ease; /* Transição de cor */
+}
+
+/* Cor do valor (progress) */
+#barraProgresso::-webkit-progress-value {
+    border-radius: 10px;
+    transition: width 0.3s ease, background-color 0.3s ease; /* Transição suave */
+    background-color: #28a745; /* Cor padrão (OK) */
+}
+
+/* Cores baseadas em classes */
+#barraProgresso.orcamento-ok::-webkit-progress-value { background-color: #28a745; }
+#barraProgresso.orcamento-apertado::-webkit-progress-value { background-color: #ffc107; }
+#barraProgresso.orcamento-estourado::-webkit-progress-value { background-color: #dc3545; }
+
+#barraProgresso.orcamento-ok::-moz-progress-bar { background-color: #28a745; }
+#barraProgresso.orcamento-apertado::-moz-progress-bar { background-color: #ffc107; }
+#barraProgresso.orcamento-estourado::-moz-progress-bar { background-color: #dc3545; }
+
+/* Texto da Porcentagem */
+#porcentagemProgresso {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #333;
+    font-weight: bold;
+    font-size: 0.85rem;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.6); /* Sombra clara para legibilidade */
+}
+
+/* Modal de Aviso de Importação Excel (.import-info-modal) */
+.import-info-modal .modal-content { /* Estilo específico se necessário */
+     max-width: 400px; /* Ajustar largura */
+     text-align: center;
+}
+.import-info-content p {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    color: #333;
+    line-height: 1.5;
+    text-align: left; /* Alinhar texto à esquerda */
+}
+.import-info-content ul {
+    list-style: disc;
+    margin-left: 25px; /* Indentar lista */
+    margin-bottom: 15px;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #555;
+}
+.import-info-content ul li { margin-bottom: 5px; }
+.import-info-content a { color: #0056b3; font-weight: bold;}
+#continuarImport { /* Botão Continuar */
+    margin-top: 10px;
+    /* Herda estilos de .button-gold */
+}
+
+/* Modal de Importação por Texto (NOVO) */
+#modalImportTexto .modal-content {
+    max-width: 550px; /* Um pouco maior para o textarea */
+}
+#modalImportTexto p {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: #555;
+    text-align: left;
+}
+#modalImportTexto ul {
+    list-style: disc;
+    margin-left: 20px;
+    margin-bottom: 15px;
+    text-align: left;
+    font-size: 0.85rem;
+    color: #666;
+}
+#modalImportTexto ul li { margin-bottom: 4px; }
+
+#textoImportar { /* Textarea */
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem; /* Tamanho de fonte para código/lista */
+    line-height: 1.6;
+    resize: vertical; /* Permitir redimensionamento vertical */
+    min-height: 150px; /* Altura mínima */
+    font-family: 'Courier New', Courier, monospace; /* Fonte monoespaçada */
+}
+#processarTextoImport { /* Botão Processar */
+    margin-top: 15px;
+    /* Herda estilo .button-green */
+}
+
+
+/* Media Queries para Responsividade */
+
+/* Telas Pequenas (smartphones < 600px) */
+@media (max-width: 600px) {
+    body { font-size: 0.95rem; }
+    .container { padding: 10px; max-width: 100%;}
+    h1 { font-size: 1.4rem; }
+    #painelTotal { font-size: 2rem; padding: 10px; }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea { font-size: 1rem; padding: 8px 10px;}
+    #orcamento { max-width: 140px; font-size: 1.1rem; }
+
+    .voice-input-wrapper { flex-wrap: wrap; } /* Quebrar botões se não couber */
+    #vozInput { margin-bottom: 5px; } /* Espaço se quebrar linha */
+    #ativarVoz, #inserirItem, #limparInput, .mic-btn { width: 40px; height: 40px; font-size: 1.1rem; }
+
+    .voz-feedback { font-size: 0.9rem; }
+    #categoriaFiltro { max-width: 100%; font-size: 1rem;}
+    h2 { font-size: 1.1rem; }
+    .categoria-header { font-size: 1.05rem; }
+    .item-lista { font-size: 1rem; padding: 8px 10px; }
+    .excluir-item { width: 32px; height: 32px; font-size: 0.9rem; }
+
+    .total { font-size: 1.2rem; }
+
+    .buttons { gap: 8px; margin-top: 20px; padding-top: 15px;}
+    .button-green, .button-gold, .button-red, .button-blue { padding: 8px 15px; font-size: 0.9rem; }
+
+    .modal-content { width: 95%; margin: 15% auto; padding: 15px;}
+    .modal-content h2 { font-size: 1.2rem; }
+
+    #barraProgresso { height: 20px; }
+    #porcentagemProgresso { font-size: 0.75rem; }
+}
+
+/* Telas Extra Pequenas (< 400px) */
+@media (max-width: 400px) {
+     h1 { font-size: 1.2rem; }
+     #painelTotal { font-size: 1.8rem; }
+     .item-lista { font-size: 0.9rem; }
+     .total { font-size: 1.1rem; }
+     .button-green, .button-gold, .button-red, .button-blue { font-size: 0.8rem; padding: 6px 12px; }
+     #ativarVoz, #inserirItem, #limparInput, .mic-btn { width: 36px; height: 36px; font-size: 1rem; }
+     .excluir-item { width: 28px; height: 28px; font-size: 0.8rem; }
+}
+
+
+/* --- END OF FILE styles.css --- */

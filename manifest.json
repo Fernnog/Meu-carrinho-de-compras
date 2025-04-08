@@ -1,6 +1,6 @@
 {
   "name": "Minhas Compras de Mercado",
-  "short_name": "Compras",
+  "short_name": "Lista de Compras",
   "description": "Sua lista de supermercado inteligente.",
   "start_url": ".", // Ou apenas "/" se o index.html está na raiz
   "display": "standalone", // Faz parecer um app sem a barra de endereço do Chrome

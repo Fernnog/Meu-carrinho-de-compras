@@ -1,0 +1,845 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f8f9fa; /* Ligeiramente mais claro */
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #343a40; /* Cinza escuro mais suave */
+}
+
+/* Header */
+header {
+    text-align: center;
+    width: 100%;
+    padding: 10px 0 5px 0;
+    background: linear-gradient(to right, #006400, #FFD700);
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+    margin-bottom: 5px;
+}
+
+.logo-background-circle {
+    background-color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    width: fit-content;
+    height: fit-content;
+    overflow: hidden;
+}
+
+.logo {
+    width: 15vw;
+    max-width: 80px;
+    min-width: 45px;
+    height: auto;
+    display: block;
+    padding: 6px; /* Espaçamento interno no círculo */
+    box-sizing: border-box;
+    border-radius: 50%;
+}
+
+h1 {
+    font-size: 1.6rem;
+    color: #ffffff;
+    margin-top: 0;
+    padding: 0 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.header-divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    margin: 0.5rem auto;
+    width: 90%;
+}
+
+/* Container Principal */
+.container {
+    max-width: 95%;
+    margin: 15px auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 12px; /* Mais arredondado */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Botões de Ação Superiores */
+.top-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.top-action-btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #FFD700; /* Dourado */
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-action-btn i {
+    font-size: 1em;
+}
+
+.top-action-btn:hover {
+    background-color: #E6C200;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.top-action-btn:active {
+    background-color: #D4A600;
+    transform: scale(0.97);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.top-action-btn.danger {
+    background-color: #dc3545; /* Vermelho */
+    color: white;
+}
+
+.top-action-btn.danger:hover {
+    background-color: #c82333;
+}
+
+.top-action-btn.danger:active {
+    background-color: #bd2130;
+}
+
+/* Orçamento, Barra Progresso, Painéis */
+.input-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+label {
+    display: block;
+    margin-bottom: 3px;
+    color: #495057; /* Cinza mais escuro */
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 12px; /* Mais padding */
+    border: 1px solid #ced4da; /* Borda mais suave */
+    border-radius: 8px; /* Mais arredondado */
+    font-size: 1.1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #fff; /* Garante fundo branco */
+}
+
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: #006400; /* Verde escuro no foco */
+    box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.15); /* Sombra de foco verde suave */
+}
+
+#orcamento {
+    width: 100%;
+    max-width: 180px;
+    font-weight: bold;
+    text-align: right; /* Alinha valor à direita */
+}
+
+/* Barra de Progresso Refinada */
+.progress-bar-container {
+    width: 100%;
+    margin-bottom: 15px;
+    position: relative;
+    background-color: #e9ecef; /* Fundo cinza suave */
+    border-radius: 15px; /* Bem arredondado */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    height: 28px; /* Ligeiramente mais alta */
+}
+
+#barraProgresso {
+    width: 100%; /* Ocupa toda a largura */
+    height: 100%; /* Ocupa toda altura do container */
+    border-radius: 15px;
+    appearance: none; /* Remove estilo padrão */
+    -webkit-appearance: none;
+    border: none;
+    background-color: transparent; /* Track (fundo) é o container */
+    transition: width 0.5s ease-in-out; /* Transição suave da largura */
+}
+
+/* Estilo padrão da barra (verde -> dourado) - Webkit (Chrome, Safari, Edge) */
+#barraProgresso::-webkit-progress-value {
+    background: linear-gradient(to right, #28a745, #FFD700); /* Verde vibrante -> Dourado */
+    border-radius: 15px; /* Mantém arredondamento interno */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset; /* Sombra interna sutil */
+    transition: background 0.4s ease; /* Transição suave de cor */
+}
+#barraProgresso::-webkit-progress-bar { /* Estilo do fundo (track) */
+     background-color: transparent; /* Definido pelo container */
+     border-radius: 15px;
+}
+
+/* Estilo padrão da barra (verde -> dourado) - Mozilla (Firefox) */
+#barraProgresso::-moz-progress-bar {
+    background: linear-gradient(to right, #28a745, #FFD700); /* Verde vibrante -> Dourado */
+    border-radius: 15px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
+    transition: background 0.4s ease; /* Transição suave de cor */
+}
+
+/* Estilo quando estourar o orçamento (classe .over-budget adicionada via JS) - Webkit */
+.progress-bar-container.over-budget #barraProgresso::-webkit-progress-value {
+    background: linear-gradient(to right, #dc3545, #ffc107); /* Vermelho -> Laranja/Amarelo */
+}
+
+/* Estilo quando estourar o orçamento (classe .over-budget adicionada via JS) - Mozilla */
+.progress-bar-container.over-budget #barraProgresso::-moz-progress-bar {
+    background: linear-gradient(to right, #dc3545, #ffc107); /* Vermelho -> Laranja/Amarelo */
+}
+
+/* Texto da porcentagem sobre a barra */
+#porcentagemProgresso {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff; /* Branco para contraste */
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Sombra para legibilidade */
+    pointer-events: none; /* Não interfere com cliques */
+    mix-blend-mode: difference; /* Tenta manter legível sobre o gradiente (pode variar) */
+    /* Se mix-blend-mode não funcionar bem, remova e use apenas text-shadow */
+}
+
+/* Painéis Total/Contagem */
+#painelTotal {
+    background-color: #e9f5e9; /* Verde bem claro */
+    border: 1px solid #c8e6c9; /* Borda verde clara */
+    padding: 15px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 2.5rem;
+    color: #006400; /* Verde escuro */
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Transição suave */
+    font-weight: bold;
+}
+#painelTotal #totalValorPainel { font-weight: bold; }
+
+#painelContagemItens {
+    background-color: #fff8e1; /* Amarelo bem claro */
+    border: 1px solid #ffecb3; /* Borda amarela clara */
+    padding: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #856404; /* Cor de texto marrom/dourado escuro */
+    border-radius: 8px;
+    font-weight: normal;
+}
+#painelContagemItens span {
+    font-weight: bold;
+    color: #e65100; /* Laranja escuro */
+}
+
+/* Entrada de Item e Botões */
+.input-with-mic { /* Usado no modal */
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+}
+.input-with-mic input { flex-grow: 1; min-width: 0; } /* Input ocupa espaço restante */
+
+.voice-input { /* Container do input principal */
+    position: relative; /* Para posicionar feedback */
+    margin-bottom: 15px; /* Espaçamento */
+}
+.voice-input-wrapper { /* Alinha input e botões */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+#vozInput { /* Input principal */
+    flex: 1; /* Ocupa espaço restante */
+    min-width: 0; /* Permite encolher */
+}
+
+/* Botões de Ação (Mic, Add, Clear Input) Refinados */
+.mic-btn, .action-btn {
+    padding: 0; /* Remove padding interno */
+    width: 45px; /* Tamanho fixo */
+    height: 45px; /* Tamanho fixo */
+    font-size: 1.2rem; /* Tamanho do ícone */
+    border: none;
+    border-radius: 50%; /* Círculo */
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0; /* Impede que encolham */
+    color: white; /* Cor do ícone padrão */
+}
+.mic-btn:disabled { /* Estilo para botão desabilitado (sem API de voz) */
+    background-color: #adb5bd;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Botão Microfone e Adicionar */
+#ativarVoz, #inserirItem {
+    background-color: #28a745; /* Verde vibrante */
+}
+#ativarVoz:hover:not(:disabled), #inserirItem:hover {
+    background-color: #218838; /* Verde mais escuro no hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+#ativarVoz:active:not(:disabled), #inserirItem:active {
+    background-color: #1e7e34; /* Verde ainda mais escuro no active */
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+#ativarVoz.recording { /* Feedback visual quando gravando */
+    background-color: #dc3545; /* Vermelho */
+    animation: pulse 1.5s infinite;
+}
+
+/* Botão Limpar Input */
+#limparInput {
+    background-color: #ffc107; /* Amarelo/Laranja */
+    color: #333; /* Texto/ícone escuro para contraste */
+}
+#limparInput:hover {
+    background-color: #e0a800; /* Amarelo mais escuro */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+#limparInput:active {
+    background-color: #d39e00; /* Amarelo ainda mais escuro */
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Microfone dentro do Modal */
+.modal-mic-btn {
+    background-color: #6c757d; /* Cinza padrão */
+    color: white;
+    width: 40px; /* Um pouco menor */
+    height: 40px;
+    font-size: 1.1rem;
+}
+.modal-mic-btn:hover:not(:disabled) {
+    background-color: #5a6268;
+}
+.modal-mic-btn:active:not(:disabled) {
+    background-color: #545b62;
+    transform: scale(0.95);
+}
+.modal-mic-btn.recording { /* Feedback visual quando gravando no modal */
+    background-color: #dc3545; /* Vermelho */
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse { /* Animação de pulsar para gravação */
+    0% { transform: scale(1); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+    50% { transform: scale(1.05); box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4); }
+    100% { transform: scale(1); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+}
+
+/* Feedback de Voz */
+.voz-feedback {
+    margin-top: 8px; /* Espaço acima */
+    font-size: 0.9rem;
+    padding: 8px 12px; /* Mais padding */
+    border-radius: 6px; /* Arredondado */
+    display: none; /* Oculto por padrão */
+    border: 1px solid transparent; /* Borda base */
+    opacity: 0; /* Para transição */
+    transition: opacity 0.3s ease-in-out;
+}
+.voz-feedback.show { /* Classe para mostrar com fade-in */
+    display: block;
+    opacity: 1;
+}
+.voz-feedback.success {
+    background-color: #d4edda; color: #155724; border-color: #c3e6cb;
+}
+.voz-feedback.error {
+    background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;
+}
+.voz-feedback.info {
+    background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; /* Azul claro */
+}
+
+/* Filtro por Categoria */
+#categoriaFiltro {
+    padding: 12px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: white;
+    cursor: pointer;
+}
+#categoriaFiltro:focus {
+    border-color: #006400;
+    box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.15);
+}
+
+/* --- Lista de Compras Refinada --- */
+#listaComprasContainer h2 {
+    margin-top: 25px;
+    margin-bottom: 15px; /* Mais espaço */
+    font-size: 1.4rem; /* Maior */
+    color: #006400; /* Verde escuro */
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #FFD700; /* Linha dourada embaixo */
+    display: inline-block; /* Para a borda ficar só no texto */
+    position: relative; /* Necessário para centralizar */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Cabeçalho de Categoria Refinado */
+.category-header {
+    background-color: #e9f5e9; /* Fundo verde bem claro */
+    color: #004d00; /* Verde mais escuro para texto */
+    padding: 10px 15px; /* Mais padding */
+    margin-top: 20px; /* Mais espaço entre categorias */
+    margin-bottom: 0; /* Sem margem inferior, conecta com o primeiro item */
+    border-radius: 8px 8px 0 0; /* Arredondado só em cima */
+    font-weight: bold;
+    font-size: 1.15rem;
+    border-bottom: 1px solid #c8e6c9; /* Linha divisória suave */
+    cursor: default; /* Não é clicável */
+}
+/* Remove margem superior do primeiro cabeçalho */
+.category-group:first-of-type .category-header {
+    margin-top: 0;
+}
+
+
+/* Grupo de Categoria (para filtro e animação) */
+.category-group {
+    transition: opacity 0.3s ease-out, max-height 0.4s ease-out; /* Animação suave */
+    overflow: hidden; /* Necessário para animar max-height */
+    opacity: 1;
+    max-height: 10000px; /* Valor grande para permitir conteúdo */
+    /* Adiciona uma leve sombra para destacar o grupo */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border-radius: 8px; /* Arredonda o grupo inteiro (header + itens) */
+    margin-bottom: 10px; /* Espaço entre grupos de categoria */
+}
+.category-group.hidden {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+}
+
+/* Lista de Itens UL */
+#listaCompras {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Mensagem de lista vazia ou filtro sem resultados */
+#listaCompras li.lista-vazia, #listaCompras li.filtro-sem-resultados {
+    text-align: center;
+    padding: 20px;
+    color: #6c757d; /* Cinza */
+    font-style: italic;
+    background-color: transparent;
+    border: none;
+    cursor: default;
+}
+#listaCompras li.lista-vazia:hover, #listaCompras li.filtro-sem-resultados:hover {
+    background-color: transparent; /* Sem efeito hover */
+}
+
+/* Item da Lista Refinado */
+#listaCompras li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px; /* Mais padding */
+    background-color: #fff;
+    margin: 0; /* Sem margem entre itens da mesma categoria */
+    font-size: 1.1rem;
+    border: none; /* Remove bordas individuais, o grupo tem sombra */
+    border-top: 1px solid #f1f3f5; /* Linha MUITO suave separando itens */
+    transition: background-color 0.2s ease-out, transform 0.2s ease-out;
+    cursor: pointer;
+    border-radius: 0; /* Sem arredondamento individual */
+}
+/* Arredonda o último item do grupo */
+.category-group li:last-child {
+    border-radius: 0 0 8px 8px;
+}
+/* Remove borda superior do primeiro item após o header */
+.category-header + li {
+    border-top: none;
+}
+
+/* Efeito Hover no item */
+#listaCompras li:hover:not(.lista-vazia):not(.filtro-sem-resultados) {
+    background-color: #f8f9fa; /* Fundo cinza bem claro */
+    transform: translateX(3px); /* Leve deslocamento */
+}
+
+/* Item Pendente (Valor Zero) */
+#listaCompras li.item-pendente {
+    background-color: #fff8f8; /* Fundo rosa bem claro */
+    border-left: 4px solid #ffcdd2; /* Borda lateral vermelha clara */
+    padding-left: 11px; /* Ajusta padding por causa da borda */
+}
+#listaCompras li.item-pendente:hover {
+    background-color: #ffebec; /* Rosa um pouco mais escuro no hover */
+}
+
+/* Info do item (Qtd, Desc, Preço) */
+.item-info {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap; /* Permite quebrar linha se não couber */
+    margin-right: 10px; /* Espaço antes do botão de excluir */
+    overflow: hidden; /* Evita que texto longo empurre o botão */
+}
+
+.item-qtd {
+    font-weight: bold;
+    color: #495057; /* Cinza escuro */
+    background-color: #e9ecef; /* Fundo cinza claro */
+    padding: 3px 8px; /* Padding */
+    border-radius: 5px; /* Arredondado */
+    font-size: 0.9em; /* Pouco menor */
+    white-space: nowrap; /* Não quebra linha */
+}
+
+.item-desc {
+    flex-grow: 1; /* Ocupa espaço */
+    min-width: 100px; /* Largura mínima */
+    color: #343a40; /* Cor principal do texto */
+    white-space: normal; /* Permite quebra de linha */
+    word-break: break-word; /* Quebra palavras longas */
+}
+
+.item-preco {
+    color: #28a745; /* Verde */
+    font-weight: bold;
+    white-space: nowrap; /* Não quebra linha */
+    font-size: 1.05em; /* Pouco maior */
+    margin-left: auto; /* Tenta empurrar para a direita se houver espaço */
+    padding-left: 10px; /* Espaço à esquerda */
+}
+/* Esconde preço se for vazio (gerado por JS) */
+.item-preco:empty {
+    display: none;
+}
+
+/* Botão de Excluir Refinado */
+#listaCompras .excluir-item {
+    background-color: #6c757d; /* Cinza padrão (visível em item com preço) */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Circular */
+    width: 36px; /* Tamanho */
+    height: 36px;
+    font-size: 1rem; /* Tamanho ícone */
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Não encolhe */
+    transition: background-color 0.2s, transform 0.15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Botão Excluir para item SEM valor (pendente) */
+#listaCompras .excluir-item.sem-valor {
+    background-color: #dc3545; /* Vermelho */
+}
+
+/* Efeito Hover nos botões de excluir */
+#listaCompras .excluir-item:hover {
+    background-color: #5a6268; /* Cinza escuro */
+    transform: scale(1.1); /* Aumenta um pouco */
+}
+#listaCompras .excluir-item.sem-valor:hover {
+    background-color: #c82333; /* Vermelho escuro */
+    transform: scale(1.1);
+}
+
+/* Total Oculto (mantido por JS, mas sem estilo visual) */
+.total {
+    display: none;
+}
+
+/* Modal de Edição */
+.modal {
+    display: none; /* Oculto por padrão */
+    position: fixed; /* Fica fixo na tela */
+    z-index: 1000; /* Sobrepõe outros elementos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Permite scroll se conteúdo for maior */
+    background-color: rgba(0,0,0,0.5); /* Fundo semi-transparente */
+    animation: fadeIn 0.3s ease-out; /* Animação de entrada */
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* Centraliza verticalmente (aproximado) e horizontalmente */
+    padding: 25px;
+    border: 1px solid #888;
+    width: 90%; /* Largura responsiva */
+    max-width: 500px; /* Largura máxima */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    position: relative;
+    animation: slideIn 0.4s ease-out; /* Animação de entrada do conteúdo */
+}
+@keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.fechar-modal {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1; /* Ajusta altura da linha */
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.fechar-modal:hover,
+.fechar-modal:focus {
+    color: #333; /* Escurece no hover */
+    text-decoration: none;
+}
+
+/* Título do Modal */
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #006400; /* Verde escuro */
+    text-align: center;
+}
+
+/* Botões dentro do Modal */
+.button-green, .button-gold {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 25px; /* Bem arredondado */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+    width: 100%; /* Ocupa largura total */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.button-green {
+    background-color: #28a745; /* Verde vibrante */
+    color: white;
+}
+.button-green:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+.button-green:active {
+    background-color: #1e7e34;
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal de Informação de Importação */
+.import-info-modal .modal-content { /* Herda estilos, mas pode ter ajustes */
+    max-width: 600px; /* Pode ser um pouco maior */
+}
+.import-info-content p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+    color: #495057;
+}
+.import-info-content ul {
+    margin: 10px 0 15px 20px; /* Recuo da lista */
+    list-style: disc; /* Estilo de marcador */
+    color: #495057;
+}
+.import-info-content li {
+    margin-bottom: 5px;
+}
+.import-info-content a {
+    color: #006400; /* Verde escuro para link */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+.import-info-content a:hover {
+    color: #004d00; /* Verde mais escuro no hover */
+    text-decoration: underline;
+}
+.button-gold { /* Botão Continuar/Download */
+    background-color: #FFD700; /* Dourado */
+    color: #333;
+}
+.button-gold:hover {
+    background-color: #E6C200;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+.button-gold:active {
+    background-color: #D4A600;
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para Awesomplete (Sugestões) */
+div.awesomplete { /* Container principal */
+    width: 100%; /* Ocupa a largura do wrapper */
+    display: block; /* Garante que ocupe espaço corretamente */
+}
+.awesomplete > ul { /* Lista de sugestões */
+    position: absolute;
+    left: 0;
+    z-index: 999; /* Acima de outros elementos normais */
+    min-width: 100%; /* Largura mínima igual ao input */
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0.2em 0.3em 0.5em rgba(0,0,0,0.1);
+    border-radius: 0 0 8px 8px; /* Arredondado embaixo */
+    margin-top: -1px; /* Sobrepõe borda inferior do input */
+    max-height: 200px; /* Altura máxima com scroll */
+    overflow-y: auto;
+}
+.awesomplete > ul:empty { /* Esconde lista vazia */
+    display: none;
+}
+.awesomplete > ul li { /* Item da lista */
+    position: relative;
+    padding: 0.5em 0.8em;
+    cursor: pointer;
+    background: #fff;
+    transition: background-color 0.1s;
+    font-size: 1rem; /* Tamanho de fonte consistente */
+}
+.awesomplete > ul li:hover { /* Hover no item */
+    background: #f0f0f0; /* Cinza claro */
+}
+.awesomplete > ul li[aria-selected="true"] { /* Item selecionado (setas) */
+    background: #006400; /* Verde escuro */
+    color: white;
+}
+.awesomplete mark { /* Destaca texto correspondente */
+    background: #ffdd77; /* Amarelo claro */
+    border-radius: 2px;
+    padding: 0.1em 0;
+    margin: -0.1em 0;
+    box-shadow: none;
+    color: inherit;
+}
+.awesomplete li[aria-selected="true"] mark { /* Destaca texto no item selecionado */
+    background: #ffeb99; /* Amarelo mais claro */
+    color: #333; /* Cor escura para contraste */
+}
+
+/* --- Media Queries para Responsividade --- */
+
+/* Telas Pequenas (Smartphones) */
+@media (max-width: 480px) {
+    body { font-size: 0.95rem; }
+    h1 { font-size: 1.4rem; }
+    .container { padding: 10px; margin: 10px auto; border-radius: 8px; }
+    label { font-size: 0.9rem; }
+    input[type="text"], input[type="number"], select { padding: 10px; font-size: 1rem; border-radius: 6px; }
+    #orcamento { max-width: 140px; } /* Ajusta largura do orçamento */
+    .top-actions { margin-bottom: 20px; gap: 8px;}
+    .top-action-btn { padding: 6px 12px; font-size: 0.8rem; }
+    #painelTotal { font-size: 2rem; padding: 10px; }
+    #painelContagemItens { font-size: 1rem; padding: 8px; }
+    .voice-input-wrapper { gap: 5px; }
+    .mic-btn, .action-btn { width: 40px; height: 40px; font-size: 1.1rem; }
+    #listaComprasContainer h2 { font-size: 1.2rem; margin-bottom: 12px; padding-bottom: 6px; }
+    .category-header { padding: 8px 12px; font-size: 1.05rem; border-radius: 6px 6px 0 0; }
+    .category-group { border-radius: 6px; }
+    #listaCompras li { padding: 10px 12px; font-size: 1rem; }
+    #listaCompras li:last-child { border-radius: 0 0 6px 6px; }
+    .item-qtd { padding: 2px 6px; font-size: 0.85em; }
+    .item-preco { font-size: 1em; }
+    #listaCompras .excluir-item { width: 32px; height: 32px; font-size: 0.9rem; }
+    .modal-content { padding: 20px; margin: 10% auto; width: 95%; } /* Ajusta margem e largura do modal */
+    .fechar-modal { font-size: 28px; top: 8px; right: 12px; }
+    .button-green, .button-gold { padding: 10px 15px; font-size: 1rem;}
+    .progress-bar-container { height: 24px; border-radius: 12px; }
+    #barraProgresso, #barraProgresso::-webkit-progress-value, #barraProgresso::-moz-progress-bar { border-radius: 12px; }
+    #porcentagemProgresso { font-size: 0.8rem; }
+    .logo { max-width: 60px; min-width: 40px; padding: 5px;} /* Ajuste logo */
+}
+
+/* Telas Médias (Tablets) */
+@media (min-width: 481px) and (max-width: 768px) {
+    h1 { font-size: 1.5rem; }
+    .container { max-width: 90%; padding: 15px; }
+    label { font-size: 0.9rem; }
+    input[type="text"], input[type="number"], select { font-size: 1.05rem; padding: 10px; }
+    .top-actions { margin-bottom: 25px; }
+    #painelTotal { font-size: 2.2rem; }
+    #painelContagemItens { font-size: 1.05rem; }
+    .mic-btn, .action-btn { width: 44px; height: 44px; font-size: 1.1rem; }
+    .top-action-btn { padding: 7px 14px; font-size: 0.85rem; }
+    #listaComprasContainer h2 { font-size: 1.25rem; }
+    .category-header { font-size: 1.05rem; }
+    #listaCompras li { font-size: 1.05rem; padding: 10px 12px; }
+    .modal-content { max-width: 500px; margin: 12% auto; }
+    .logo { max-width: 70px; min-width: 45px; padding: 6px;} /* Ajuste logo */
+}
+
+/* Telas Maiores (Desktops pequenos) */
+@media (min-width: 769px) {
+    .container { max-width: 800px; /* Limita largura máxima em telas maiores */ }
+    .modal-content { margin: 10% auto; } /* Ajusta margem vertical modal */
+}

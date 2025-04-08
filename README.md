@@ -1,61 +1,133 @@
-# Minhas Compras de Mercado
+🛒 Minhas Compras de Mercado
 
-## Descrição do Projeto
+Sua lista de supermercado inteligente e eficiente, direto no seu navegador mobile!
 
-"Minhas Compras de Mercado" é uma aplicação web intuitiva e eficiente, desenvolvida para simplificar a gestão das suas listas de compras de supermercado. Projetada com foco em dispositivos Android (smartphones e tablets), esta ferramenta leve permite que você adicione, organize, edite e monitore seus itens de compra de forma rápida e prática, diretamente do seu navegador.
+![alt text](https://img.shields.io/badge/lang-pt--BR-green.svg)
+<!-- Substitua 'usuario/minhas-compras-mercado' pelo seu repo real se quiser -->
 
-**Gerencie suas compras com facilidade, utilizando recursos como:**
+![alt text](https://img.shields.io/badge/HTML-5-orange)
 
-*   **Entrada de dados flexível:** Adicione itens por digitação ou utilize o **ditado por voz** com comandos em linguagem natural (ex: "quantidade 2 descrição maçã preço 3,99").
-*   **Categorização inteligente:** A aplicação categoriza automaticamente seus itens (Alimentos, Limpeza, Higiene Pessoal, Outros), facilitando a organização da sua lista.
-*   **Controle financeiro integrado:** Defina um orçamento e acompanhe o seu progresso com uma **barra de progresso visual** e alertas de estouro de orçamento.
-*   **Persistência de dados:** Sua lista de compras e orçamento são salvos localmente no seu navegador usando `localStorage`, garantindo que você não perca suas informações.
-*   **Importar Lista:** Importe listas de compras existentes a partir de arquivos **XLSX (Excel)**, utilizando um modelo para facilitar a criação da sua lista.
-*   **Relatórios detalhados:** Gere **relatórios em Excel (.xlsx)** para ter uma visão clara dos seus gastos e itens comprados.
-*   **Interface amigável e responsiva:** Design limpo e otimizado para **smartphones Android**, com animações suaves e feedback visual para uma experiência de usuário agradável.
 
-"Minhas Compras de Mercado" é a solução ideal para planejar suas idas ao supermercado, controlar seus gastos e otimizar seu tempo, tudo isso em uma interface web simples e acessível.
+![alt text](https://img.shields.io/badge/CSS-3-blue)
 
-## Funcionalidades Principais
 
-*   **Adicionar Itens:**
-    *   Por **digitação** no campo de texto com sugestões de autocomplete.
-    *   Por **ditado de voz** com reconhecimento de comandos em português.
-*   **Editar Itens:** Modifique a descrição, quantidade, valor unitário e categoria dos itens diretamente na lista através de um modal de edição.
-*   **Excluir Itens:** Remova itens da lista individualmente com confirmação.
-*   **Filtrar por Categoria:** Visualize itens específicos por categoria (Alimentos, Limpeza, Higiene Pessoal, Todas).
-*   **Controle de Orçamento:**
-    *   Defina um orçamento total para suas compras.
-    *   Acompanhe o progresso do seu gasto em relação ao orçamento com uma barra de progresso colorida.
-    *   Receba alertas visuais caso o valor total da lista exceda o orçamento definido.
-*   **Importar Lista:** Importe listas de compras existentes a partir de arquivos **XLSX (Excel)**, utilizando um modelo de planilha para garantir o formato correto dos dados.
-*   **Limpar Lista:** Remova todos os itens da lista de compras com confirmação.
-*   **Gerar Relatório Excel:** Crie um relatório detalhado da sua lista de compras em formato **XLSX (Excel)**, incluindo descrição, quantidade, valor unitário, categoria e a data de geração do relatório.
-*   **Feedback Visual e Animações:** A aplicação utiliza animações suaves (fade-in, transições) e feedback visual para melhorar a experiência do usuário.
-*   **Botões de Lixeira Dinâmicos:** Os ícones de lixeira ao lado de cada item mudam de cor para indicar o status do valor do item:
-    *   **Verde:** Item possui valor unitário maior que zero.
-    *   **Vermelho:** Item possui valor unitário igual a zero ou não possui valor definido.
+![alt text](https://img.shields.io/badge/JavaScript-ES6+-yellow)
 
-## Pré-requisitos
+📝 Descrição do Projeto
 
-Para utilizar o projeto, você precisará de:
+"Minhas Compras de Mercado" é uma aplicação web leve, intuitiva e eficiente, projetada para simplificar a gestão das suas listas de compras de supermercado. Otimizada para uso em navegadores de dispositivos móveis (smartphones e tablets, especialmente Android), esta ferramenta permite adicionar, organizar, editar e monitorar seus itens de compra de forma rápida e prática.
 
-*   Um navegador web moderno compatível com HTML5, CSS3 e JavaScript (preferencialmente Chrome, Firefox, Safari ou Edge, otimizado para dispositivos Android).
-*   Acesso à internet (necessário para carregar as bibliotecas externas: Awesomplete, XLSX e Font Awesome, e para funcionalidades opcionais como reconhecimento de voz, dependendo do navegador).
+Planeje suas idas ao mercado, controle seus gastos e otimize seu tempo com recursos poderosos, tudo em uma interface web limpa e acessível.
 
-## Como Usar
+✨ Funcionalidades Principais
 
-1.  **Abrir no Navegador:** Abra o arquivo `index.html` diretamente no seu navegador web (Chrome, Firefox, etc.). Você pode fazer isso clicando com o botão direito no arquivo `index.html` e selecionando "Abrir com..." e escolhendo seu navegador.
+🛒 Adição Flexível de Itens:
 
-2.  **Utilizar a Aplicação:** A página "Minhas Compras de Mercado" será carregada no seu navegador. Você pode começar a utilizar todas as funcionalidades da aplicação:
+Digitação: Campo de texto com sugestões de autocomplete (itens comuns pré-definidos).
 
-    *   Adicione itens digitando ou por voz.
-    *   Defina seu orçamento.
-    *   Visualize e edite sua lista de compras.
--   Exporte, importe ou limpe a lista.  *(Removido "Exportar" aqui)*
-+   Importe ou limpe a lista. *(Atualizado para refletir a remoção do "Exportar")*
-    *   Gere relatórios em Excel.
+🎤 Ditado por Voz: Use comandos em linguagem natural (português) para adicionar itens rapidamente (ex: "quantidade 2 descrição maçã preço 3,99").
 
-3.  **Persistência de Dados:** Seus dados (lista de compras e orçamento) serão salvos automaticamente no `localStorage` do seu navegador. Ao reabrir a página no mesmo navegador e dispositivo, seus dados serão restaurados.
+📄 Importação de Texto: Cole uma lista de nomes de itens separados por vírgula para adicionar múltiplos produtos de uma vez (com quantidade 1 e preço 0).
 
-**Divirta-se planejando suas compras de mercado de forma mais inteligente e eficiente!**
+📊 Importação de Planilha: Importe listas existentes a partir de arquivos XLSX (Excel), utilizando um modelo fornecido para garantir o formato correto.
+
+🏷️ Categorização Automática: Itens são automaticamente classificados em categorias (Alimentos, Limpeza, Higiene Pessoal, Outros) para melhor organização. Filtre sua lista por categoria.
+
+✏️ Edição Fácil: Modifique descrição, quantidade, valor unitário e categoria de qualquer item diretamente na lista através de um modal intuitivo.
+
+💰 Controle Financeiro Integrado:
+
+Defina seu orçamento para as compras.
+
+Acompanhe o total gasto em relação ao orçamento com uma barra de progresso visual colorida.
+
+Receba alertas visuais (cor da barra e painel de total) caso o valor total exceda o orçamento.
+
+🗑️ Gerenciamento da Lista:
+
+Exclua itens individualmente (com confirmação).
+
+Limpe toda a lista e o orçamento com um único clique (com confirmação).
+
+Ícones de lixeira com cores dinâmicas indicam se um item tem preço definido (Verde) ou não (Vermelho).
+
+💾 Persistência Local: Sua lista de compras e orçamento são salvos automaticamente no localStorage do seu navegador, garantindo que seus dados não sejam perdidos ao fechar e reabrir a página no mesmo dispositivo e navegador.
+
+📈 Relatórios Detalhados: Gere relatórios completos da sua lista de compras em formato XLSX (Excel), incluindo totais por item, categorias e total geral.
+
+📱 Interface Amigável e Responsiva: Design limpo, moderno e otimizado para telas de smartphones, com animações suaves e feedback visual claro para uma ótima experiência de usuário.
+
+🛠️ Tecnologias Utilizadas
+
+Frontend: HTML5, CSS3, JavaScript (ES6+)
+
+APIs Web:
+
+Web Speech API (para ditado por voz, dependente do suporte do navegador)
+
+localStorage (para persistência de dados)
+
+Bibliotecas Externas:
+
+SheetJS (xlsx.full.min.js): Para leitura e escrita de arquivos Excel (.xlsx).
+
+Awesomplete: Para sugestões de autocomplete no input de itens.
+
+Font Awesome: Para ícones.
+
+🚀 Como Usar (Getting Started)
+
+Clone ou Baixe: Obtenha os arquivos do projeto:
+
+git clone https://github.com/usuario/minhas-compras-mercado.git
+# Ou baixe o ZIP do repositório
+
+
+(Substitua usuario/minhas-compras-mercado pelo caminho real do seu repositório)
+
+Abra no Navegador: Navegue até a pasta onde você salvou os arquivos e abra o arquivo index.html diretamente no seu navegador web preferido (Chrome, Firefox, Edge são recomendados, especialmente em suas versões mobile Android).
+
+Pronto! A aplicação "Minhas Compras de Mercado" carregará e você poderá começar a:
+
+Definir seu orçamento.
+
+Adicionar itens (digitando, ditando ou importando).
+
+Gerenciar sua lista (editar, excluir, filtrar).
+
+Gerar relatórios ou limpar a lista quando necessário.
+
+📥 Importando Dados
+
+Você pode adicionar itens à sua lista de duas formas além da digitação/voz:
+
+Lista de Texto:
+
+Clique em "Importar".
+
+Escolha a opção "Lista de Itens (texto)".
+
+Na janela que abrir, cole ou digite os nomes dos itens que deseja adicionar, separados por vírgula (ex: Arroz, Feijão, Óleo de Soja, Café).
+
+Clique em "Adicionar Itens da Lista". Os itens serão adicionados com quantidade 1 e valor R$ 0,00, sendo categorizados automaticamente. Itens duplicados (já existentes na lista) serão ignorados.
+
+Planilha Excel (.xlsx):
+
+Clique em "Importar".
+
+Escolha a opção "Arquivo Excel (.xlsx)".
+
+Baixe o modelo (modelo_importacao.xlsx) fornecido na janela de aviso para ver o formato esperado.
+
+Prepare sua planilha com as colunas: Descrição, Quantidade, Valor Unitário (R$), Categoria (opcional).
+
+Clique em "Selecionar Arquivo .xlsx" e escolha sua planilha. Os itens serão adicionados à lista, ignorando duplicados.
+
+✅ Pré-requisitos
+
+Um navegador web moderno compatível com HTML5, CSS3 e JavaScript (Chrome, Firefox, Safari, Edge - otimizado para mobile).
+
+Microfone habilitado e permissão concedida no navegador para usar a funcionalidade de ditado por voz.
+
+Acesso à internet (pelo menos na primeira vez) para carregar as bibliotecas externas (Font Awesome, Awesomplete, SheetJS) e para o funcionamento da API de Ditado por Voz (geralmente requer conexão).
+

@@ -2,7 +2,7 @@
   "name": "Minhas Compras de Mercado",
   "short_name": "Compras",
   "description": "Sua lista de supermercado inteligente.",
-  "start_url": "/index.html", // Ou apenas "/" se o index.html está na raiz
+  "start_url": ".", // Ou apenas "/" se o index.html está na raiz
   "display": "standalone", // Faz parecer um app sem a barra de endereço do Chrome
   "background_color": "#f8f9fa", // Cor de fundo da tela de splash (opcional)
   "theme_color": "#006400", // Cor da barra de status/header do app (verde escuro do seu header)

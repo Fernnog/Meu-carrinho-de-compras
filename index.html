@@ -72,7 +72,7 @@
                     <i class="fas fa-plus"></i>
                 </button>
                 <button id="limparInput" class="action-btn danger" aria-label="Limpar Campo" title="Limpar Campo de Entrada">
-                    <i class="fas fa-times"></i>
+                    <i class="fas fa-times"></i> <!-- Ícone 'x' mais apropriado -->
                 </button>
             </div>
             <div class="voz-feedback"></div> <!-- Área para feedback de sucesso/erro -->
@@ -113,6 +113,8 @@
                 <!-- Botão Fechar Genérico (usa data-target) -->
                 <span class="fechar-modal" data-target="modalEdicao" aria-label="Fechar Modal de Edição" title="Fechar">×</span>
                 <h2 id="modalEdicaoTitulo">Editar Item</h2>
+
+                <!-- Edição Manual da Descrição -->
                 <div class="input-group">
                     <label for="editarDescricao">Descrição:</label>
                     <div class="input-with-mic">
@@ -122,24 +124,46 @@
                         </button>
                     </div>
                 </div>
-                <div class="input-group">
-                    <label for="editarQuantidade">Quantidade:</label>
-                     <div class="input-with-mic">
-                        <input type="number" id="editarQuantidade" placeholder="Quantidade" min="1" inputmode="numeric">
-                        <button class="mic-btn modal-mic-btn" data-target="editarQuantidade" aria-label="Editar Quantidade por Voz" title="Ditar Quantidade">
-                             <i class="fas fa-microphone"></i>
-                         </button>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label for="editarValor">Valor Unitário (R$):</label>
-                    <div class="input-with-mic">
-                        <input type="text" id="editarValor" placeholder="0,00" inputmode="decimal">
-                        <button class="mic-btn modal-mic-btn" data-target="editarValor" aria-label="Editar Valor por Voz" title="Ditar Valor">
+
+                <!-- NOVA Seção para Edição por Voz (Quantidade e Preço) -->
+                <hr class="modal-divider"> <!-- Linha divisória opcional -->
+                 <div class="input-group voice-input-modal"> <!-- Nova classe para possível estilo específico -->
+                    <label for="editarVozInput">Editar Qtd/Preço por Voz:</label>
+                    <div class="input-with-mic"> <!-- Reutiliza a classe para alinhamento -->
+                        <input type="text" id="editarVozInput" placeholder="Ex: qtd 5 preco 10,50" aria-label="Campo para editar quantidade e preço por voz">
+                        <button id="editarVozMicBtn" class="mic-btn modal-mic-btn" data-target="editarVozInput" aria-label="Ativar Ditado para Editar Qtd/Preço" title="Ditar Alterações Qtd/Preço">
                             <i class="fas fa-microphone"></i>
                         </button>
+                        <button id="processarEdicaoVoz" class="action-btn modal-action-btn" aria-label="Processar Comando de Voz" title="Aplicar alterações ditadas">
+                            <i class="fas fa-check"></i> <!-- Ícone de 'check' para processar -->
+                        </button>
+                        <button id="limparEdicaoVoz" class="action-btn modal-action-btn danger" aria-label="Limpar Comando de Voz" title="Limpar campo de comando">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="editarVozFeedback" class="voz-feedback modal-feedback"></div> <!-- Feedback específico para o modal -->
+                </div>
+                <hr class="modal-divider"> <!-- Linha divisória opcional -->
+
+                <!-- Edição Manual da Quantidade -->
+                <div class="input-group">
+                    <label for="editarQuantidade">Quantidade (Manual):</label>
+                     <div class="input-with-mic"> <!-- Removido mic daqui, já tem o global -->
+                        <input type="number" id="editarQuantidade" placeholder="Quantidade" min="1" inputmode="numeric">
+                        <!-- Removido botão de microfone específico daqui -->
                     </div>
                 </div>
+
+                <!-- Edição Manual do Valor -->
+                <div class="input-group">
+                    <label for="editarValor">Valor Unitário (R$) (Manual):</label>
+                    <div class="input-with-mic"> <!-- Removido mic daqui, já tem o global -->
+                        <input type="text" id="editarValor" placeholder="0,00" inputmode="decimal">
+                        <!-- Removido botão de microfone específico daqui -->
+                    </div>
+                </div>
+
+                <!-- Botão Salvar (Aplica TODAS as alterações, manuais ou via voz processada) -->
                 <button id="salvarEdicao" class="button-green">
                     <i class="fas fa-save"></i> Salvar Alterações
                 </button>

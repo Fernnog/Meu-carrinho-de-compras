@@ -289,7 +289,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 }
 
 /* --- Área de Entrada de Item (Voz/Digitação) --- */
-.input-with-mic { /* Usado no modal */
+.input-with-mic { /* Usado no modal E AGORA NO PRINCIPAL */
     display: flex;
     align-items: center;
     width: 100%;
@@ -335,7 +335,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     box-shadow: none; /* Sem sombra */
 }
 
-/* Botão Microfone e Adicionar */
+/* Botão Microfone e Adicionar (Principal)*/
 #ativarVoz, #inserirItem {
     background-color: #28a745; /* Verde vibrante */
 }
@@ -349,12 +349,12 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 /* Classe adicionada via JS quando gravando */
-.mic-btn.recording, #ativarVoz.recording {
+.mic-btn.recording, #ativarVoz.recording { /* Aplica a ambos os tipos de mic */
     background-color: #dc3545; /* Vermelho para indicar gravação */
     animation: pulse 1.5s infinite; /* Animação de pulsar */
 }
 
-/* Botão Limpar Input */
+/* Botão Limpar Input (Principal) */
 #limparInput {
     background-color: #ffc107; /* Amarelo/Laranja */
     color: #333; /* Texto/ícone escuro para contraste */
@@ -369,13 +369,14 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Microfone dentro do Modal */
+/* Microfone dentro do Modal (Estilo base para todos os mics do modal) */
 .modal-mic-btn {
     background-color: #6c757d; /* Cinza padrão */
     color: white;
     width: 40px; /* Um pouco menor que os principais */
     height: 40px;
     font-size: 1.1rem;
+    /* Herda .mic-btn:disabled */
 }
 .modal-mic-btn:hover:not(:disabled) {
     background-color: #5a6268; /* Cinza mais escuro */
@@ -384,6 +385,13 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     background-color: #545b62; /* Cinza ainda mais escuro */
     transform: scale(0.95);
 }
+/* Classe de gravação para mics do modal */
+.modal-mic-btn.recording {
+    background-color: #dc3545; /* Vermelho para indicar gravação */
+    animation: pulse 1.5s infinite; /* Animação de pulsar */
+}
+
+
 /* Animação de pulsar para gravação (reutilizada) */
 @keyframes pulse {
     0% { transform: scale(1); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
@@ -391,7 +399,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     100% { transform: scale(1); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
 }
 
-/* --- Feedback de Voz (abaixo do input) --- */
+/* --- Feedback de Voz (Principal, abaixo do input) --- */
 .voz-feedback {
     margin-top: 8px; /* Espaço acima */
     font-size: 0.9rem;
@@ -406,7 +414,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     display: block;
     opacity: 1;
 }
-/* Estilos por tipo de feedback */
+/* Estilos por tipo de feedback (Principal) */
 .voz-feedback.success {
     background-color: #d4edda; color: #155724; border-color: #c3e6cb;
 }
@@ -430,6 +438,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 #categoriaFiltro:focus {
     border-color: #006400;
     box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.15);
+    outline: none;
 }
 
 /* --- Lista de Compras --- */
@@ -486,6 +495,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     padding: 0;
     border: none;
     box-shadow: none;
+    overflow: hidden; /* Garante que não ocupe espaço */
 }
 
 /* Lista de Itens UL */
@@ -502,17 +512,17 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     padding: 20px;
     color: #6c757d; /* Cinza */
     font-style: italic;
-    background-color: transparent;
+    background-color: transparent; /* Fundo é do container */
     border: none;
     cursor: default;
     box-shadow: none; /* Garante sem sombra */
     margin: 10px 0; /* Espaçamento para a mensagem */
-    border-radius: 8px;
-    background-color: #f8f9fa; /* Fundo levemente cinza para destacar */
+    border-radius: 8px; /* Arredonda se estiver fora de um grupo */
+    /* background-color: #f8f9fa; /* Fundo levemente cinza para destacar (opcional) */
 }
 #listaCompras li.lista-vazia:hover,
 #listaCompras li.filtro-sem-resultados:hover {
-    background-color: #f8f9fa; /* Sem efeito hover visual */
+    background-color: transparent; /* Sem efeito hover visual */
     transform: none; /* Sem deslocamento no hover */
 }
 
@@ -630,14 +640,9 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 
 /* Efeito Hover nos botões de excluir */
 #listaCompras .excluir-item:hover {
-    /* background-color: #5a6268; */ /* Cinza escuro no hover (comentado para manter cor indicativa) */
     transform: scale(1.1); /* Aumenta um pouco */
     filter: brightness(90%); /* Escurece levemente a cor atual (verde ou vermelho) */
 }
-/* #listaCompras .excluir-item.sem-valor:hover { */ /* Não precisa mais, o hover acima funciona */
-/*    background-color: #c82333; */ /* Vermelho escuro */
-/*    transform: scale(1.1); */
-/* } */
 
 /* --- Total Oculto (Mantido por JS, sem estilo visual) --- */
 .total {
@@ -885,6 +890,112 @@ div.awesomplete { /* Container principal do Awesomplete */
     color: #333; /* Cor escura para contraste sobre fundo verde */
 }
 
+/* ============================================================ */
+/* --- NOVOS ESTILOS - Modal de Edição por Voz (Adicionados) --- */
+/* ============================================================ */
+
+/* Divisória dentro do modal */
+.modal-divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 20px 0; /* Espaçamento vertical */
+}
+
+/* Wrapper para o input de voz no modal */
+.voice-input-modal .input-with-mic {
+    gap: 8px; /* Ajuste o espaçamento se necessário */
+}
+
+/* Botões de ação dentro do modal (check, limpar) - Herda .action-btn mas com ajustes */
+.modal-action-btn {
+    padding: 0;
+    width: 40px; /* Tamanho similar aos mics do modal */
+    height: 40px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    color: white;
+}
+
+/* Botão Processar (Check) */
+#processarEdicaoVoz {
+    background-color: #28a745; /* Verde (similar ao add principal) */
+}
+#processarEdicaoVoz:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+#processarEdicaoVoz:active {
+    background-color: #1e7e34;
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão Limpar Comando Voz (X) */
+#limparEdicaoVoz {
+    background-color: #ffc107; /* Amarelo/Laranja (similar ao limpar principal) */
+    color: #333;
+}
+#limparEdicaoVoz:hover {
+    background-color: #e0a800;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+#limparEdicaoVoz:active {
+    background-color: #d39e00;
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Área de feedback de voz dentro do modal */
+.modal-feedback {
+    margin-top: 8px;
+    font-size: 0.85rem; /* Um pouco menor */
+    padding: 6px 10px;
+    border-radius: 4px;
+    display: none; /* Escondido por padrão */
+    border: 1px solid transparent;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    /* Herda estilos de .voz-feedback.show */
+}
+.modal-feedback.show {
+    display: block;
+    opacity: 1;
+}
+/* Estilos por tipo de feedback (reutiliza os nomes de classe) */
+.modal-feedback.success {
+    background-color: #d4edda; color: #155724; border-color: #c3e6cb;
+}
+.modal-feedback.error {
+    background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;
+}
+.modal-feedback.info {
+    background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb;
+}
+
+/* Garante que o input de voz no modal ocupe espaço */
+#editarVozInput {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+/* Ajuste opcional no espaçamento dos grupos no modal */
+#modalEdicao .input-group {
+    margin-bottom: 12px; /* Um pouco menos de espaço entre grupos no modal */
+}
+
+/* ================================================== */
+/* --- FIM DOS NOVOS ESTILOS --- */
+/* ================================================== */
+
 
 /* --- Media Queries para Responsividade --- */
 
@@ -900,8 +1011,8 @@ div.awesomplete { /* Container principal do Awesomplete */
     .top-action-btn { padding: 7px 12px; font-size: 0.85rem; } /* Ajuste padding */
     #painelTotal { font-size: 2rem; padding: 12px; } /* Ajuste padding */
     #painelContagemItens { font-size: 1rem; padding: 8px; }
-    .voice-input-wrapper { gap: 5px; }
-    .mic-btn, .action-btn { width: 40px; height: 40px; font-size: 1.1rem; }
+    .voice-input-wrapper { gap: 5px; } /* Ajuste gap principal */
+    .mic-btn, .action-btn { width: 40px; height: 40px; font-size: 1.1rem; } /* Ajuste botões principais */
     #listaComprasContainer h2 { font-size: 1.2rem; margin-bottom: 12px; padding-bottom: 6px; }
     .category-header { padding: 8px 12px; font-size: 1.05rem; border-radius: 6px 6px 0 0; }
     .category-group { border-radius: 6px; }
@@ -918,6 +1029,10 @@ div.awesomplete { /* Container principal do Awesomplete */
     #barraProgresso, #barraProgresso::-webkit-progress-value, #barraProgresso::-moz-progress-bar { border-radius: 12px; }
     #porcentagemProgresso { font-size: 0.8rem; }
     .logo { max-width: 60px; min-width: 40px; padding: 5px;} /* Ajuste logo */
+
+    /* Ajuste modal edicao voz mobile */
+     .modal-mic-btn, .modal-action-btn { width: 38px; height: 38px; font-size: 1rem; }
+     .voice-input-modal .input-with-mic { gap: 5px; }
 }
 
 /* Telas Médias (Tablets 481px - 768px) */
@@ -929,13 +1044,16 @@ div.awesomplete { /* Container principal do Awesomplete */
     .top-actions { margin-bottom: 25px; }
     #painelTotal { font-size: 2.2rem; }
     #painelContagemItens { font-size: 1.05rem; }
-    .mic-btn, .action-btn { width: 44px; height: 44px; font-size: 1.1rem; }
+    .mic-btn, .action-btn { width: 44px; height: 44px; font-size: 1.1rem; } /* Ajuste botões principais */
     .top-action-btn { padding: 8px 14px; font-size: 0.9rem; } /* Ajuste padding/fonte */
     #listaComprasContainer h2 { font-size: 1.25rem; }
     .category-header { font-size: 1.1rem; } /* Ajuste fonte */
     #listaCompras li { font-size: 1.05rem; padding: 11px 13px; } /* Ajuste padding */
     .modal-content { max-width: 500px; margin: 12% auto; }
     .logo { max-width: 70px; min-width: 45px; padding: 6px;} /* Ajuste logo */
+
+    /* Ajuste modal edicao voz tablet */
+    .modal-mic-btn, .modal-action-btn { width: 40px; height: 40px; font-size: 1.1rem; }
 }
 
 /* Telas Maiores (Desktops pequenos > 769px) */

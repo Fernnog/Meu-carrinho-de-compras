@@ -191,7 +191,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 /* --- Barra de Progresso --- */
 .progress-bar-container {
     width: 100%; /* Largura total */
-    margin-bottom: 15px; /* Espaço abaixo */
+    margin-bottom: 10px; /* Reduzido para dar espaço ao novo painel */
     position: relative; /* Para posicionar o texto da porcentagem */
     background-color: #e9ecef; /* Fundo cinza suave */
     border-radius: 15px; /* Bem arredondado */
@@ -253,8 +253,36 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Sombra para legibilidade */
     pointer-events: none; /* Não interfere com cliques na barra */
     white-space: nowrap; /* Evita quebra de linha */
-    /* mix-blend-mode: difference; /* Tenta manter legível (pode variar) */
 }
+
+/* --- (NOVO) Painel de Informação Sutil (Último Item) --- */
+.painel-info-sutil {
+    background-color: #eef1f5; /* Fundo cinza bem claro/azulado */
+    border: 1px solid #d6dde7; /* Borda suave */
+    padding: 8px 12px; /* Espaçamento interno menor */
+    margin-top: 10px; /* Espaço acima (após a barra de progresso) */
+    margin-bottom: 10px; /* Espaço abaixo (antes do painel total) */
+    text-align: center; /* Centraliza texto */
+    font-size: 0.9rem; /* Fonte ligeiramente menor */
+    color: #495057; /* Cor de texto cinza escuro */
+    border-radius: 6px; /* Bordas arredondadas suaves */
+    transition: opacity 0.4s ease-out, max-height 0.4s ease-out, margin 0.4s ease-out; /* Transição suave */
+    opacity: 0; /* Começa invisível para animação */
+    max-height: 0; /* Começa colapsado */
+    overflow: hidden; /* Esconde conteúdo enquanto colapsado */
+}
+.painel-info-sutil.show { /* Classe para mostrar o painel */
+    opacity: 1;
+    max-height: 100px; /* Altura máxima suficiente para o conteúdo */
+     /* Margens voltam ao normal quando visível (definidas acima) */
+}
+
+#ultimoItemInfo { /* Estilo para o span que contém a info */
+    font-weight: bold; /* Destaca a informação do item */
+    color: #0056b3; /* Azul para destacar */
+}
+/* --- FIM DO NOVO PAINEL --- */
+
 
 /* --- Painéis de Total e Contagem --- */
 #painelTotal {
@@ -269,8 +297,6 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Transição suave */
     font-weight: bold; /* Negrito */
 }
-/* Estilo aplicado via JS quando orçamento estoura */
-/* #painelTotal (verificarOrcamento no JS) */
 
 #painelContagemItens {
     background-color: #fff8e1; /* Amarelo bem claro */
@@ -289,7 +315,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 }
 
 /* --- Área de Entrada de Item (Voz/Digitação) --- */
-.input-with-mic { /* Usado no modal E AGORA NO PRINCIPAL */
+.input-with-mic { /* Usado no modal E NO PRINCIPAL */
     display: flex;
     align-items: center;
     width: 100%;
@@ -518,7 +544,6 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     box-shadow: none; /* Garante sem sombra */
     margin: 10px 0; /* Espaçamento para a mensagem */
     border-radius: 8px; /* Arredonda se estiver fora de um grupo */
-    /* background-color: #f8f9fa; /* Fundo levemente cinza para destacar (opcional) */
 }
 #listaCompras li.lista-vazia:hover,
 #listaCompras li.filtro-sem-resultados:hover {
@@ -559,9 +584,6 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 /* Estilo para Item Pendente (Valor Zero ou Nulo) */
 #listaCompras li.item-pendente {
     background-color: #fff8f8; /* Fundo rosa bem claro */
-    /* Opcional: Borda lateral para destaque maior */
-    /* border-left: 4px solid #ffcdd2; */
-    /* padding-left: 11px; */ /* Ajusta padding se usar borda */
 }
 #listaCompras li.item-pendente:hover {
     background-color: #ffebec; /* Rosa um pouco mais escuro no hover */
@@ -891,7 +913,7 @@ div.awesomplete { /* Container principal do Awesomplete */
 }
 
 /* ============================================================ */
-/* --- NOVOS ESTILOS - Modal de Edição por Voz (Adicionados) --- */
+/* --- ESTILOS - Modal de Edição (Incluindo Edição por Voz) --- */
 /* ============================================================ */
 
 /* Divisória dentro do modal */
@@ -923,6 +945,14 @@ div.awesomplete { /* Container principal do Awesomplete */
     flex-shrink: 0;
     color: white;
 }
+/* Estilo perigo também para botões de ação no modal */
+.modal-action-btn.danger {
+    background-color: #dc3545;
+    color: white;
+}
+.modal-action-btn.danger:hover { background-color: #c82333; }
+.modal-action-btn.danger:active { background-color: #bd2130; }
+
 
 /* Botão Processar (Check) */
 #processarEdicaoVoz {
@@ -938,21 +968,10 @@ div.awesomplete { /* Container principal do Awesomplete */
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Botão Limpar Comando Voz (X) */
+/* Botão Limpar Comando Voz (X) - Reutiliza estilo danger */
 #limparEdicaoVoz {
-    background-color: #ffc107; /* Amarelo/Laranja (similar ao limpar principal) */
-    color: #333;
+    /* Usa .modal-action-btn.danger */
 }
-#limparEdicaoVoz:hover {
-    background-color: #e0a800;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-}
-#limparEdicaoVoz:active {
-    background-color: #d39e00;
-    transform: scale(0.95);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
 
 /* Área de feedback de voz dentro do modal */
 .modal-feedback {
@@ -993,7 +1012,7 @@ div.awesomplete { /* Container principal do Awesomplete */
 }
 
 /* ================================================== */
-/* --- FIM DOS NOVOS ESTILOS --- */
+/* --- FIM DOS ESTILOS DO MODAL DE EDIÇÃO --- */
 /* ================================================== */
 
 
@@ -1011,6 +1030,7 @@ div.awesomplete { /* Container principal do Awesomplete */
     .top-action-btn { padding: 7px 12px; font-size: 0.85rem; } /* Ajuste padding */
     #painelTotal { font-size: 2rem; padding: 12px; } /* Ajuste padding */
     #painelContagemItens { font-size: 1rem; padding: 8px; }
+    .painel-info-sutil { font-size: 0.85rem; padding: 6px 10px; } /* Ajuste painel info */
     .voice-input-wrapper { gap: 5px; } /* Ajuste gap principal */
     .mic-btn, .action-btn { width: 40px; height: 40px; font-size: 1.1rem; } /* Ajuste botões principais */
     #listaComprasContainer h2 { font-size: 1.2rem; margin-bottom: 12px; padding-bottom: 6px; }
@@ -1060,6 +1080,5 @@ div.awesomplete { /* Container principal do Awesomplete */
 @media (min-width: 769px) {
     .container { max-width: 800px; /* Limita largura máxima em telas maiores */ }
     .modal-content { margin: 10% auto; } /* Ajusta margem vertical modal */
-    /* Potencialmente aumentar fontes ligeiramente se necessário */
     /* body { font-size: 1.05rem; } */
 }

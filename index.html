@@ -49,14 +49,20 @@
             <span id="porcentagemProgresso">0%</span>
         </div>
 
+        <!-- (NOVO) Painel do Último Item Adicionado -->
+        <div id="painelUltimoItem" class="painel-info-sutil" style="display: none;" aria-live="polite">
+            Último: <span id="ultimoItemInfo">Nenhum item adicionado recentemente.</span>
+        </div>
+        <!-- Fim do Novo Painel -->
+
         <!-- Painel de Total -->
         <div id="painelTotal">
             Total: R$ <span id="totalValorPainel">0,00</span>
         </div>
 
-        <!-- Painel de Contagem de Itens -->
+        <!-- Painel de Contagem de Itens (Labels ajustados para refletir contagem de itens com preço) -->
         <div id="painelContagemItens">
-            Itens: <span id="contagemNomes">0</span> nomes / <span id="contagemUnidades">0</span> unidades
+            Itens (com preço): <span id="contagemNomes">0</span> nomes / <span id="contagemUnidades">0</span> unidades
         </div>
 
         <!-- Entrada por Voz com Autocomplete -->
@@ -176,10 +182,10 @@
                  <!-- Botão Fechar Genérico (usa data-target) -->
                 <span class="fechar-modal" data-target="modalImportInfo" aria-label="Fechar Aviso de Importação" title="Fechar">×</span>
                 <h2 id="modalImportInfoTitulo">Importar via Planilha Excel (.xlsx)</h2>
-                <p>Para importar sua lista de compras via Excel, utilize o modelo de planilha abaixo. Certifique-se de que sua planilha tenha as seguintes colunas, exatamente nesta ordem:</p>
+                <p>Para importar sua lista de compras via Excel, utilize o modelo de planilha abaixo. Certifique-se de que sua planilha tenha as seguintes colunas, exatamente nesta ordem (a primeira linha pode ser cabeçalho ou dados):</p>
                 <ul style="text-align:left; margin-left: 20px;">
-                    <li><b>Descrição:</b> O nome do produto.</li>
-                    <li><b>Quantidade:</b> Número de unidades (padrão 1 se vazio).</li>
+                    <li><b>Descrição:</b> O nome do produto (obrigatório).</li>
+                    <li><b>Quantidade:</b> Número de unidades (padrão 1 se vazio/inválido).</li>
                     <li><b>Valor Unitário (R$):</b> Preço por unidade (ex: 5,99 ou 5.99; padrão 0,00 se vazio).</li>
                     <li><b>Categoria (Opcional):</b> Ex: Alimentos, Limpeza (será inferida se vazia).</li>
                 </ul>

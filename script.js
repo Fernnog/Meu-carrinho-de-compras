@@ -1,6 +1,6 @@
-// script.js - Minhas Compras de Mercado
+// script.js - Minhas Compras de Mercado (Versão com Melhorias)
 
-// --- Seleção de elementos do DOM (Adicionar novos do modal de edição) ---
+// --- Seleção de elementos do DOM (Adicionar novos do modal de edição e painel último item) ---
 const vozInput = document.querySelector('#vozInput');
 const ativarVoz = document.querySelector('#ativarVoz');
 const inserirItem = document.querySelector('#inserirItem');
@@ -9,11 +9,10 @@ const vozFeedback = document.querySelector('.voz-feedback'); // Feedback princip
 const listaComprasUL = document.querySelector('#listaCompras');
 const listaComprasContainer = document.querySelector('#listaComprasContainer');
 const totalValorPainel = document.querySelector('#totalValorPainel');
-const totalValor = document.querySelector('#totalValor');
+const totalValor = document.querySelector('#totalValor'); // Total oculto (pode remover se não usar)
 const orcamentoInput = document.querySelector('#orcamento');
 const categoriaFiltro = document.querySelector('#categoriaFiltro');
 const modalEdicao = document.querySelector('#modalEdicao');
-// const fecharModalBtn = document.querySelector('#modalEdicao .fechar-modal'); // Usar genérico
 const editarDescricao = document.querySelector('#editarDescricao');
 const editarQuantidade = document.querySelector('#editarQuantidade'); // Campo manual
 const editarValor = document.querySelector('#editarValor'); // Campo manual
@@ -47,6 +46,10 @@ const importChoiceTextBtn = document.getElementById('importChoiceText');
 const textImportArea = document.getElementById('textImportArea');
 const processTextImportBtn = document.getElementById('processTextImport');
 
+// --- (NOVO) Seletores para Painel Último Item ---
+const painelUltimoItem = document.getElementById('painelUltimoItem');
+const ultimoItemInfo = document.getElementById('ultimoItemInfo');
+
 // --- Variáveis Globais ---
 let compras = JSON.parse(localStorage.getItem('compras')) || [];
 let itemEditandoIndex = null;
@@ -71,11 +74,11 @@ const awesompleteInstance = new Awesomplete(vozInput, {
     autoFirst: true
 });
 vozInput.addEventListener('focus', () => {
-    // setTimeout(() => awesompleteInstance.evaluate(), 1);
+    // setTimeout(() => awesompleteInstance.evaluate(), 1); // Descomentar se precisar forçar avaliação no foco
 });
 
-// --- Funções de Manipulação de Dados (inferirCategoria, parseNumber, processarEAdicionarItem, salvarDados, carregarDados) ---
-// (Nenhuma alteração necessária nessas funções por enquanto)
+// --- Funções de Manipulação de Dados ---
+
 // Função para inferir categoria baseado na descrição
 function inferirCategoria(descricao) {
     const descLower = descricao.toLowerCase();
@@ -99,7 +102,7 @@ function parseNumber(texto) {
     return isNaN(valor) ? 0 : valor; // Retorna 0 se não for um número válido
 }
 
-// ***** FUNÇÃO processarEAdicionarItem (Sem alterações) *****
+// Função para processar texto de entrada (voz ou digitação) e adicionar item
 function processarEAdicionarItem(textoOriginal) {
     if (!textoOriginal || textoOriginal.trim() === '') {
         mostrarFeedbackErro('Digite ou dite alguma informação do item.');
@@ -111,37 +114,31 @@ function processarEAdicionarItem(textoOriginal) {
     let valorUnitario = 0; // Padrão
     let descricao = ''; // Começa vazia
 
-    // 1. Definir os marcadores e suas variações (em minúsculas)
     const marcadores = {
         quantidade: ['quantidade', 'quant', 'qtd', 'qt'],
         descricao: ['descrição', 'descricao', 'desc', 'nome'],
         preco: ['preço', 'preco', 'valor', 'val']
     };
 
-    // Cria uma expressão regular para encontrar qualquer um dos marcadores
     const todosMarcadoresRegex = new RegExp(`\\b(${
         [...marcadores.quantidade, ...marcadores.descricao, ...marcadores.preco].join('|')
     })\\b\\s*`, 'gi');
 
-    // 2. Dividir o texto usando os marcadores como delimitadores
     const partes = texto.split(todosMarcadoresRegex).filter(p => p && p.trim() !== '');
 
     let tipoAtual = null;
     let descricaoColetada = [];
 
-    // Mapa de números por extenso
     const numerosPorExtenso = {
         'um': 1, 'uma': 1, 'dois': 2, 'duas': 2, 'três': 3, 'tres': 3, 'quatro': 4,
         'cinco': 5, 'seis': 6, 'sete': 7, 'oito': 8, 'nove': 9, 'dez': 10,
     };
 
-    // Se a primeira parte NÃO é um marcador, assume-se que é o início da descrição
     if (partes.length > 0 && !Object.values(marcadores).flat().includes(partes[0].toLowerCase().trim())) {
         tipoAtual = 'descricao';
         descricaoColetada.push(partes[0].trim());
     }
 
-    // 3. Iterar pelas partes para extrair valores
     for (let i = 0; i < partes.length; i++) {
         const parteAtual = partes[i].trim();
         const parteLower = parteAtual.toLowerCase();
@@ -173,35 +170,29 @@ function processarEAdicionarItem(textoOriginal) {
                         quantidade = qtdEncontrada;
                     } else {
                         console.warn(`Não foi possível parsear quantidade: "${parteAtual}". Usando padrão 1.`);
-                        // Mantém quantidade = 1 se não conseguir parsear
                     }
                     break;
                 case 'preco':
-                    // parseNumber retorna 0 se não conseguir parsear
                     valorUnitario = parseNumber(parteAtual);
                     break;
                 case 'descricao':
                     descricaoColetada.push(parteAtual);
                     break;
                 default:
-                    if (!tipoAtual) { // Se ainda não achou marcador, assume descrição
+                    if (!tipoAtual) {
                          descricaoColetada.push(parteAtual);
                     }
                     break;
             }
-             // Reseta o tipo após ler o valor (exceto descrição)
              if (tipoAtual === 'quantidade' || tipoAtual === 'preco') {
                  tipoAtual = null;
              }
         }
     }
 
-    // 4. Montar a descrição final
     descricao = descricaoColetada.join(' ').trim();
 
-    // 5. Validação Final e Adição/Atualização
     if (!descricao) {
-        // Se o texto original não tinha marcadores e não é vazio, usa ele todo como descrição
         if (textoOriginal && partes.length <= 1 && !Object.values(marcadores).flat().includes(textoOriginal.toLowerCase())) {
             descricao = textoOriginal;
         } else {
@@ -209,14 +200,13 @@ function processarEAdicionarItem(textoOriginal) {
             return;
         }
     }
-     // Garante que a quantidade seja pelo menos 1
      if (quantidade <= 0) {
           quantidade = 1;
      }
 
-    // --- Lógica de Adicionar/Atualizar Item ---
     try {
         const itemExistenteIndex = compras.findIndex(item => item.descricao.toLowerCase() === descricao.toLowerCase());
+        let itemFinal; // Guarda o item que foi adicionado/atualizado
 
         if (itemExistenteIndex > -1) {
              if (confirm(`"${descricao}" já está na lista com quantidade ${compras[itemExistenteIndex].quantidade}. Deseja somar a nova quantidade (${quantidade}) e atualizar o valor unitário (para R$ ${valorUnitario.toFixed(2).replace('.', ',')})?`)) {
@@ -224,6 +214,7 @@ function processarEAdicionarItem(textoOriginal) {
                 if (valorUnitario > 0 || !compras[itemExistenteIndex].valorUnitario || compras[itemExistenteIndex].valorUnitario <= 0) {
                     compras[itemExistenteIndex].valorUnitario = valorUnitario;
                 }
+                itemFinal = compras[itemExistenteIndex]; // Guarda o item atualizado
             } else {
                 mostrarFeedbackErro("Adição/Atualização cancelada.");
                 vozInput.focus();
@@ -233,6 +224,7 @@ function processarEAdicionarItem(textoOriginal) {
             const categoria = inferirCategoria(descricao);
             const novoItem = { descricao, quantidade, valorUnitario, categoria };
             compras.push(novoItem);
+            itemFinal = novoItem; // Guarda o novo item
         }
 
         atualizarLista();
@@ -242,6 +234,9 @@ function processarEAdicionarItem(textoOriginal) {
         const acaoRealizada = itemExistenteIndex > -1 ? "atualizado" : "adicionado";
         const indexFinal = itemExistenteIndex > -1 ? itemExistenteIndex : compras.length - 1;
         mostrarFeedbackSucesso(`Item "${descricao}" ${acaoRealizada}! (Qtd final: ${compras[indexFinal].quantidade}, Preço: R$ ${compras[indexFinal].valorUnitario.toFixed(2).replace('.', ',')})`);
+
+        atualizarPainelUltimoItem(itemFinal); // (NOVO) Atualiza o painel do último item
+
         vozInput.focus();
 
     } catch (error) {
@@ -249,7 +244,6 @@ function processarEAdicionarItem(textoOriginal) {
         mostrarFeedbackErro('Ocorreu um erro ao processar o item.');
     }
 }
-
 
 // Salva a lista de compras e o orçamento no localStorage
 function salvarDados() {
@@ -270,25 +264,26 @@ function carregarDados() {
     }
 }
 
-
 // --- Funções de Atualização da Interface (UI) ---
 
-// Funções de Feedback (Principal)
+// Funções de Feedback (Principal e Modal)
 function mostrarFeedback(mensagem, tipo = 'info', elementoFeedback = vozFeedback) {
+    if (!elementoFeedback) return; // Segurança
     elementoFeedback.textContent = mensagem;
-    elementoFeedback.className = `voz-feedback ${elementoFeedback.id === 'editarVozFeedback' ? 'modal-feedback' : ''} show ${tipo}`; // Adiciona classe base correta
+    elementoFeedback.className = `voz-feedback ${elementoFeedback.id === 'editarVozFeedback' ? 'modal-feedback' : ''} show ${tipo}`;
     elementoFeedback.style.display = 'block';
 }
 function mostrarFeedbackSucesso(mensagem, elementoFeedback = vozFeedback) { mostrarFeedback(mensagem, 'success', elementoFeedback); }
 function mostrarFeedbackErro(mensagem, elementoFeedback = vozFeedback) { mostrarFeedback(mensagem, 'error', elementoFeedback); }
 
 function ocultarFeedback(elementoFeedback = vozFeedback) {
+    if (!elementoFeedback) return; // Segurança
     elementoFeedback.classList.remove('show');
     setTimeout(() => {
         if (!elementoFeedback.classList.contains('show')) {
             elementoFeedback.style.display = 'none';
             elementoFeedback.textContent = '';
-            elementoFeedback.className = `voz-feedback ${elementoFeedback.id === 'editarVozFeedback' ? 'modal-feedback' : ''}`; // Reseta classes base
+            elementoFeedback.className = `voz-feedback ${elementoFeedback.id === 'editarVozFeedback' ? 'modal-feedback' : ''}`;
         }
     }, 300);
 }
@@ -297,14 +292,42 @@ function mostrarFeedbackModalSucesso(mensagem) { mostrarFeedbackSucesso(mensagem
 function mostrarFeedbackModalErro(mensagem) { mostrarFeedbackErro(mensagem, editarVozFeedback); }
 function ocultarFeedbackModal() { ocultarFeedback(editarVozFeedback); }
 
+// --- (NOVO) Funções para Painel Último Item ---
+function atualizarPainelUltimoItem(item) {
+    if (!item || !painelUltimoItem || !ultimoItemInfo) return; // Segurança
 
-// Atualiza a exibição da lista de compras, agrupando por categoria - SEM ALTERAÇÕES AQUI
+    const { quantidade, descricao } = item; // Simplificado para mostrar só Qtd e Descrição
+    let infoTexto = `${quantidade}x ${descricao}`;
+
+    ultimoItemInfo.textContent = infoTexto;
+    painelUltimoItem.style.display = 'block'; // Garante visibilidade antes da classe
+    // Adiciona a classe 'show' com um pequeno delay para a transição CSS funcionar
+    setTimeout(() => {
+         painelUltimoItem.classList.add('show');
+    }, 10); // Pequeno delay
+}
+
+function resetarPainelUltimoItem() {
+    if (!painelUltimoItem || !ultimoItemInfo) return; // Segurança
+    painelUltimoItem.classList.remove('show');
+    // Espera a transição de fade-out antes de esconder e resetar
+    setTimeout(() => {
+        if (!painelUltimoItem.classList.contains('show')) { // Verifica se ainda está escondido
+             painelUltimoItem.style.display = 'none';
+             ultimoItemInfo.textContent = 'Nenhum item adicionado recentemente.';
+        }
+    }, 400); // Tempo da transição CSS (definido em styles.css)
+}
+
+// Atualiza a exibição da lista de compras, agrupando por categoria
 function atualizarLista() {
     listaComprasUL.innerHTML = '';
     let totalGeral = 0;
     let totalUnidades = 0;
+    let nomesUnicosCount = 0;
     const tituloLista = listaComprasContainer.querySelector('h2');
 
+    // Atribui índice original para referência segura na edição/exclusão
     compras.forEach((item, index) => item.originalIndex = index);
 
     if (compras.length === 0) {
@@ -318,7 +341,7 @@ function atualizarLista() {
             if (!acc[categoria]) {
                 acc[categoria] = [];
             }
-            acc[categoria].push({ ...item });
+            acc[categoria].push({ ...item }); // Cria cópia para não afetar originalIndex
             return acc;
         }, {});
 
@@ -327,13 +350,14 @@ function atualizarLista() {
             const indexB = ordemCategorias.indexOf(b);
             if (indexA === -1 && indexB === -1) return a.localeCompare(b);
             if (indexA === -1) return 1;
-            if (indexB === -1) return 1; // Corrigido para 1 (desconhecido B vai para o fim)
+            if (indexB === -1) return -1; // Corrigido para colocar desconhecido B antes
             return indexA - indexB;
         });
 
         categoriasOrdenadas.forEach(categoria => {
             const itensDaCategoria = itensAgrupados[categoria];
 
+            // Ordena itens dentro da categoria (Pendentes primeiro, depois alfabético)
             itensDaCategoria.sort((a, b) => {
                 const aPendente = !a.valorUnitario || a.valorUnitario <= 0;
                 const bPendente = !b.valorUnitario || b.valorUnitario <= 0;
@@ -353,7 +377,7 @@ function atualizarLista() {
 
             itensDaCategoria.forEach(item => {
                 const li = document.createElement('li');
-                li.dataset.index = item.originalIndex; // Usa o índice original
+                li.dataset.index = item.originalIndex; // Usa o índice original do array 'compras'
 
                 const isPendente = !item.valorUnitario || item.valorUnitario <= 0;
                 if (isPendente) {
@@ -373,58 +397,65 @@ function atualizarLista() {
                     </button>
                 `;
 
+                // Event listener para editar ao clicar no item (exceto no botão excluir)
                 li.addEventListener('click', (event) => {
                     if (!event.target.closest('.excluir-item')) {
                          const indexParaEditar = parseInt(li.dataset.index, 10);
+                         // Verifica se o índice é válido no array 'compras' atual
                          if (!isNaN(indexParaEditar) && indexParaEditar >= 0 && indexParaEditar < compras.length) {
                              editarItem(indexParaEditar); // Chama a função de edição
                          } else {
                               console.error("Índice original inválido para edição:", indexParaEditar, item);
                               mostrarFeedbackErro("Erro ao tentar editar o item. Recarregue a página.");
-                              atualizarLista();
+                              atualizarLista(); // Força atualização se índice estiver dessincronizado
                          }
                     }
                 });
                 categoryGroup.appendChild(li);
             });
-
             listaComprasUL.appendChild(categoryGroup);
         });
     }
 
-    // Remove o índice original temporário APÓS renderizar
+    // Remove o índice original temporário APÓS renderizar (não é estritamente necessário, mas limpa o objeto)
     compras.forEach(item => delete item.originalIndex);
-
 
     aplicarFiltroCategoria(); // Aplica filtro após renderizar
 
-    totalGeral = compras.reduce((sum, item) => sum + (item.quantidade * (item.valorUnitario || 0)), 0);
-    totalUnidades = compras.reduce((sum, item) => sum + item.quantidade, 0);
-    const nomesUnicosCount = new Set(compras.map(item => item.descricao.toLowerCase().trim())).size;
+    // --- (MODIFICADO) Cálculos de Totais e Contagens ---
+    // Filtra itens COM PREÇO DEFINIDO (maior que zero) ANTES de contar unidades e nomes
+    const itensComPreco = compras.filter(item => item.valorUnitario && item.valorUnitario > 0);
 
+    // Calcula total geral (R$) USANDO TODOS os itens
+    totalGeral = compras.reduce((sum, item) => sum + (item.quantidade * (item.valorUnitario || 0)), 0);
+
+    // Calcula contagens USANDO APENAS itens com preço
+    totalUnidades = itensComPreco.reduce((sum, item) => sum + item.quantidade, 0);
+    nomesUnicosCount = new Set(itensComPreco.map(item => item.descricao.toLowerCase().trim())).size;
+    // --- FIM DA MODIFICAÇÃO ---
+
+    // Atualiza os painéis de total e contagem
     totalValorPainel.textContent = totalGeral.toFixed(2).replace('.', ',');
     if (totalValor) totalValor.textContent = totalGeral.toFixed(2).replace('.', ',');
-    contagemNomesSpan.textContent = nomesUnicosCount;
-    contagemUnidadesSpan.textContent = totalUnidades;
+    contagemNomesSpan.textContent = nomesUnicosCount; // Usa a contagem filtrada
+    contagemUnidadesSpan.textContent = totalUnidades; // Usa a contagem filtrada
 
-    verificarOrcamento(totalGeral);
+    verificarOrcamento(totalGeral); // Orçamento ainda usa o total geral
 }
 
-
-// Função para aplicar o filtro de categoria (mostrar/ocultar grupos) - SEM ALTERAÇÕES
+// Função para aplicar o filtro de categoria (mostrar/ocultar grupos)
 function aplicarFiltroCategoria() {
     const categoriaSelecionada = categoriaFiltro.value;
     const todosGrupos = listaComprasUL.querySelectorAll('.category-group');
     const listaVaziaMsg = listaComprasUL.querySelector('.lista-vazia');
     let algumGrupoVisivel = false;
 
-    // Remove mensagem de filtro anterior antes de reavaliar
     let noResultsMsg = listaComprasUL.querySelector('.filtro-sem-resultados');
     if (noResultsMsg) {
         noResultsMsg.remove();
     }
 
-    if (listaVaziaMsg && !todosGrupos.length) return; // Sai se a lista estiver realmente vazia
+    if (listaVaziaMsg && !todosGrupos.length) return;
 
     todosGrupos.forEach(grupo => {
         const grupoCategoria = grupo.dataset.category;
@@ -436,83 +467,70 @@ function aplicarFiltroCategoria() {
         }
     });
 
-    // Adiciona mensagem de sem resultados SE necessário
     if (!algumGrupoVisivel && categoriaSelecionada !== "" && !listaVaziaMsg) {
         const msg = document.createElement('li');
         msg.textContent = `Nenhum item na categoria "${categoriaSelecionada}".`;
         msg.classList.add('filtro-sem-resultados');
-        listaComprasUL.appendChild(msg); // Adiciona ao final da UL
+        listaComprasUL.appendChild(msg);
     }
 }
 
-
-// Verificar orçamento e atualizar barra de progresso - SEM ALTERAÇÕES
+// Verificar orçamento e atualizar barra de progresso
 function verificarOrcamento(total) {
     const orcamento = parseNumber(orcamentoInput.value) || 0;
     let porcentagem = 0;
 
     if (orcamento > 0) {
         const porcentagemReal = (total / orcamento) * 100;
-        porcentagem = Math.min(porcentagemReal, 100); // Barra não passa de 100%
+        porcentagem = Math.min(porcentagemReal, 100);
         barraProgresso.value = porcentagem;
 
         if (total > orcamento) {
             progressBarContainer.classList.add('over-budget');
-            // Exibe a porcentagem real, mesmo acima de 100%
             porcentagemProgresso.textContent = `Estourado! (${Math.round(porcentagemReal)}%)`;
-            // Altera estilo do painel total para alerta
             painelTotal.style.backgroundColor = '#f8d7da';
             painelTotal.style.color = '#721c24';
             painelTotal.style.borderColor = '#f5c6cb';
         } else {
             progressBarContainer.classList.remove('over-budget');
             porcentagemProgresso.textContent = `${Math.round(porcentagem)}%`;
-            // Restaura estilo normal do painel total
             painelTotal.style.backgroundColor = '#e9f5e9';
             painelTotal.style.color = '#006400';
             painelTotal.style.borderColor = '#c8e6c9';
         }
     } else {
-        // Sem orçamento definido
         barraProgresso.value = 0;
         porcentagemProgresso.textContent = '0%';
         progressBarContainer.classList.remove('over-budget');
-        // Estilo normal do painel total
         painelTotal.style.backgroundColor = '#e9f5e9';
         painelTotal.style.color = '#006400';
         painelTotal.style.borderColor = '#c8e6c9';
     }
 }
 
-
 // --- Funções de Edição e Modal ---
 
 // Abre o modal para editar um item específico
 function editarItem(index) {
-    // Validação crucial do índice recebido do dataset
     if (index === null || typeof index !== 'number' || isNaN(index) || index < 0 || index >= compras.length) {
         console.error("Índice inválido para edição:", index);
         mostrarFeedbackErro("Não foi possível encontrar o item para edição. Tente atualizar a página.");
         return;
     }
-    itemEditandoIndex = index; // Guarda o índice válido
-    const item = compras[index]; // Acessa o item usando o índice validado
+    itemEditandoIndex = index;
+    const item = compras[index];
 
-    // Preenche os campos MANUAIS do modal
     editarDescricao.value = item.descricao;
     editarQuantidade.value = item.quantidade;
     editarValor.value = item.valorUnitario > 0 ? item.valorUnitario.toFixed(2).replace('.', ',') : '';
 
-    // Limpa o campo de comando de voz e o feedback do modal
     if(editarVozInput) editarVozInput.value = '';
-    ocultarFeedbackModal(); // Usa a função específica do modal
+    ocultarFeedbackModal();
 
     modalEdicao.style.display = 'block';
-
     modalEdicao.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => {
-        editarDescricao.focus(); // Foca na descrição primeiro
-        // editarDescricao.select(); // Descomentar se quiser selecionar o texto
+        editarDescricao.focus();
     }, 350);
 }
 
@@ -520,24 +538,25 @@ function editarItem(index) {
 function fecharModalEdicao() {
     modalEdicao.style.display = 'none';
     itemEditandoIndex = null;
-    ocultarFeedbackModal(); // Limpa feedback ao fechar
+    ocultarFeedbackModal();
 }
 
 // Formata o campo de valor MANUAL no modal de edição
 editarValor.addEventListener('input', function(e) {
     let value = e.target.value;
-    value = value.replace(/\D/g, ''); // Remove não-dígitos
+    value = value.replace(/\D/g, '');
     if (value) {
-        // Divide por 100 e formata como moeda BRL
         let numberValue = parseInt(value, 10) / 100;
-        e.target.value = numberValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace('R$', '').trim();
+        // Tenta formatar, mas usa replace para garantir ponto como separador decimal interno se falhar
+        let formattedValue = numberValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        e.target.value = formattedValue.replace('R$', '').trim();
     } else {
         e.target.value = '';
     }
 });
 
 
-// --- NOVA Função para Processar Comando de Voz de Edição ---
+// Processa Comando de Voz de Edição (Qtd/Preço)
 function processarComandoEdicaoVoz() {
     const textoComando = editarVozInput.value.trim();
     if (!textoComando) {
@@ -553,12 +572,11 @@ function processarComandoEdicaoVoz() {
         quantidade: ['quantidade', 'quant', 'qtd', 'qt'],
         preco: ['preço', 'preco', 'valor', 'val']
     };
-    const numerosPorExtensoEdicao = { // Pode reutilizar o global, mas definindo aqui fica claro
+    const numerosPorExtensoEdicao = {
         'um': 1, 'uma': 1, 'dois': 2, 'duas': 2, 'três': 3, 'tres': 3, 'quatro': 4,
         'cinco': 5, 'seis': 6, 'sete': 7, 'oito': 8, 'nove': 9, 'dez': 10,
     };
 
-    // Regex para encontrar marcadores de quantidade OU preço
     const marcadorRegex = new RegExp(`\\b(${
         [...marcadoresEdicao.quantidade, ...marcadoresEdicao.preco].join('|')
     })\\b\\s*`, 'gi');
@@ -572,7 +590,6 @@ function processarComandoEdicaoVoz() {
         const parteLower = parteAtual.toLowerCase();
         let marcadorEncontrado = false;
 
-        // Verifica se a parte atual é um marcador
         for (const [tipo, keywords] of Object.entries(marcadoresEdicao)) {
             if (keywords.includes(parteLower)) {
                 tipoAtual = tipo;
@@ -581,7 +598,6 @@ function processarComandoEdicaoVoz() {
             }
         }
 
-        // Se NÃO for marcador, é um valor (ou lixo)
         if (!marcadorEncontrado && tipoAtual) {
             switch (tipoAtual) {
                 case 'quantidade':
@@ -598,58 +614,52 @@ function processarComandoEdicaoVoz() {
                     }
                     if (!isNaN(qtdEncontrada) && qtdEncontrada > 0) {
                         novaQuantidade = qtdEncontrada;
-                        comandoValido = true; // Marcar que algo válido foi encontrado
+                        comandoValido = true;
                     } else {
                         mostrarFeedbackModalErro(`Quantidade inválida: "${parteAtual}".`);
-                        tipoAtual = null; // Reseta para evitar aplicar valor errado
-                        continue; // Pula para próxima parte
+                        tipoAtual = null;
+                        continue;
                     }
                     break;
                 case 'preco':
-                    const valorParseado = parseNumber(parteAtual); // Usa a função existente
-                    // Considera 0 como válido, mas talvez não seja ideal aqui?
-                    // Vamos considerar > 0 como preço válido para edição por voz
+                    const valorParseado = parseNumber(parteAtual);
                     if (valorParseado >= 0) { // Permite zerar o preço
                         novoValor = valorParseado;
-                        comandoValido = true; // Marcar que algo válido foi encontrado
+                        comandoValido = true;
                     } else {
                          mostrarFeedbackModalErro(`Preço inválido: "${parteAtual}".`);
-                         tipoAtual = null; // Reseta
-                         continue; // Pula
+                         tipoAtual = null;
+                         continue;
                     }
                     break;
             }
-            tipoAtual = null; // Reseta o tipo após ler o valor
+            tipoAtual = null;
         } else if (!marcadorEncontrado && !tipoAtual) {
-             // Ignora partes que não são marcadores e vêm antes de um marcador válido
              console.warn("Ignorando parte inicial inválida no comando de edição:", parteAtual);
         }
     }
 
-    // Aplica as alterações aos campos manuais se algo válido foi encontrado
     if (comandoValido) {
-        let feedbackMsg = "Alterações aplicadas:";
+        let feedbackMsg = "Alterações aplicadas aos campos manuais:";
         if (novaQuantidade !== null) {
-            editarQuantidade.value = novaQuantidade;
+            editarQuantidade.value = novaQuantidade; // Atualiza campo manual
             feedbackMsg += ` Qtd=${novaQuantidade}`;
         }
         if (novoValor !== null) {
+            // Atualiza campo manual e dispara evento para reformatar
             editarValor.value = novoValor > 0 ? novoValor.toFixed(2).replace('.', ',') : '';
-             // Dispara o evento input para reformatar se necessário (caso a função parseNumber mude)
-             editarValor.dispatchEvent(new Event('input'));
+            editarValor.dispatchEvent(new Event('input'));
             feedbackMsg += ` Preço=R$ ${novoValor.toFixed(2).replace('.', ',')}`;
         }
         mostrarFeedbackModalSucesso(feedbackMsg);
-        editarVozInput.value = ''; // Limpa o input de comando
-        // Focar no botão salvar? Ou no próximo campo?
-        // salvarEdicaoBtn.focus();
+        editarVozInput.value = '';
     } else {
         mostrarFeedbackModalErro("Nenhum comando válido de quantidade ou preço encontrado.");
     }
 }
 
 
-// --- Funções de Reconhecimento de Voz (adaptar para modal) ---
+// --- Funções de Reconhecimento de Voz ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition;
 
@@ -661,40 +671,29 @@ if (SpeechRecognition) {
 
     recognition.onresult = (event) => {
         const transcript = event.results[event.results.length - 1][0].transcript.trim();
-        const targetInputId = recognition.targetInputId; // ID do input alvo (e.g., 'vozInput' ou 'editarVozInput')
+        const targetInputId = recognition.targetInputId;
         const targetInput = document.getElementById(targetInputId);
 
         if (targetInput) {
             targetInput.value = transcript;
-            // Se for o input de valor manual, dispara formatação
             if (targetInput === editarValor) {
                  targetInput.dispatchEvent(new Event('input'));
             }
-            // Determina qual feedback usar (principal ou modal)
             const feedbackElement = targetInputId === 'editarVozInput' ? editarVozFeedback : vozFeedback;
             mostrarFeedbackSucesso(`Texto ditado: "${transcript}"`, feedbackElement);
-
-            // Se o alvo for o input de edição por voz, processa automaticamente? Ou espera o 'check'?
-            // Vamos esperar o 'check' por enquanto para mais controle do usuário.
-            // if (targetInputId === 'editarVozInput') {
-            //     setTimeout(processarComandoEdicaoVoz, 100); // Pequeno delay
-            // }
-
         } else {
             console.warn("Input alvo para reconhecimento de voz não encontrado:", targetInputId);
         }
-        // Remove classe 'recording' de TODOS os botões de microfone
         document.querySelectorAll('.mic-btn.recording, .modal-mic-btn.recording').forEach(btn => btn.classList.remove('recording'));
     };
 
     recognition.onerror = (event) => {
         let errorMsg = 'Erro no reconhecimento de voz: ';
         if (event.error == 'no-speech') { errorMsg += 'Nenhuma fala detectada.'; }
-        else if (event.error == 'audio-capture') { errorMsg += 'Falha na captura de áudio (verifique permissão do microfone).'; }
+        else if (event.error == 'audio-capture') { errorMsg += 'Falha na captura de áudio (verifique permissão).'; }
         else if (event.error == 'not-allowed') { errorMsg += 'Permissão para usar o microfone negada.'; }
         else { errorMsg += event.error; }
 
-        // Determina qual feedback usar baseado no botão que estava gravando (se houver)
         const recordingButton = document.querySelector('.mic-btn.recording, .modal-mic-btn.recording');
         const targetId = recordingButton ? (recordingButton.dataset.target || 'vozInput') : 'vozInput';
         const feedbackElement = targetId === 'editarVozInput' ? editarVozFeedback : vozFeedback;
@@ -705,13 +704,12 @@ if (SpeechRecognition) {
     };
 
     recognition.onend = () => {
-        // Garante que todos os botões parem de pulsar
         document.querySelectorAll('.mic-btn.recording, .modal-mic-btn.recording').forEach(btn => btn.classList.remove('recording'));
     };
 
 } else {
     console.warn("API de Reconhecimento de Voz não suportada neste navegador.");
-    document.querySelectorAll('.mic-btn, .modal-mic-btn').forEach(btn => { // Desabilita TODOS os mics
+    document.querySelectorAll('.mic-btn, .modal-mic-btn').forEach(btn => {
         btn.disabled = true;
         btn.title = "Reconhecimento de voz não suportado";
     });
@@ -720,27 +718,21 @@ if (SpeechRecognition) {
 // Função genérica para iniciar o reconhecimento para um input específico
 function ativarVozParaInput(inputId) {
     if (!recognition) {
-        // Tenta determinar o feedback correto mesmo sem reconhecimento
         const feedbackElement = inputId === 'editarVozInput' ? editarVozFeedback : vozFeedback;
-        mostrarFeedbackErro("Reconhecimento de voz não suportado ou inicializado.", feedbackElement);
+        mostrarFeedbackErro("Reconhecimento de voz não suportado.", feedbackElement);
         return;
     }
-    // Para a instância anterior, se houver
     try { recognition.stop(); } catch(e) { /* Ignora erro se não estiver rodando */ }
-    // Remove classe de gravação de qualquer botão antes de iniciar
     document.querySelectorAll('.mic-btn.recording, .modal-mic-btn.recording').forEach(btn => btn.classList.remove('recording'));
 
     try {
-        recognition.targetInputId = inputId; // Guarda o ID do input alvo
+        recognition.targetInputId = inputId;
         recognition.start();
 
-        // Determina qual feedback usar e mostra "Ouvindo..."
         const feedbackElement = inputId === 'editarVozInput' ? editarVozFeedback : vozFeedback;
-        ocultarFeedback(feedbackElement); // Limpa feedback anterior primeiro
+        ocultarFeedback(feedbackElement);
         mostrarFeedback("Ouvindo...", 'info', feedbackElement);
 
-        // Adiciona classe 'recording' APENAS ao botão correto
-        // Seleciona pelo data-target OU pelo ID específico do botão principal (#ativarVoz)
         const clickedButton = document.querySelector(`.mic-btn[data-target="${inputId}"], .modal-mic-btn[data-target="${inputId}"], #ativarVoz`);
         if (clickedButton) {
             clickedButton.classList.add('recording');
@@ -749,16 +741,16 @@ function ativarVozParaInput(inputId) {
         }
     } catch (e) {
         console.error("Erro ao iniciar reconhecimento de voz:", e);
-        // Determina qual feedback usar para o erro
         const feedbackElement = inputId === 'editarVozInput' ? editarVozFeedback : vozFeedback;
-        mostrarFeedbackErro("Não foi possível iniciar o reconhecimento de voz.", feedbackElement);
-        // Garante a remoção da classe recording em caso de erro ao iniciar
+        mostrarFeedbackErro("Não foi possível iniciar o reconhecimento.", feedbackElement);
         document.querySelectorAll('.mic-btn.recording, .modal-mic-btn.recording').forEach(btn => btn.classList.remove('recording'));
     }
 }
 
 
-// --- Funções de Importação/Exportação/Limpeza (SEM ALTERAÇÕES) ---
+// --- Funções de Importação/Exportação/Limpeza ---
+
+// Importa dados de arquivo XLSX
 function importarDadosXLSX(file) {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -774,35 +766,46 @@ function importarDadosXLSX(file) {
                 return;
             }
 
-            const dadosItens = jsonData;
+            const dadosItens = jsonData; // Pode pular cabeçalho se houver: jsonData.slice(1);
             let itensImportados = 0;
             let errosImportacao = 0;
             let itensPulados = 0;
+            let ultimoItemImportadoSucesso = null;
 
             dadosItens.forEach((row, index) => {
-                if (row && row.length > 0 && row.some(cell => cell !== null && String(cell).trim() !== '')) {
-                    const descricao = String(row[0] || '').trim();
-                    const quantidadeStr = String(row[1] || '1').trim();
-                    const valorUnitarioStr = String(row[2] || '0').trim();
-                    const categoria = String(row[3] || '').trim() || inferirCategoria(descricao);
+                 // Ignora linha se a primeira célula (descrição) estiver vazia
+                const descricao = String(row[0] || '').trim();
+                if (!descricao) {
+                     console.warn(`Linha ${index + 1} ignorada: Descrição vazia.`);
+                     return; // Pula para a próxima linha
+                }
 
-                    // Correção: Usar parseNumber para quantidade também pode ser arriscado, melhor parseInt
-                    const quantidade = parseInt(quantidadeStr.replace(/\D/g,''), 10); // Tenta pegar só os dígitos
-                    const valorUnitario = parseNumber(valorUnitarioStr);
+                const quantidadeStr = String(row[1] || '1').trim();
+                const valorUnitarioStr = String(row[2] || '0').trim();
+                const categoriaPlanilha = String(row[3] || '').trim();
 
-                    if (descricao && !isNaN(quantidade) && quantidade > 0) {
-                        const itemExistenteIndex = compras.findIndex(item => item.descricao.toLowerCase() === descricao.toLowerCase());
-                        if (itemExistenteIndex === -1) {
-                             compras.push({ descricao, quantidade, valorUnitario, categoria });
-                             itensImportados++;
-                        } else {
-                             console.warn(`Item "${descricao}" já existe na lista, pulando importação da linha ${index + 1}.`);
-                             itensPulados++;
-                        }
+                // Tenta parsear quantidade como inteiro
+                let quantidade = parseInt(quantidadeStr.replace(/[^\d]/g, ''), 10); // Remove não dígitos
+                if (isNaN(quantidade) || quantidade <= 0) {
+                    quantidade = 1; // Padrão 1 se inválido
+                }
+                const valorUnitario = parseNumber(valorUnitarioStr);
+                const categoria = categoriaPlanilha || inferirCategoria(descricao);
+
+                if (descricao) { // Validação básica (descrição não vazia)
+                    const itemExistenteIndex = compras.findIndex(item => item.descricao.toLowerCase() === descricao.toLowerCase());
+                    if (itemExistenteIndex === -1) {
+                         const novoItem = { descricao, quantidade, valorUnitario, categoria };
+                         compras.push(novoItem);
+                         ultimoItemImportadoSucesso = novoItem; // Guarda o último adicionado
+                         itensImportados++;
                     } else {
-                        console.warn(`Linha ${index + 1} inválida ou incompleta: Desc='${descricao}', Qtd='${quantidadeStr}', Valor='${valorUnitarioStr}'`);
-                        errosImportacao++;
+                         console.warn(`Item "${descricao}" já existe na lista, pulando importação da linha ${index + 1}.`);
+                         itensPulados++;
                     }
+                } else {
+                    console.warn(`Linha ${index + 1} inválida ou incompleta: Desc='${descricao}', Qtd='${quantidadeStr}', Valor='${valorUnitarioStr}'`);
+                    errosImportacao++;
                 }
             });
 
@@ -815,6 +818,9 @@ function importarDadosXLSX(file) {
                 atualizarLista();
                 salvarDados();
                 mostrarFeedbackSucesso(feedbackMsg.trim());
+                if (ultimoItemImportadoSucesso) {
+                    atualizarPainelUltimoItem(ultimoItemImportadoSucesso); // (NOVO) Atualiza painel
+                }
             } else if (itensPulados > 0 || errosImportacao > 0) {
                  mostrarFeedbackErro(feedbackMsg.trim() || "Nenhum item novo importado.");
             } else {
@@ -833,6 +839,7 @@ function importarDadosXLSX(file) {
     reader.readAsArrayBuffer(file);
 }
 
+// Processa importação por lista de texto separada por vírgula
 function processarImportacaoTexto() {
     const texto = textImportArea.value.trim();
     if (!texto) {
@@ -853,18 +860,21 @@ function processarImportacaoTexto() {
 
     let itensAdicionados = 0;
     let itensDuplicados = 0;
+    let ultimoItemAdicionadoTexto = null;
 
     nomesItens.forEach(nomeItem => {
         const itemExistenteIndex = compras.findIndex(item => item.descricao.toLowerCase() === nomeItem.toLowerCase());
 
         if (itemExistenteIndex === -1) {
             const categoria = inferirCategoria(nomeItem);
-            compras.push({
+            const novoItem = {
                 descricao: nomeItem,
                 quantidade: 1,
                 valorUnitario: 0,
                 categoria: categoria
-            });
+            };
+            compras.push(novoItem);
+            ultimoItemAdicionadoTexto = novoItem; // Guarda o último
             itensAdicionados++;
         } else {
             console.warn(`Item "${nomeItem}" já existe, importação por texto pulada.`);
@@ -877,6 +887,9 @@ function processarImportacaoTexto() {
         feedbackMsg += `${itensAdicionados} novo(s) item(ns) importado(s)! `;
         atualizarLista();
         salvarDados();
+        if(ultimoItemAdicionadoTexto){
+            atualizarPainelUltimoItem(ultimoItemAdicionadoTexto); // (NOVO) Atualiza painel
+        }
     }
     if (itensDuplicados > 0) {
         feedbackMsg += `${itensDuplicados} ignorado(s) (já existiam).`;
@@ -890,96 +903,81 @@ function processarImportacaoTexto() {
          mostrarFeedbackErro("Não foi possível importar itens da lista.");
     }
 
-    if (modalTextImport) modalTextImport.style.display = 'none'; // Fecha o modal
+    if (modalTextImport) modalTextImport.style.display = 'none';
 }
 
-
+// Gera relatório em Excel (.xlsx)
 function gerarRelatorioExcel() {
     if (compras.length === 0) {
-        mostrarFeedbackErro("A lista de compras está vazia. Adicione itens para gerar o relatório.");
+        mostrarFeedbackErro("A lista de compras está vazia.");
         return;
     }
 
-    // Ordena os dados para exportação por categoria e depois descrição
     const comprasOrdenadas = [...compras].sort((a, b) => {
          const catA = ordemCategorias.indexOf(a.categoria || 'Outros');
          const catB = ordemCategorias.indexOf(b.categoria || 'Outros');
          if (catA !== catB) {
-             // Coloca categorias desconhecidas no final
              if (catA === -1) return 1;
              if (catB === -1) return -1;
              return catA - catB;
          }
-         // Dentro da mesma categoria, ordena por descrição
          return a.descricao.localeCompare(b.descricao, 'pt-BR', { sensitivity: 'base' });
     });
 
-
     const dadosParaExportar = comprasOrdenadas.map(item => ({
-        'Categoria': item.categoria || 'Outros', // Adiciona categoria primeiro
+        'Categoria': item.categoria || 'Outros',
         'Descrição': item.descricao,
         'Quantidade': item.quantidade,
-        // Formata valor unitário para número no Excel (melhor para somas)
         'Valor Unitário (R$)': item.valorUnitario || 0,
-        // Calcula e formata valor total para número no Excel
         'Valor Total (R$)': (item.quantidade * (item.valorUnitario || 0))
     }));
 
     const totalGeral = compras.reduce((sum, item) => sum + (item.quantidade * (item.valorUnitario || 0)), 0);
 
-    // Cria a planilha a partir dos dados JSON
     const worksheet = XLSX.utils.json_to_sheet(dadosParaExportar, {
-        header: ['Categoria', 'Descrição', 'Quantidade', 'Valor Unitário (R$)', 'Valor Total (R$)'] // Ordem das colunas
+        header: ['Categoria', 'Descrição', 'Quantidade', 'Valor Unitário (R$)', 'Valor Total (R$)']
     });
 
-     // Aplica formatação de número às colunas de valor
     const range = XLSX.utils.decode_range(worksheet['!ref']);
-    for (let C = 3; C <= 4; ++C) { // Colunas D e E (Valor Unitário e Valor Total)
-        for (let R = range.s.r + 1; R <= range.e.r; ++R) { // Começa da linha 2 (abaixo do cabeçalho)
+    for (let C = 3; C <= 4; ++C) { // Colunas D e E
+        for (let R = range.s.r + 1; R <= range.e.r; ++R) {
             const cell_address = { c: C, r: R };
             const cell_ref = XLSX.utils.encode_cell(cell_address);
-            if (!worksheet[cell_ref]) continue; // Pula células vazias
-            worksheet[cell_ref].t = 'n'; // Define tipo como número
-            worksheet[cell_ref].z = 'R$ #,##0.00'; // Define formato de moeda BRL
+            if (!worksheet[cell_ref]) continue;
+            worksheet[cell_ref].t = 'n';
+            worksheet[cell_ref].z = 'R$ #,##0.00';
         }
     }
 
-    // Adiciona linha do total geral
     XLSX.utils.sheet_add_aoa(worksheet, [
-        [], // Linha em branco
-        ['', '', '', 'Total Geral:', { t: 'n', v: totalGeral, z: 'R$ #,##0.00' }] // Formata total como número/moeda
-    ], { origin: -1 }); // Adiciona ao final
+        [],
+        ['', '', '', 'Total Geral:', { t: 'n', v: totalGeral, z: 'R$ #,##0.00' }]
+    ], { origin: -1 });
 
-    // Define larguras das colunas (ajuste conforme necessário)
     const columnWidths = [
-        { wch: 18 }, // Categoria
-        { wch: Math.min(60, Math.max(25, ...dadosParaExportar.map(i => i.Descrição?.length || 0))) }, // Descrição
-        { wch: 12 }, // Quantidade
-        { wch: 20 }, // Valor Unitário
-        { wch: 20 }  // Valor Total
+        { wch: 18 }, { wch: Math.min(60, Math.max(25, ...dadosParaExportar.map(i => i.Descrição?.length || 0))) },
+        { wch: 12 }, { wch: 20 }, { wch: 20 }
     ];
     worksheet['!cols'] = columnWidths;
 
-    // Cria o workbook e adiciona a planilha
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Lista de Compras");
 
-    // Gera e baixa o arquivo
     const dataAtual = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
     const nomeArquivo = `Relatorio_Compras_${dataAtual}.xlsx`;
     try {
         XLSX.writeFile(workbook, nomeArquivo);
-        mostrarFeedbackSucesso("Relatório Excel gerado com sucesso!");
+        mostrarFeedbackSucesso("Relatório Excel gerado!");
     } catch (error) {
         console.error("Erro ao gerar o arquivo Excel:", error);
-        mostrarFeedbackErro("Ocorreu um erro ao gerar o relatório Excel.");
+        mostrarFeedbackErro("Erro ao gerar o relatório Excel.");
     }
 }
 
 
 // --- Event Listeners ---
 
-// Input principal e botões associados (SEM ALTERAÇÕES)
+// Input principal e botões associados
 vozInput.addEventListener('input', () => {
     ocultarFeedback();
     awesompleteInstance.evaluate();
@@ -991,7 +989,7 @@ vozInput.addEventListener('keypress', (e) => {
 });
 if (ativarVoz) {
      ativarVoz.addEventListener('click', () => {
-         ativarVozParaInput('vozInput'); // Chama a função genérica
+         ativarVozParaInput('vozInput');
      });
 }
 inserirItem.addEventListener('click', () => {
@@ -1007,7 +1005,7 @@ limparInput.addEventListener('click', () => {
     vozInput.focus();
 });
 
-// Delegação de eventos para excluir item (SEM ALTERAÇÕES)
+// Delegação de eventos para excluir item
 listaComprasUL.addEventListener('click', (event) => {
     const excluirBtn = event.target.closest('.excluir-item');
     if (excluirBtn) {
@@ -1021,6 +1019,7 @@ listaComprasUL.addEventListener('click', (event) => {
          if (!isNaN(index) && index >= 0 && index < compras.length) {
              const itemParaExcluir = compras[index];
              if (confirm(`Tem certeza que deseja excluir "${itemParaExcluir.descricao}"?`)) {
+                 // Animação de saída
                  li.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out, max-height 0.4s ease-out, margin 0.3s ease-out, padding 0.3s ease-out, border 0.3s ease-out';
                  li.style.opacity = '0';
                  li.style.transform = 'translateX(-50px)';
@@ -1031,50 +1030,46 @@ listaComprasUL.addEventListener('click', (event) => {
                  li.style.marginBottom = '0';
                  li.style.borderWidth = '0';
 
-                 // Remove do array DEPOIS de iniciar a animação
+                 // Remove do array APÓS iniciar a animação
                  compras.splice(index, 1);
 
                  setTimeout(() => {
-                      atualizarLista(); // Redesenha TUDO
+                      atualizarLista(); // Redesenha TUDO para recalcular índices e totais
                       salvarDados();
                       mostrarFeedbackSucesso(`"${itemParaExcluir.descricao}" excluído!`);
                  }, 400); // Tempo da animação CSS
              }
          } else {
-             console.error("Índice inválido ou dessincronizado para exclusão:", index, "Tamanho do array:", compras.length);
+             console.error("Índice inválido ou dessincronizado para exclusão:", index, "Tamanho atual:", compras.length);
              mostrarFeedbackErro("Erro ao tentar excluir item. A lista será atualizada.");
-             atualizarLista();
+             atualizarLista(); // Força atualização
          }
     }
 });
 
-
-// Filtro por categoria (SEM ALTERAÇÕES)
+// Filtro por categoria
 categoriaFiltro.addEventListener('change', aplicarFiltroCategoria);
 
-// Orçamento Input (SEM ALTERAÇÕES)
+// Orçamento Input
 orcamentoInput.addEventListener('input', () => {
-    salvarDados(); // Salva enquanto digita? Pode ser pesado. Talvez só no blur?
+    salvarDados(); // Salva enquanto digita
     const totalAtual = compras.reduce((sum, item) => sum + (item.quantidade * (item.valorUnitario || 0)), 0);
     verificarOrcamento(totalAtual);
 });
 orcamentoInput.addEventListener('blur', () => {
     const valorNumerico = parseNumber(orcamentoInput.value);
     orcamentoInput.value = valorNumerico > 0 ? valorNumerico.toFixed(2).replace('.', ',') : '';
-    salvarDados(); // Salva o valor final formatado
-    // Recalcula a barra caso o valor tenha mudado significativamente na formatação
+    salvarDados();
     const totalAtual = compras.reduce((sum, item) => sum + (item.quantidade * (item.valorUnitario || 0)), 0);
-    verificarOrcamento(totalAtual);
+    verificarOrcamento(totalAtual); // Reverifica com valor formatado
 });
 
-
-// --- Listeners para Botões de Ação Superiores e Modais de Importação (SEM ALTERAÇÕES) ---
+// Botões de Ação Superiores e Modais de Importação
 importarBtn.addEventListener('click', () => {
     if (modalImportChoice) {
         modalImportChoice.style.display = 'block';
         modalImportChoice.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
-        console.error("Modal #modalImportChoice não encontrado no DOM.");
         mostrarFeedbackErro("Erro ao abrir opções de importação.");
     }
 });
@@ -1085,8 +1080,7 @@ if (importChoiceXlsxBtn) {
             modalImportInfo.style.display = 'block';
             modalImportInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
-             console.error("Modal #modalImportInfo não encontrado no DOM.");
-             mostrarFeedbackErro("Erro ao abrir informações de importação XLSX.");
+             mostrarFeedbackErro("Erro ao abrir info de importação XLSX.");
         }
     });
 }
@@ -1103,7 +1097,7 @@ if (continuarImportBtn) {
                 importarDadosXLSX(file);
             }
             document.body.removeChild(fileInput);
-        }, { once: true }); // Garante que o listener seja removido após o uso
+        }, { once: true });
         document.body.appendChild(fileInput);
         fileInput.click();
     });
@@ -1117,7 +1111,6 @@ if (importChoiceTextBtn) {
             modalTextImport.scrollIntoView({ behavior: 'smooth', block: 'center' });
             setTimeout(() => textImportArea.focus(), 300);
         } else {
-             console.error("Modal #modalTextImport não encontrado no DOM.");
              mostrarFeedbackErro("Erro ao abrir importação por texto.");
         }
     });
@@ -1136,31 +1129,30 @@ limparListaBtn.addEventListener('click', () => {
              orcamentoInput.value = '';
              salvarDados();
              atualizarLista();
+             resetarPainelUltimoItem(); // (NOVO) Reseta o painel
              mostrarFeedbackSucesso('Lista e orçamento limpos!');
-             categoriaFiltro.value = ""; // Reseta filtro
+             categoriaFiltro.value = "";
          }
     }
 });
 relatorioBtn.addEventListener('click', gerarRelatorioExcel);
 
-// --- Listeners para Modal de Edição (ATUALIZADO) ---
+// --- Listeners para Modal de Edição ---
 
-// Botão Salvar Edição (Principal)
+// Botão Salvar Edição (Principal do Modal)
 salvarEdicaoBtn.addEventListener('click', () => {
-     // Validação crucial do índice
      if (itemEditandoIndex === null || typeof itemEditandoIndex !== 'number' || isNaN(itemEditandoIndex) || itemEditandoIndex < 0 || itemEditandoIndex >= compras.length) {
-         mostrarFeedbackModalErro("Nenhum item selecionado para salvar ou índice inválido.");
+         mostrarFeedbackModalErro("Nenhum item selecionado ou índice inválido.");
          fecharModalEdicao();
          return;
      }
 
-     // Pega os valores FINAIS dos campos manuais (que podem ter sido alterados por voz)
      const novaDescricao = editarDescricao.value.trim();
-     const novaQuantidade = parseInt(editarQuantidade.value, 10) || 1; // Pega do campo manual
-     const novoValorUnitario = parseNumber(editarValor.value); // Pega do campo manual formatado
+     const novaQuantidade = parseInt(editarQuantidade.value, 10) || 1;
+     const novoValorUnitario = parseNumber(editarValor.value);
 
      if (!novaDescricao) {
-         alert("A descrição não pode ficar vazia."); // Usar alert aqui é ok para bloqueio rápido
+         alert("A descrição não pode ficar vazia.");
          editarDescricao.focus();
          return;
      }
@@ -1174,6 +1166,8 @@ salvarEdicaoBtn.addEventListener('click', () => {
 
      // Atualiza o item no array 'compras'
      compras[itemEditandoIndex] = {
+         // Mantém a ordem original se possível, ou adiciona no final
+         ...compras[itemEditandoIndex], // Preserva propriedades extras se houver
          descricao: novaDescricao,
          quantidade: novaQuantidade,
          valorUnitario: novoValorUnitario,
@@ -1183,10 +1177,10 @@ salvarEdicaoBtn.addEventListener('click', () => {
      fecharModalEdicao();
      atualizarLista(); // Atualiza a interface geral
      salvarDados();
-     mostrarFeedbackSucesso(`"${novaDescricao}" atualizado com sucesso!`); // Feedback principal
+     mostrarFeedbackSucesso(`"${novaDescricao}" atualizado!`); // Feedback principal
 });
 
-// Microfone da DESCRIÇÃO (Manual)
+// Microfone da DESCRIÇÃO (Manual dentro do Modal)
 document.querySelectorAll('#modalEdicao .mic-btn[data-target="editarDescricao"]').forEach(button => {
     const targetId = button.dataset.target;
     if (targetId && recognition) {
@@ -1196,13 +1190,13 @@ document.querySelectorAll('#modalEdicao .mic-btn[data-target="editarDescricao"]'
     }
 });
 
-// --- NOVOS Listeners para a seção de Edição por Voz ---
+// Listeners para a seção de Edição por Voz (dentro do Modal)
 if(editarVozMicBtn && recognition) {
     editarVozMicBtn.addEventListener('click', () => {
-        ativarVozParaInput('editarVozInput'); // Chama a função genérica para o input de comando
+        ativarVozParaInput('editarVozInput');
     });
 } else if (editarVozMicBtn) {
-     editarVozMicBtn.disabled = true; // Desabilita se não houver API de voz
+     editarVozMicBtn.disabled = true;
 }
 
 if(processarEdicaoVoz) {
@@ -1216,41 +1210,31 @@ if(limparEdicaoVoz) {
         editarVozInput.focus();
     });
 }
-// Opcional: Processar comando de voz ao pressionar Enter no input
 if(editarVozInput) {
     editarVozInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             processarComandoEdicaoVoz();
         }
     });
-    // Opcional: Limpar feedback ao começar a digitar novo comando
-     editarVozInput.addEventListener('input', ocultarFeedbackModal);
+    editarVozInput.addEventListener('input', ocultarFeedbackModal);
 }
 
-
-// --- Listeners Genéricos para Fechar Modais (SEM ALTERAÇÕES) ---
+// --- Listeners Genéricos para Fechar Modais ---
 document.querySelectorAll('.fechar-modal[data-target]').forEach(btn => {
     btn.addEventListener('click', () => {
         const targetModalId = btn.dataset.target;
         const targetModal = document.getElementById(targetModalId);
         if (targetModal) {
-            // Se for o modal de edição, chama a função específica para limpar o index
             if (targetModalId === 'modalEdicao') {
-                fecharModalEdicao();
+                fecharModalEdicao(); // Usa função específica
             } else {
                  targetModal.style.display = 'none';
             }
         } else {
-            // Fallback para fechar modal pai se target não for encontrado
             const parentModal = btn.closest('.modal');
             if(parentModal) {
-                 if (parentModal.id === 'modalEdicao') {
-                     fecharModalEdicao();
-                 } else {
-                     parentModal.style.display = 'none';
-                 }
-            } else {
-                 console.warn(`Modal com ID "${targetModalId}" ou modal pai não encontrado.`);
+                 if (parentModal.id === 'modalEdicao') { fecharModalEdicao(); }
+                 else { parentModal.style.display = 'none'; }
             }
         }
     });
@@ -1258,11 +1242,8 @@ document.querySelectorAll('.fechar-modal[data-target]').forEach(btn => {
 
 window.addEventListener('click', (event) => {
     if (event.target.classList.contains('modal')) {
-         if (event.target.id === 'modalEdicao') {
-             fecharModalEdicao();
-         } else {
-             event.target.style.display = 'none';
-         }
+         if (event.target.id === 'modalEdicao') { fecharModalEdicao(); }
+         else { event.target.style.display = 'none'; }
     }
 });
 
@@ -1272,30 +1253,27 @@ window.addEventListener('keydown', (event) => {
         document.querySelectorAll('.modal').forEach(modal => {
             if (modal.style.display === 'block') {
                 modalAberto = true;
-                 if (modal.id === 'modalEdicao') {
-                     fecharModalEdicao();
-                 } else {
-                     modal.style.display = 'none';
-                 }
+                 if (modal.id === 'modalEdicao') { fecharModalEdicao(); }
+                 else { modal.style.display = 'none'; }
             }
         });
-        // Para reconhecimento de voz se ESC for pressionado e um modal estava aberto
         if (modalAberto && recognition && document.querySelector('.mic-btn.recording, .modal-mic-btn.recording')) {
              try { recognition.stop(); } catch(e) {}
              document.querySelectorAll('.mic-btn.recording, .modal-mic-btn.recording').forEach(btn => btn.classList.remove('recording'));
-             ocultarFeedback(); // Limpa feedback principal
-             ocultarFeedbackModal(); // Limpa feedback do modal
+             ocultarFeedback();
+             ocultarFeedbackModal();
          }
     }
 });
 
-
-// --- Inicialização da Aplicação (SEM ALTERAÇÕES) ---
+// --- Inicialização da Aplicação ---
 document.addEventListener('DOMContentLoaded', () => {
     carregarDados();
 
+    // Formata orçamento carregado
     const valorOrcamentoCarregado = parseNumber(orcamentoInput.value);
     orcamentoInput.value = valorOrcamentoCarregado > 0 ? valorOrcamentoCarregado.toFixed(2).replace('.', ',') : '';
 
+    resetarPainelUltimoItem(); // (NOVO) Garante que comece escondido/resetado
     atualizarLista(); // Exibe a lista e calcula totais/orçamento inicial
 });

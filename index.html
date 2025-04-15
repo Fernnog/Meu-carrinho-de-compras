@@ -96,13 +96,23 @@
             </select>
         </div>
 
-        <!-- Lista de Compras (será populada com categorias e itens via JS) -->
-        <div id="listaComprasContainer">
+        <!-- NOVA Seção: Lista de Compras (Itens Pendentes/Sem Preço) -->
+        <div id="listaPendentesContainer" style="display: none;"> <!-- Começa escondido, JS controla -->
+             <h2>Lista de Compras (Pendentes)</h2>
+             <ul id="listaPendentes">
+                 <!-- Itens PENDENTES serão inseridos aqui pelo JavaScript -->
+                 <!-- Exemplo de mensagem de lista vazia (adicionado/removido via JS): -->
+                 <!-- <li class="lista-vazia">Nenhum item pendente encontrado.</li> -->
+             </ul>
+        </div>
+
+        <!-- Seção Existente: Itens no Carrinho (Itens Com Preço) -->
+        <div id="listaComprasContainer" style="display: none;"> <!-- Começa escondido, JS controla -->
              <h2>Itens no Carrinho</h2>
              <ul id="listaCompras">
-                 <!-- Itens e grupos de categoria serão inseridos aqui pelo JavaScript -->
+                 <!-- Itens COM PREÇO serão inseridos aqui pelo JavaScript -->
                  <!-- Exemplo de mensagem de lista vazia (adicionado/removido via JS): -->
-                 <!-- <li class="lista-vazia">Sua lista de compras está vazia.</li> -->
+                 <!-- <li class="lista-vazia">Nenhum item com preço definido no carrinho.</li> -->
              </ul>
         </div>
 

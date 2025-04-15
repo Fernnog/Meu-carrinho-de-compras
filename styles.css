@@ -17,6 +17,7 @@ body {
     font-size: 1rem; /* Tamanho de fonte base */
     line-height: 1.6; /* Espaçamento entre linhas */
     color: #343a40; /* Cor de texto principal (cinza escuro) */
+    padding-bottom: 70px; /* Adiciona espaço no fundo para não cobrir com navegador flutuante */
 }
 
 /* --- Header --- */
@@ -441,7 +442,6 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     font-size: 0.9rem;
     padding: 8px 12px;
     border-radius: 6px; /* Arredondado */
-    /* display: none;  Oculto por padrão, mas a classe 'show' controla */
     opacity: 0; /* Para transição fade-in/out */
     max-height: 0; /* Para transição de altura */
     overflow: hidden;
@@ -506,11 +506,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 /* Espaçamento entre as duas listas */
 #listaPendentesContainer {
     margin-bottom: 30px; /* Adiciona espaço abaixo da lista de pendentes */
-    /* display: none; Controlado por JS */
 }
-/* #listaComprasContainer { */
-    /* display: none; Controlado por JS */
-/* } */
 
 /* Cabeçalho de Categoria */
 .category-header {
@@ -551,7 +547,6 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     border: none;
     box-shadow: none;
     overflow: hidden; /* Garante que não ocupe espaço */
-    /* Adiciona transições para propriedades afetadas */
     transition: opacity 0.3s ease-out, max-height 0.4s ease-out, margin 0.3s ease-out, padding 0.3s ease-out, border 0.3s ease-out;
 }
 
@@ -578,7 +573,6 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     box-shadow: none; /* Garante sem sombra */
     margin: 10px 0; /* Espaçamento para a mensagem */
     border-radius: 8px; /* Arredonda se estiver fora de um grupo */
-    /* Garante que não tenha hover */
     transition: none;
     transform: none;
 }
@@ -1026,7 +1020,6 @@ div.awesomplete { /* Container principal do Awesomplete */
     font-size: 0.85rem; /* Um pouco menor */
     padding: 6px 10px;
     border-radius: 4px;
-    /* display: none; */ /* Controlado pela classe .show */
     opacity: 0;
     max-height: 0;
     overflow: hidden;
@@ -1037,7 +1030,6 @@ div.awesomplete { /* Container principal do Awesomplete */
     padding-bottom: 0;
 }
 .modal-feedback.show {
-    /* display: block; */ /* display não é animável, usar opacity/height */
     opacity: 1;
     max-height: 80px; /* Altura suficiente */
     padding: 6px 10px;
@@ -1075,25 +1067,25 @@ div.awesomplete { /* Container principal do Awesomplete */
 
 /* Telas Pequenas (Smartphones < 480px) */
 @media (max-width: 480px) {
-    body { font-size: 0.95rem; }
+    body { font-size: 0.95rem; padding-bottom: 60px; } /* Ajusta padding inferior */
     h1 { font-size: 1.4rem; }
-    .container { padding: 10px; margin: 10px auto; max-width: 98%; border-radius: 8px; } /* Aumenta max-width um pouco */
+    .container { padding: 10px; margin: 10px auto; max-width: 98%; border-radius: 8px; }
     label { font-size: 0.9rem; }
     input[type="text"], input[type="number"], select, textarea { padding: 10px; font-size: 1rem; border-radius: 6px; }
     #orcamento { max-width: 140px; font-size: 1.1rem; }
     .top-actions { margin-bottom: 20px; gap: 8px;}
-    .top-action-btn { padding: 7px 12px; font-size: 0.85rem; } /* Ajuste padding */
-    #painelTotal { font-size: 1.8rem; padding: 12px; } /* Reduz um pouco */
+    .top-action-btn { padding: 7px 12px; font-size: 0.85rem; }
+    #painelTotal { font-size: 1.8rem; padding: 12px; }
     #painelContagemItens { font-size: 1rem; padding: 8px; }
-    .painel-info-sutil { font-size: 0.85rem; padding: 6px 10px; } /* Ajuste painel info */
-    .voice-input-wrapper { gap: 5px; } /* Ajuste gap principal */
-    .mic-btn, .action-btn { width: 40px; height: 40px; font-size: 1.1rem; } /* Ajuste botões principais */
+    .painel-info-sutil { font-size: 0.85rem; padding: 6px 10px; }
+    .voice-input-wrapper { gap: 5px; }
+    .mic-btn, .action-btn { width: 40px; height: 40px; font-size: 1.1rem; }
 
-    #listaPendentesContainer h2, /* Ajuste título mobile */
+    #listaPendentesContainer h2,
     #listaComprasContainer h2 { font-size: 1.2rem; margin-bottom: 12px; padding-bottom: 6px; }
-    #listaPendentesContainer { margin-bottom: 20px; } /* Reduz espaço mobile */
+    #listaPendentesContainer { margin-bottom: 20px; }
     .category-header { padding: 8px 12px; font-size: 1.05rem; border-radius: 6px 6px 0 0; }
-    .category-group { border-radius: 6px; margin-bottom: 8px; } /* Ajusta grupo mobile */
+    .category-group { border-radius: 6px; margin-bottom: 8px; }
     #listaPendentes li:not(.lista-vazia):not(.filtro-sem-resultados),
     #listaCompras li:not(.lista-vazia):not(.filtro-sem-resultados) { padding: 10px 12px; font-size: 1rem; }
     #listaPendentes li:last-child,
@@ -1102,46 +1094,143 @@ div.awesomplete { /* Container principal do Awesomplete */
     .item-preco { font-size: 1em; }
     #listaPendentes .excluir-item,
     #listaCompras .excluir-item { width: 32px; height: 32px; font-size: 0.9rem; }
-    .modal-content { padding: 20px; margin: 5% auto; width: 95%; max-width: none; } /* Ajusta modal para tela cheia, menos margem */
+    .modal-content { padding: 20px; margin: 5% auto; width: 95%; max-width: none; }
     .modal-content h2 { font-size: 1.3rem; }
     .fechar-modal { font-size: 28px; top: 8px; right: 12px; }
-    .button-green, .button-gold { padding: 11px 15px; font-size: 1rem;} /* Ajuste padding botão modal */
+    .button-green, .button-gold { padding: 11px 15px; font-size: 1rem;}
     .progress-bar-container { height: 24px; border-radius: 12px; }
     #barraProgresso, #barraProgresso::-webkit-progress-value, #barraProgresso::-moz-progress-bar { border-radius: 12px; }
     #porcentagemProgresso { font-size: 0.8rem; }
-    .logo { max-width: 60px; min-width: 40px; padding: 5px;} /* Ajuste logo */
+    .logo { max-width: 60px; min-width: 40px; padding: 5px;}
 
-    /* Ajuste modal edicao voz mobile */
-     .modal-mic-btn, .modal-action-btn { width: 38px; height: 38px; font-size: 1rem; }
-     .voice-input-modal .input-with-mic { gap: 5px; }
+    .modal-mic-btn, .modal-action-btn { width: 38px; height: 38px; font-size: 1rem; }
+    .voice-input-modal .input-with-mic { gap: 5px; }
 }
 
 /* Telas Médias (Tablets 481px - 768px) */
 @media (min-width: 481px) and (max-width: 768px) {
+    body { padding-bottom: 65px; } /* Ajusta padding inferior */
     h1 { font-size: 1.5rem; }
     .container { max-width: 90%; padding: 15px; }
     label { font-size: 0.9rem; }
-    input[type="text"], input[type="number"], select, textarea { font-size: 1.05rem; padding: 11px; } /* Ajuste padding */
+    input[type="text"], input[type="number"], select, textarea { font-size: 1.05rem; padding: 11px; }
     .top-actions { margin-bottom: 25px; }
     #painelTotal { font-size: 2.2rem; }
     #painelContagemItens { font-size: 1.05rem; }
-    .mic-btn, .action-btn { width: 44px; height: 44px; font-size: 1.1rem; } /* Ajuste botões principais */
-    .top-action-btn { padding: 8px 14px; font-size: 0.9rem; } /* Ajuste padding/fonte */
+    .mic-btn, .action-btn { width: 44px; height: 44px; font-size: 1.1rem; }
+    .top-action-btn { padding: 8px 14px; font-size: 0.9rem; }
     #listaPendentesContainer h2,
     #listaComprasContainer h2 { font-size: 1.25rem; }
-    .category-header { font-size: 1.1rem; } /* Ajuste fonte */
+    .category-header { font-size: 1.1rem; }
     #listaPendentes li:not(.lista-vazia):not(.filtro-sem-resultados),
-    #listaCompras li:not(.lista-vazia):not(.filtro-sem-resultados) { font-size: 1.05rem; padding: 11px 13px; } /* Ajuste padding */
+    #listaCompras li:not(.lista-vazia):not(.filtro-sem-resultados) { font-size: 1.05rem; padding: 11px 13px; }
     .modal-content { max-width: 500px; margin: 12% auto; }
-    .logo { max-width: 70px; min-width: 45px; padding: 6px;} /* Ajuste logo */
+    .logo { max-width: 70px; min-width: 45px; padding: 6px;}
 
-    /* Ajuste modal edicao voz tablet */
     .modal-mic-btn, .modal-action-btn { width: 40px; height: 40px; font-size: 1.1rem; }
 }
 
 /* Telas Maiores (Desktops pequenos > 769px) */
 @media (min-width: 769px) {
-    .container { max-width: 800px; /* Limita largura máxima em telas maiores */ }
-    .modal-content { margin: 10% auto; } /* Ajusta margem vertical modal */
-    /* body { font-size: 1.05rem; } */ /* Opcional: aumentar fonte base */
+    body { padding-bottom: 70px; } /* Ajusta padding inferior */
+    .container { max-width: 800px; }
+    .modal-content { margin: 10% auto; }
 }
+
+
+/* =========================================== */
+/* --- ESTILOS NAVEGADOR FLUTUANTE --- */
+/* =========================================== */
+
+#floating-navigator {
+    position: fixed;
+    bottom: 15px; /* Espaço da borda inferior */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Ajuste fino da centralização */
+    width: auto; /* Largura automática baseada no conteúdo */
+    background-color: rgba(255, 255, 255, 0.9); /* Fundo branco semi-transparente */
+    padding: 8px 10px; /* Padding interno */
+    z-index: 990; /* Abaixo dos modais, mas acima do resto */
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.15); /* Sombra suave */
+    border-radius: 25px; /* Bordas bem arredondadas (formato pílula) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Espaço entre os botões */
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0); /* Posição normal */
+}
+
+#floating-navigator.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(calc(100% + 20px)); /* Desliza para baixo ao esconder */
+}
+
+#floating-navigator .nav-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;  /* Tamanho do botão */
+    height: 45px;
+    border: none;
+    border-radius: 50%; /* Botões circulares */
+    text-decoration: none;
+    color: white; /* Cor do ícone padrão */
+    font-size: 1.2rem; /* Tamanho do ícone */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+#floating-navigator .nav-button:hover {
+    transform: scale(1.08); /* Aumenta um pouco no hover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+#floating-navigator .nav-button:active {
+    transform: scale(0.95); /* Efeito de pressionar */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Cores específicas para cada botão */
+#floating-navigator .top-button {
+    background-color: #6c757d; /* Cinza */
+}
+#floating-navigator .top-button:hover {
+    background-color: #5a6268;
+}
+
+#floating-navigator .pending-button {
+    background-color: #dc3545; /* Vermelho (igual lixeira sem valor) */
+}
+#floating-navigator .pending-button:hover {
+    background-color: #c82333;
+}
+
+#floating-navigator .priced-button {
+    background-color: #28a745; /* Verde (igual lixeira com valor) */
+}
+#floating-navigator .priced-button:hover {
+    background-color: #218838;
+}
+
+/* Ajuste fino para telas muito pequenas, se necessário */
+@media (max-width: 360px) {
+    body { padding-bottom: 55px; } /* Ajusta padding inferior mobile */
+    #floating-navigator {
+        bottom: 10px; /* Menos espaço inferior */
+        gap: 10px; /* Reduz espaço entre botões */
+        padding: 6px 8px;
+    }
+    #floating-navigator .nav-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}
+
+/* =========================================== */
+/* --- FIM ESTILOS NAVEGADOR FLUTUANTE --- */
+/* =========================================== */

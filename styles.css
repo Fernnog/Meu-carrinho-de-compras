@@ -208,7 +208,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     -webkit-appearance: none;
     border: none; /* Sem borda */
     background-color: transparent; /* Fundo definido pelo container */
-    transition: width 0.5s ease-in-out; /* Transição suave da largura */
+    transition: width 0.5s ease-in-out, background 0.4s ease; /* Transição suave da largura E COR */
 }
 
 /* Estilo da barra de progresso (verde -> dourado) - Webkit (Chrome, Safari, Edge) */
@@ -266,15 +266,24 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     font-size: 0.9rem; /* Fonte ligeiramente menor */
     color: #495057; /* Cor de texto cinza escuro */
     border-radius: 6px; /* Bordas arredondadas suaves */
-    transition: opacity 0.4s ease-out, max-height 0.4s ease-out, margin 0.4s ease-out; /* Transição suave */
+    transition: opacity 0.4s ease-out, max-height 0.4s ease-out, margin 0.4s ease-out, padding 0.4s ease-out; /* Transição suave */
     opacity: 0; /* Começa invisível para animação */
     max-height: 0; /* Começa colapsado */
     overflow: hidden; /* Esconde conteúdo enquanto colapsado */
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-width: 0;
 }
 .painel-info-sutil.show { /* Classe para mostrar o painel */
     opacity: 1;
     max-height: 100px; /* Altura máxima suficiente para o conteúdo */
-     /* Margens voltam ao normal quando visível (definidas acima) */
+    /* Margens e paddings voltam ao normal quando visível (definidos no estilo base) */
+    padding: 8px 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-width: 1px;
 }
 
 #ultimoItemInfo { /* Estilo para o span que contém a info */
@@ -359,6 +368,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     background-color: #adb5bd; /* Cinza */
     cursor: not-allowed; /* Cursor indicando não permitido */
     box-shadow: none; /* Sem sombra */
+    opacity: 0.7;
 }
 
 /* Botão Microfone e Adicionar (Principal)*/
@@ -431,14 +441,22 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     font-size: 0.9rem;
     padding: 8px 12px;
     border-radius: 6px; /* Arredondado */
-    display: none; /* Oculto por padrão */
-    border: 1px solid transparent; /* Borda base */
+    /* display: none;  Oculto por padrão, mas a classe 'show' controla */
     opacity: 0; /* Para transição fade-in/out */
-    transition: opacity 0.3s ease-in-out; /* Transição suave */
+    max-height: 0; /* Para transição de altura */
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin 0.3s ease-in-out, padding 0.3s ease-in-out; /* Transição suave */
+    border: 1px solid transparent; /* Borda base */
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
-.voz-feedback.show { /* Classe para mostrar com fade-in */
-    display: block;
+.voz-feedback.show { /* Classe para mostrar com fade-in e altura */
     opacity: 1;
+    max-height: 100px; /* Altura suficiente */
+    padding: 8px 12px;
+    margin-top: 8px;
+    margin-bottom: 10px; /* Adiciona espaço abaixo quando visível */
 }
 /* Estilos por tipo de feedback (Principal) */
 .voz-feedback.success {
@@ -467,8 +485,10 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     outline: none;
 }
 
-/* --- Lista de Compras --- */
-#listaComprasContainer h2 { /* Título "Itens no Carrinho" */
+/* --- Listas de Compras (Pendentes e Confirmados) --- */
+/* Estilo dos títulos H2 das listas */
+#listaPendentesContainer h2,
+#listaComprasContainer h2 {
     margin-top: 25px; /* Espaço acima */
     margin-bottom: 15px; /* Espaço abaixo */
     font-size: 1.4rem; /* Tamanho */
@@ -483,12 +503,21 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     transform: translateX(-50%);
 }
 
+/* Espaçamento entre as duas listas */
+#listaPendentesContainer {
+    margin-bottom: 30px; /* Adiciona espaço abaixo da lista de pendentes */
+    /* display: none; Controlado por JS */
+}
+/* #listaComprasContainer { */
+    /* display: none; Controlado por JS */
+/* } */
+
 /* Cabeçalho de Categoria */
 .category-header {
     background-color: #e9f5e9; /* Fundo verde bem claro */
     color: #004d00; /* Verde mais escuro para texto */
     padding: 10px 15px; /* Espaçamento interno */
-    margin-top: 20px; /* Espaço ENTRE categorias */
+    margin-top: 20px; /* Espaço ENTRE categorias (removido do primeiro via JS se necessário) */
     margin-bottom: 0; /* Sem margem inferior, conecta com o primeiro item */
     border-radius: 8px 8px 0 0; /* Arredondado só em cima */
     font-weight: bold;
@@ -522,9 +551,12 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     border: none;
     box-shadow: none;
     overflow: hidden; /* Garante que não ocupe espaço */
+    /* Adiciona transições para propriedades afetadas */
+    transition: opacity 0.3s ease-out, max-height 0.4s ease-out, margin 0.3s ease-out, padding 0.3s ease-out, border 0.3s ease-out;
 }
 
 /* Lista de Itens UL */
+#listaPendentes,
 #listaCompras {
     list-style: none; /* Remove marcadores padrão */
     padding: 0;
@@ -532,6 +564,8 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 }
 
 /* Mensagem de lista vazia ou filtro sem resultados */
+#listaPendentes li.lista-vazia,
+#listaPendentes li.filtro-sem-resultados,
 #listaCompras li.lista-vazia,
 #listaCompras li.filtro-sem-resultados {
     text-align: center;
@@ -544,15 +578,21 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     box-shadow: none; /* Garante sem sombra */
     margin: 10px 0; /* Espaçamento para a mensagem */
     border-radius: 8px; /* Arredonda se estiver fora de um grupo */
+    /* Garante que não tenha hover */
+    transition: none;
+    transform: none;
 }
+#listaPendentes li.lista-vazia:hover,
+#listaPendentes li.filtro-sem-resultados:hover,
 #listaCompras li.lista-vazia:hover,
 #listaCompras li.filtro-sem-resultados:hover {
-    background-color: transparent; /* Sem efeito hover visual */
-    transform: none; /* Sem deslocamento no hover */
+    background-color: transparent;
+    transform: none;
 }
 
 /* Item Individual da Lista (LI) */
-#listaCompras li {
+#listaPendentes li:not(.lista-vazia):not(.filtro-sem-resultados), /* Aplica a LI normais */
+#listaCompras li:not(.lista-vazia):not(.filtro-sem-resultados) {
     display: flex; /* Alinha conteúdo e botão lado a lado */
     justify-content: space-between; /* Espaça conteúdo e botão */
     align-items: center; /* Alinha verticalmente */
@@ -576,16 +616,17 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 }
 
 /* Efeito Hover no item (exceto mensagens) */
+#listaPendentes li:hover:not(.lista-vazia):not(.filtro-sem-resultados),
 #listaCompras li:hover:not(.lista-vazia):not(.filtro-sem-resultados) {
     background-color: #f8f9fa; /* Fundo cinza bem claro */
     transform: translateX(3px); /* Leve deslocamento para direita */
 }
 
-/* Estilo para Item Pendente (Valor Zero ou Nulo) */
-#listaCompras li.item-pendente {
+/* Estilo para Item Pendente (Valor Zero ou Nulo) - Aplica fundo rosa */
+li.item-pendente {
     background-color: #fff8f8; /* Fundo rosa bem claro */
 }
-#listaCompras li.item-pendente:hover {
+li.item-pendente:hover:not(.lista-vazia):not(.filtro-sem-resultados) {
     background-color: #ffebec; /* Rosa um pouco mais escuro no hover */
 }
 
@@ -638,6 +679,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
 }
 
 /* Botão de Excluir Item (Lixeira) */
+#listaPendentes .excluir-item,
 #listaCompras .excluir-item {
     background-color: #28a745; /* VERDE por padrão (item com preço) */
     color: white;
@@ -651,16 +693,18 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:foc
     align-items: center;
     justify-content: center;
     flex-shrink: 0; /* Não encolhe */
-    transition: background-color 0.2s, transform 0.15s;
+    transition: background-color 0.2s, transform 0.15s, filter 0.2s; /* Adiciona filter */
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 /* Botão Excluir para item SEM valor (pendente) - Classe "sem-valor" */
-#listaCompras .excluir-item.sem-valor {
+#listaPendentes .excluir-item.sem-valor,
+#listaCompras .excluir-item.sem-valor { /* Mantém caso algum item com preço seja zerado */
     background-color: #dc3545; /* VERMELHO para item sem valor */
 }
 
 /* Efeito Hover nos botões de excluir */
+#listaPendentes .excluir-item:hover,
 #listaCompras .excluir-item:hover {
     transform: scale(1.1); /* Aumenta um pouco */
     filter: brightness(90%); /* Escurece levemente a cor atual (verde ou vermelho) */
@@ -861,12 +905,14 @@ div.awesomplete { /* Container principal do Awesomplete */
     width: 100%; /* Ocupa a largura do wrapper (.voice-input-wrapper) */
     display: block; /* Garante que ocupe espaço corretamente */
     flex: 1; /* Faz com que ocupe o espaço flexível no wrapper */
+    position: relative; /* Necessário para posicionar a lista de sugestões */
 }
 .awesomplete > ul { /* Lista de sugestões */
     position: absolute; /* Posicionamento absoluto em relação ao input */
     left: 0;
     z-index: 999; /* Acima de outros elementos normais */
     min-width: 100%; /* Largura mínima igual ao input */
+    box-sizing: border-box; /* Garante que padding/border não aumentem a largura */
     background: #fff;
     border: 1px solid rgba(0,0,0,0.15); /* Borda um pouco mais visível */
     box-shadow: 0.2em 0.3em 0.5em rgba(0,0,0,0.1);
@@ -887,6 +933,7 @@ div.awesomplete { /* Container principal do Awesomplete */
     font-size: 1rem; /* Tamanho de fonte consistente */
     color: #333; /* Cor do texto */
     border-bottom: 1px solid #eee; /* Linha separadora suave */
+    text-align: left; /* Garante alinhamento à esquerda */
 }
 .awesomplete > ul li:last-child {
     border-bottom: none; /* Remove borda do último item */
@@ -979,15 +1026,23 @@ div.awesomplete { /* Container principal do Awesomplete */
     font-size: 0.85rem; /* Um pouco menor */
     padding: 6px 10px;
     border-radius: 4px;
-    display: none; /* Escondido por padrão */
-    border: 1px solid transparent;
+    /* display: none; */ /* Controlado pela classe .show */
     opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    /* Herda estilos de .voz-feedback.show */
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin 0.3s ease-in-out, padding 0.3s ease-in-out;
+    border: 1px solid transparent;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 .modal-feedback.show {
-    display: block;
+    /* display: block; */ /* display não é animável, usar opacity/height */
     opacity: 1;
+    max-height: 80px; /* Altura suficiente */
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-bottom: 5px; /* Espaço abaixo quando visível */
 }
 /* Estilos por tipo de feedback (reutiliza os nomes de classe) */
 .modal-feedback.success {
@@ -1022,26 +1077,32 @@ div.awesomplete { /* Container principal do Awesomplete */
 @media (max-width: 480px) {
     body { font-size: 0.95rem; }
     h1 { font-size: 1.4rem; }
-    .container { padding: 10px; margin: 10px auto; border-radius: 8px; }
+    .container { padding: 10px; margin: 10px auto; max-width: 98%; border-radius: 8px; } /* Aumenta max-width um pouco */
     label { font-size: 0.9rem; }
     input[type="text"], input[type="number"], select, textarea { padding: 10px; font-size: 1rem; border-radius: 6px; }
     #orcamento { max-width: 140px; font-size: 1.1rem; }
     .top-actions { margin-bottom: 20px; gap: 8px;}
     .top-action-btn { padding: 7px 12px; font-size: 0.85rem; } /* Ajuste padding */
-    #painelTotal { font-size: 2rem; padding: 12px; } /* Ajuste padding */
+    #painelTotal { font-size: 1.8rem; padding: 12px; } /* Reduz um pouco */
     #painelContagemItens { font-size: 1rem; padding: 8px; }
     .painel-info-sutil { font-size: 0.85rem; padding: 6px 10px; } /* Ajuste painel info */
     .voice-input-wrapper { gap: 5px; } /* Ajuste gap principal */
     .mic-btn, .action-btn { width: 40px; height: 40px; font-size: 1.1rem; } /* Ajuste botões principais */
+
+    #listaPendentesContainer h2, /* Ajuste título mobile */
     #listaComprasContainer h2 { font-size: 1.2rem; margin-bottom: 12px; padding-bottom: 6px; }
+    #listaPendentesContainer { margin-bottom: 20px; } /* Reduz espaço mobile */
     .category-header { padding: 8px 12px; font-size: 1.05rem; border-radius: 6px 6px 0 0; }
-    .category-group { border-radius: 6px; }
-    #listaCompras li { padding: 10px 12px; font-size: 1rem; }
+    .category-group { border-radius: 6px; margin-bottom: 8px; } /* Ajusta grupo mobile */
+    #listaPendentes li:not(.lista-vazia):not(.filtro-sem-resultados),
+    #listaCompras li:not(.lista-vazia):not(.filtro-sem-resultados) { padding: 10px 12px; font-size: 1rem; }
+    #listaPendentes li:last-child,
     #listaCompras li:last-child { border-radius: 0 0 6px 6px; }
     .item-qtd { padding: 2px 6px; font-size: 0.85em; }
     .item-preco { font-size: 1em; }
+    #listaPendentes .excluir-item,
     #listaCompras .excluir-item { width: 32px; height: 32px; font-size: 0.9rem; }
-    .modal-content { padding: 20px; margin: 10% auto; width: 95%; max-width: none; } /* Ajusta modal para tela cheia */
+    .modal-content { padding: 20px; margin: 5% auto; width: 95%; max-width: none; } /* Ajusta modal para tela cheia, menos margem */
     .modal-content h2 { font-size: 1.3rem; }
     .fechar-modal { font-size: 28px; top: 8px; right: 12px; }
     .button-green, .button-gold { padding: 11px 15px; font-size: 1rem;} /* Ajuste padding botão modal */
@@ -1066,9 +1127,11 @@ div.awesomplete { /* Container principal do Awesomplete */
     #painelContagemItens { font-size: 1.05rem; }
     .mic-btn, .action-btn { width: 44px; height: 44px; font-size: 1.1rem; } /* Ajuste botões principais */
     .top-action-btn { padding: 8px 14px; font-size: 0.9rem; } /* Ajuste padding/fonte */
+    #listaPendentesContainer h2,
     #listaComprasContainer h2 { font-size: 1.25rem; }
     .category-header { font-size: 1.1rem; } /* Ajuste fonte */
-    #listaCompras li { font-size: 1.05rem; padding: 11px 13px; } /* Ajuste padding */
+    #listaPendentes li:not(.lista-vazia):not(.filtro-sem-resultados),
+    #listaCompras li:not(.lista-vazia):not(.filtro-sem-resultados) { font-size: 1.05rem; padding: 11px 13px; } /* Ajuste padding */
     .modal-content { max-width: 500px; margin: 12% auto; }
     .logo { max-width: 70px; min-width: 45px; padding: 6px;} /* Ajuste logo */
 
@@ -1080,5 +1143,5 @@ div.awesomplete { /* Container principal do Awesomplete */
 @media (min-width: 769px) {
     .container { max-width: 800px; /* Limita largura máxima em telas maiores */ }
     .modal-content { margin: 10% auto; } /* Ajusta margem vertical modal */
-    /* body { font-size: 1.05rem; } */
+    /* body { font-size: 1.05rem; } */ /* Opcional: aumentar fonte base */
 }

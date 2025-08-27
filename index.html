@@ -1,302 +1,267 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano de Leitura da Bíblia (Firebase)</title>
-
-    <!-- ***** Link para o Favicon ***** -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <!-- ****************************** -->
-
+    <title>Minhas Compras de Mercado</title>
     <link rel="stylesheet" href="styles.css">
-
-    <!-- Google Fonts (Inter) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" href="imagens/favicon.ico" type="image/x-icon">
+    <!-- Awesomplete CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
     <link rel="manifest" href="manifest.json">
-
 </head>
 <body>
     <header>
-        <!-- ***** Imagem do Logo ***** -->
-        <img src="logo.png" alt="Logotipo Plano de Leitura" id="header-logo">
-        <!-- ************************ -->
-
-        <div class="header-content">
-            <h1>Plano de Leitura da Bíblia</h1>
+        <!-- Logo com fundo branco -->
+        <div class="logo-container">
+            <div class="logo-background-circle"> <!-- Wrapper para o círculo branco -->
+                <img src="imagens/logo.png" alt="Logo Minhas Compras" class="logo">
+            </div>
         </div>
-
-        <!-- Área de Status do Usuário -->
-        <div id="user-status" class="user-status-container">
-            <span id="user-email" style="display: none;"></span>
-            <button id="logout-button" class="button-danger" style="display: none;">Sair</button>
-        </div>
+        <h1>Minhas compras de Mercado</h1>
+        <hr class="header-divider">
     </header>
 
-    <main>
-        <!-- Seção de Autenticação -->
-        <section id="auth-section">
-             <h2>Acessar Plano</h2>
-             <div id="auth-error" class="error-message" style="display: none;"></div>
-             <div id="signup-error" class="error-message" style="display: none;"></div>
-             <div id="auth-loading" class="loading-indicator" style="display: none;">Carregando...</div>
+    <div class="container">
 
-             <!-- Formulário de Login -->
-             <form id="login-form">
-                 <label for="login-email">Email:</label>
-                 <input type="email" id="login-email" required>
-                 <label for="login-password">Senha:</label>
-                 <input type="password" id="login-password" required>
-                 <button type="submit" id="login-button" class="button-primary">Entrar</button>
-                 <p>Não tem uma conta? <a href="#" id="show-signup">Cadastre-se</a></p>
-             </form>
+        <!-- Botões de Ação Principais (Acima do orçamento) -->
+        <div class="top-actions">
+            <button id="importar" class="top-action-btn">
+                <i class="fas fa-file-import"></i> Importar <!-- Ícone atualizado -->
+            </button>
+            <button id="relatorio" class="top-action-btn">
+                <i class="fas fa-file-excel"></i> Relatório <!-- Ícone atualizado -->
+            </button>
+            <button id="limparLista" class="top-action-btn danger">
+                <i class="fas fa-trash-alt"></i> Limpar Tudo
+            </button>
+        </div>
 
-             <!-- Formulário de Cadastro -->
-             <form id="signup-form" style="display: none;">
-                 <label for="signup-email">Email:</label>
-                 <input type="email" id="signup-email" required>
-                 <label for="signup-password">Senha:</label>
-                 <input type="password" id="signup-password" required>
-                 <button type="submit" id="signup-button" class="button-primary">Cadastrar</button>
-                 <p>Já tem uma conta? <a href="#" id="show-login">Faça login</a></p>
-             </form>
-        </section>
+        <!-- Campo de Orçamento e Barra de Progresso -->
+        <div class="input-group">
+            <label for="orcamento">Orçamento (R$):</label>
+            <input type="text" id="orcamento" placeholder="200,00" inputmode="decimal"> <!-- Adicionado inputmode -->
+        </div>
+        <div class="progress-bar-container">
+            <progress id="barraProgresso" value="0" max="100"></progress>
+            <span id="porcentagemProgresso">0%</span>
+        </div>
 
-        <!-- Container para botões de criação de plano, visível após login -->
-        <section id="plan-creation-actions" class="plan-creation-actions-container" style="display: none;">
-            <button id="create-new-plan-button" class="button-primary">Criar Novo Plano (Genérico)</button>
-            <button id="create-favorite-plan-button" class="button-special">Criar Plano Favorito Anual</button>
-        </section>
+        <!-- (NOVO) Painel do Último Item Adicionado -->
+        <div id="painelUltimoItem" class="painel-info-sutil" style="display: none;" aria-live="polite">
+            Último: <span id="ultimoItemInfo">Nenhum item adicionado recentemente.</span>
+        </div>
+        <!-- Fim do Novo Painel -->
 
-        <!-- Seção de Criação e Edição de Plano -->
-        <section id="plan-creation" style="display: none;">
-             <h2 id="plan-creation-title">Criar Novo Plano</h2>
-             <div id="plan-error" class="error-message" style="display: none;"></div>
-             <div id="plan-loading-create" class="loading-indicator" style="display: none;">Salvando...</div>
-             <input type="hidden" id="editing-plan-id">
-             <label for="plan-name">Nome do Plano:</label>
-             <input type="text" id="plan-name" placeholder="Ex: Bíblia Completa, Novo Testamento" required>
-             <label for="google-drive-link">Link Google Drive (Opcional):</label>
-             <input type="url" id="google-drive-link" placeholder="https://docs.google.com/document/d/...">
-             <fieldset class="icon-selector-fieldset">
-                <legend>Ícone do Plano</legend>
-                <div id="icon-selector-container" class="icon-selector-container"></div>
-                <small style="text-align: center; margin-top: 10px;">Escolha um ícone para identificar seu plano.</small>
-             </fieldset>
-             <fieldset id="plan-structure-fieldset">
-                <legend>Estrutura do Plano (Capítulos e Duração)</legend>
-                <fieldset>
-                    <legend>Método de Seleção de Capítulos</legend>
-                    <label><input type="radio" name="creation-method" value="interval" checked> Intervalo Contínuo</label>
-                    <label><input type="radio" name="creation-method" value="selection"> Seleção Avulsa</label>
-                    <label><input type="radio" name="creation-method" value="chapters-per-day"> Capítulos por Dia de Leitura</label>
-                </fieldset>
-                <div id="interval-options">
-                    <fieldset><legend>Opção 1: Definir por Intervalo</legend>
-                        <label for="start-book-select">Livro Inicial:</label>
-                        <select id="start-book-select" required><option value="">-- Selecione --</option></select>
-                        <label for="start-chapter-input">Capítulo Inicial:</label>
-                        <input type="number" id="start-chapter-input" min="1" required>
-                        <label for="end-book-select">Livro Final:</label>
-                        <select id="end-book-select" required><option value="">-- Selecione --</option></select>
-                        <label for="end-chapter-input">Capítulo Final:</label>
-                        <input type="number" id="end-chapter-input" min="1" required>
-                    </fieldset>
-                </div>
-                <div id="selection-options" style="display: none;">
-                    <fieldset><legend>Opção 2/3: Selecionar Livros/Capítulos</legend>
-                        <label for="books-select">Selecionar Livros Completos (Opcional):</label>
-                        <select id="books-select" multiple></select>
-                        <small>Use Ctrl/Cmd para selecionar múltiplos livros.</small>
-                        <label for="chapters-input">Digitar Capítulos/Intervalos (Opcional):</label>
-                        <input type="text" id="chapters-input" placeholder="Ex: Gênesis 1-3, Êxodo 5, Salmos 119" list="book-suggestions">
-                        <datalist id="book-suggestions"></datalist>
-                        <small>Separe por vírgula. Use hífen para intervalos. Ex: "Jo 3", "Sl 23, Sl 100-102", "1 Coríntios".</small>
-                    </fieldset>
-                </div>
-                <hr>
-                <fieldset>
-                    <legend>Duração do Plano</legend>
-                    <small>A data de início será hoje por padrão, a menos que 'Data Final' seja escolhida.</small>
-                    <label><input type="radio" name="duration-method" value="days" checked> Duração Total (Dias Calendário)</label>
-                    <label><input type="radio" name="duration-method" value="end-date"> Data Final Específica</label>
-                    <div id="days-option">
-                        <label for="days-input">Número Total de Dias (Calendário):</label>
-                        <input type="number" id="days-input" min="1" value="30">
-                        <small>O plano distribuirá os capítulos nos dias de leitura *dentro* deste período.</small>
-                    </div>
-                    <div id="end-date-option" style="display: none;">
-                        <label for="start-date-input">Data de Início (Opcional, padrão é hoje):</label>
-                        <input type="date" id="start-date-input">
-                        <label for="end-date-input">Data Final (Obrigatório nesta opção):</label>
-                        <input type="date" id="end-date-input">
-                        <small>O plano distribuirá os capítulos nos dias de leitura *entre* estas datas (inclusive).</small>
-                    </div>
-                    <div id="chapters-per-day-option" style="display: none;">
-                        <label for="chapters-per-day-input">Capítulos por Dia de Leitura (Aprox.):</label>
-                        <input type="number" id="chapters-per-day-input" min="1" value="3">
-                        <small>O plano calculará a duração e a data final com base neste ritmo.</small>
-                    </div>
-                </fieldset>
-                <fieldset id="periodicity-options">
-                    <legend>Dias de Leitura na Semana</legend>
-                    <small>Selecione os dias em que haverá leitura. Se nenhum for selecionado, a leitura será distribuída em todos os dias.</small>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="reading-day" value="0"> Dom</label>
-                        <label><input type="checkbox" name="reading-day" value="1" checked> Seg</label>
-                        <label><input type="checkbox" name="reading-day" value="2" checked> Ter</label>
-                        <label><input type="checkbox" name="reading-day" value="3" checked> Qua</label>
-                        <label><input type="checkbox" name="reading-day" value="4" checked> Qui</label>
-                        <label><input type="checkbox" name="reading-day" value="5" checked> Sex</label>
-                        <label><input type="checkbox" name="reading-day" value="6"> Sáb</label>
-                    </div>
-                    <div id="periodicity-warning" class="error-message" style="display: none; margin-top: 10px;"></div>
-                </fieldset>
-            </fieldset>
-            <button id="create-plan" class="button-primary">Criar Plano</button>
-            <button id="cancel-creation-button" class="button-secondary" style="display: none;">Cancelar</button>
-        </section>
+        <!-- Painel de Total -->
+        <div id="painelTotal">
+            Total: R$ <span id="totalValorPainel">0,00</span>
+        </div>
 
-        <!-- Painel de Perseverança Aprimorado (MODIFICADO) -->
-        <section id="perseverance-section" class="perseverance-section enhanced-panel" style="display: none;">
-            <div class="perseverance-header">
-                <h2>Sua Perseverança</h2>
+        <!-- Painel de Contagem de Itens (Labels ajustados para refletir contagem de itens com preço) -->
+        <div id="painelContagemItens">
+            Itens (com preço): <span id="contagemNomes">0</span> nomes / <span id="contagemUnidades">0</span> unidades
+        </div>
+
+        <!-- Entrada por Voz com Autocomplete -->
+        <div class="input-group voice-input">
+            <label for="vozInput">Adicionar Item (Ex.: "qtd 2 biscoito preco 2,50"):</label>
+            <div class="voice-input-wrapper">
+                <!-- Input com Awesomplete será anexado aqui pelo JS -->
+                <input type="text" id="vozInput" placeholder="Dite aqui ou digite..." aria-label="Campo para adicionar item por texto ou voz">
+                <button id="ativarVoz" class="mic-btn" aria-label="Ativar Ditado por Voz" title="Ativar Ditado por Voz">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button id="inserirItem" class="action-btn" aria-label="Inserir Item" title="Adicionar Item à Lista">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button id="limparInput" class="action-btn danger" aria-label="Limpar Campo" title="Limpar Campo de Entrada">
+                    <i class="fas fa-times"></i> <!-- Ícone 'x' mais apropriado -->
+                </button>
             </div>
-            <!-- ÁREA DE ÍCONES MODIFICADA -->
-            <div class="milestone-icons-area">
-                <!-- O ícone da coroa permanece, pois sua lógica é separada -->
-                <span class="milestone-icon record-crown">👑</span>
-                <!-- Este container será preenchido dinamicamente pelo JavaScript -->
-                <div id="cumulative-milestones-container"></div>
-            </div>
-            <div class="perseverance-bar-container">
-                <div class="progress-bar">
-                    <span class="progress-percentage-left">
-                        <span class="current-days-text">0</span> / <span class="record-days-text">0</span> dias
-                    </span>
-                    <div id="perseverance-progress-fill" class="progress">
-                        <div class="progress-shine-overlay"></div>
+            <div class="voz-feedback"></div> <!-- Área para feedback de sucesso/erro -->
+        </div>
+
+        <!-- Filtro por Categoria -->
+        <div class="input-group">
+            <label for="categoriaFiltro">Filtrar por Categoria:</label>
+            <select id="categoriaFiltro" aria-label="Selecionar categoria para filtrar a lista">
+                <option value="">Todas</option>
+                <option value="Alimentos">Alimentos</option>
+                <option value="Limpeza">Limpeza</option>
+                <option value="Higiene Pessoal">Higiene Pessoal</option>
+                <option value="Outros">Outros</option>
+            </select>
+        </div>
+
+        <!-- NOVA Seção: Lista de Compras (Itens Pendentes/Sem Preço) -->
+        <div id="listaPendentesContainer" style="display: none;"> <!-- Começa escondido, JS controla -->
+             <h2>Lista de Compras (Pendentes)</h2>
+             <ul id="listaPendentes">
+                 <!-- Itens PENDENTES serão inseridos aqui pelo JavaScript -->
+                 <!-- Exemplo de mensagem de lista vazia (adicionado/removido via JS): -->
+                 <!-- <li class="lista-vazia">Nenhum item pendente encontrado.</li> -->
+             </ul>
+        </div>
+
+        <!-- Seção Existente: Itens no Carrinho (Itens Com Preço) -->
+        <div id="listaComprasContainer" style="display: none;"> <!-- Começa escondido, JS controla -->
+             <h2>Itens no Carrinho</h2>
+             <ul id="listaCompras">
+                 <!-- Itens COM PREÇO serão inseridos aqui pelo JavaScript -->
+                 <!-- Exemplo de mensagem de lista vazia (adicionado/removido via JS): -->
+                 <!-- <li class="lista-vazia">Nenhum item com preço definido no carrinho.</li> -->
+             </ul>
+        </div>
+
+        <!-- Total Oculto (mantido por referência no JS, pode ser removido se não usado) -->
+        <div class="total" style="display: none;">
+            Total: R$ <span id="totalValor">0,00</span>
+        </div>
+
+        <!-- ==================== MODAIS ==================== -->
+
+        <!-- Modal de Edição -->
+        <div id="modalEdicao" class="modal" aria-labelledby="modalEdicaoTitulo" role="dialog" aria-modal="true">
+             <div class="modal-content">
+                <!-- Botão Fechar Genérico (usa data-target) -->
+                <span class="fechar-modal" data-target="modalEdicao" aria-label="Fechar Modal de Edição" title="Fechar">×</span>
+                <h2 id="modalEdicaoTitulo">Editar Item</h2>
+
+                <!-- Edição Manual da Descrição -->
+                <div class="input-group">
+                    <label for="editarDescricao">Descrição:</label>
+                    <div class="input-with-mic">
+                        <input type="text" id="editarDescricao" placeholder="Descrição do item">
+                        <button class="mic-btn modal-mic-btn" data-target="editarDescricao" aria-label="Editar Descrição por Voz" title="Ditar Descrição">
+                            <i class="fas fa-microphone"></i>
+                        </button>
                     </div>
                 </div>
-            </div>
-            <!-- LEGENDA ATUALIZADA -->
-            <div class="milestone-legend">
-                <span>🌱 7d</span> | <span>🔥 15d</span> | <span>⭐ 30d</span> | <span>🌳 100d</span> | <span>💎 300d</span> | <span>☀️ 1000d</span>
-            </div>
-        </section>
 
-        <!-- Painel de Progresso Semanal Global (INALTERADO) -->
-        <section id="global-weekly-tracker-section" class="weekly-tracker-container enhanced-panel" style="display: none;">
-             <h3>Suas Interações na Semana</h3>
-             <div class="week-days" id="global-week-days-indicators">
-                 <div class="day-indicator" data-day="0"><span class="day-label">Dom</span><span class="day-marker"></span></div>
-                 <div class="day-indicator" data-day="1"><span class="day-label">Seg</span><span class="day-marker"></span></div>
-                 <div class="day-indicator" data-day="2"><span class="day-label">Ter</span><span class="day-marker"></span></div>
-                 <div class="day-indicator" data-day="3"><span class="day-label">Qua</span><span class="day-marker"></span></div>
-                 <div class="day-indicator" data-day="4"><span class="day-label">Qui</span><span class="day-marker"></span></div>
-                 <div class="day-indicator" data-day="5"><span class="day-label">Sex</span><span class="day-marker"></span></div>
-                 <div class="day-indicator" data-day="6"><span class="day-label">Sáb</span><span class="day-marker"></span></div>
-             </div>
-        </section>
-        
-         <!-- Seção Leituras Atrasadas (INALTERADO) -->
-         <section id="overdue-readings" class="enhanced-panel" style="display: none;">
-              <h2>⚠️ Leituras Atrasadas</h2>
-              <div id="overdue-readings-loading" class="loading-indicator" style="display: none;">Verificando...</div>
-              <div id="overdue-readings-list" class="overdue-readings-container"></div>
-         </section>
+                <!-- NOVA Seção para Edição por Voz (Quantidade e Preço) -->
+                <hr class="modal-divider"> <!-- Linha divisória opcional -->
+                 <div class="input-group voice-input-modal"> <!-- Nova classe para possível estilo específico -->
+                    <label for="editarVozInput">Editar Qtd/Preço por Voz:</label>
+                    <div class="input-with-mic"> <!-- Reutiliza a classe para alinhamento -->
+                        <input type="text" id="editarVozInput" placeholder="Ex: qtd 5 preco 10,50" aria-label="Campo para editar quantidade e preço por voz">
+                        <button id="editarVozMicBtn" class="mic-btn modal-mic-btn" data-target="editarVozInput" aria-label="Ativar Ditado para Editar Qtd/Preço" title="Ditar Alterações Qtd/Preço">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button id="processarEdicaoVoz" class="action-btn modal-action-btn" aria-label="Processar Comando de Voz" title="Aplicar alterações ditadas">
+                            <i class="fas fa-check"></i> <!-- Ícone de 'check' para processar -->
+                        </button>
+                        <button id="limparEdicaoVoz" class="action-btn modal-action-btn danger" aria-label="Limpar Comando de Voz" title="Limpar campo de comando">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="editarVozFeedback" class="voz-feedback modal-feedback"></div> <!-- Feedback específico para o modal -->
+                </div>
+                <hr class="modal-divider"> <!-- Linha divisória opcional -->
 
-         <!-- Seção Próximas Leituras (INALTERADO) -->
-         <section id="upcoming-readings" class="enhanced-panel" style="display: none;">
-              <h2>Próximas Leituras</h2>
-              <div id="upcoming-readings-loading" class="loading-indicator" style="display: none;">Carregando...</div>
-              <div id="upcoming-readings-list" class="upcoming-readings-container"></div>
-         </section>
+                <!-- Edição Manual da Quantidade -->
+                <div class="input-group">
+                    <label for="editarQuantidade">Quantidade (Manual):</label>
+                     <div class="input-with-mic"> <!-- Removido mic daqui, já tem o global -->
+                        <input type="number" id="editarQuantidade" placeholder="Quantidade" min="1" inputmode="numeric">
+                        <!-- Removido botão de microfone específico daqui -->
+                    </div>
+                </div>
 
-        <!-- Container que abrigará os múltiplos cards de planos -->
-        <section id="plans-display-section" class="plans-display-container" style="display: none;"></section>
-        
-        <!-- ------------- Modais ------------- -->
-        
-        <!-- Modal para Recálculo -->
-        <div id="recalculate-modal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <span class="close-button">×</span>
-                <h2>Recalcular Plano de Leitura</h2>
-                <p>Ajuste o ritmo do plano ativo. Capítulos já lidos serão mantidos.</p>
-                <div id="recalculate-error" class="error-message" style="display: none;"></div>
-                 <div id="recalculate-loading" class="loading-indicator" style="display: none;">Recalculando...</div>
-                <fieldset><legend>Escolha como proceder:</legend>
-                     <label><input type="radio" name="recalc-option" value="extend_date" checked> Manter ritmo original (adiar data final).</label><br>
-                     <label><input type="radio" name="recalc-option" value="increase_pace"> Manter data final original (aumentar ritmo).</label><br>
-                     <label><input type="radio" name="recalc-option" value="new_pace"> Definir novo ritmo: <input type="number" id="new-pace-input" min="1" value="3"> caps/dia de leitura.</label>
-                 </fieldset>
-                <button id="confirm-recalculate" class="button-primary">Confirmar Recálculo</button>
+                <!-- Edição Manual do Valor -->
+                <div class="input-group">
+                    <label for="editarValor">Valor Unitário (R$) (Manual):</label>
+                    <div class="input-with-mic"> <!-- Removido mic daqui, já tem o global -->
+                        <input type="text" id="editarValor" placeholder="0,00" inputmode="decimal">
+                        <!-- Removido botão de microfone específico daqui -->
+                    </div>
+                </div>
+
+                <!-- Botão Salvar (Aplica TODAS as alterações, manuais ou via voz processada) -->
+                <button id="salvarEdicao" class="button-green">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
             </div>
         </div>
 
-         <!-- Modal Estatísticas (INALTERADO) -->
-         <div id="stats-modal" class="modal" style="display: none;">
-             <div class="modal-content modal-content-scrollable">
-                 <span class="close-button">×</span>
-                 <h2>Suas Estatísticas (Plano Ativo)</h2>
-                 <div id="stats-loading" class="loading-indicator" style="display: none;">Calculando...</div>
-                 <div id="stats-error" class="error-message" style="display: none;"></div>
-                 <div id="stats-content">
-                     <p><strong>Plano:</strong> <span id="stats-active-plan-name">--</span></p>
-                     <p><strong>Progresso (Dias):</strong> <span id="stats-active-plan-progress">--</span>%</p>
-                     <hr>
-                     
-                     <!-- NOVO: Container para o gráfico de progresso -->
-                     <div class="stats-chart-container">
-                         <canvas id="progress-chart"></canvas>
-                     </div>
+        <!-- Modal para Aviso de Importação XLSX -->
+        <div id="modalImportInfo" class="modal import-info-modal" aria-labelledby="modalImportInfoTitulo" role="dialog" aria-modal="true">
+            <div class="modal-content import-info-content">
+                 <!-- Botão Fechar Genérico (usa data-target) -->
+                <span class="fechar-modal" data-target="modalImportInfo" aria-label="Fechar Aviso de Importação" title="Fechar">×</span>
+                <h2 id="modalImportInfoTitulo">Importar via Planilha Excel (.xlsx)</h2>
+                <p>Para importar sua lista de compras via Excel, utilize o modelo de planilha abaixo. Certifique-se de que sua planilha tenha as seguintes colunas, exatamente nesta ordem (a primeira linha pode ser cabeçalho ou dados):</p>
+                <ul style="text-align:left; margin-left: 20px;">
+                    <li><b>Descrição:</b> O nome do produto (obrigatório).</li>
+                    <li><b>Quantidade:</b> Número de unidades (padrão 1 se vazio/inválido).</li>
+                    <li><b>Valor Unitário (R$):</b> Preço por unidade (ex: 5,99 ou 5.99; padrão 0,00 se vazio).</li>
+                    <li><b>Categoria (Opcional):</b> Ex: Alimentos, Limpeza (será inferida se vazia).</li>
+                </ul>
+                <p>Baixe o modelo aqui: <a href="modelo_importacao.xlsx" download="modelo_importacao.xlsx" title="Baixar modelo de planilha para importação"><b>modelo_importacao.xlsx</b></a></p>
+                <button id="continuarImport" class="button-gold">
+                     <i class="fas fa-file-upload"></i> Selecionar Arquivo .xlsx
+                 </button>
+            </div>
+        </div>
 
-                     <p><strong>Total de Capítulos Lidos:</strong> <span id="stats-total-chapters">--</span></p>
-                     <p><strong>Ritmo Médio (Caps/Dia Lido):</strong> <span id="stats-avg-pace">--</span></p>
-                     <p><strong>Previsão de Término (com ritmo atual):</strong> <span id="stats-forecast-date">--</span></p>
-                     <p><strong>Número de Recálculos:</strong> <span id="stats-recalculations-count">--</span></p>
-                     <p><strong>Plano Concluído:</strong> <span id="stats-plans-completed">--</span></p>
-                     
-                     <small>Nota: Estatísticas baseadas no histórico registrado para o plano ativo.</small>
-                 </div>
-             </div>
-         </div>
+        <!-- NOVO: Modal de Escolha de Importação -->
+        <div id="modalImportChoice" class="modal" aria-labelledby="modalImportChoiceTitulo" role="dialog" aria-modal="true">
+            <div class="modal-content">
+                 <!-- Botão Fechar Genérico (usa data-target) -->
+                <span class="fechar-modal" data-target="modalImportChoice" aria-label="Fechar Escolha de Importação" title="Fechar">×</span>
+                <h2 id="modalImportChoiceTitulo">Como deseja importar?</h2>
+                <p>Selecione o método para adicionar itens à sua lista:</p>
+                <button id="importChoiceXlsx" class="button-gold" style="margin-bottom: 10px;">
+                    <i class="fas fa-file-excel"></i> Arquivo Excel (.xlsx)
+                </button>
+                <button id="importChoiceText" class="button-green">
+                    <i class="fas fa-list-alt"></i> Lista de Itens (texto)
+                </button>
+            </div>
+        </div>
 
-         <!-- Modal Histórico -->
-         <div id="history-modal" class="modal" style="display: none;">
-             <div class="modal-content modal-content-scrollable">
-                 <span class="close-button">×</span>
-                 <h2>Histórico de Leitura (Plano Ativo)</h2>
-                 <div id="history-loading" class="loading-indicator" style="display: none;">Carregando...</div>
-                 <div id="history-error" class="error-message" style="display: none;"></div>
-                 <div id="history-list" class="history-list-container"></div>
-             </div>
-         </div>
+        <!-- NOVO: Modal para Importação por Texto -->
+        <div id="modalTextImport" class="modal" aria-labelledby="modalTextImportTitulo" role="dialog" aria-modal="true">
+            <div class="modal-content">
+                 <!-- Botão Fechar Genérico (usa data-target) -->
+                <span class="fechar-modal" data-target="modalTextImport" aria-label="Fechar Importação por Texto" title="Fechar">×</span>
+                <h2 id="modalTextImportTitulo">Importar Itens por Lista</h2>
+                <p>Digite ou cole os nomes dos itens separados por vírgula (,). Cada item será adicionado com quantidade 1 e sem preço definido.</p>
+                <div class="input-group">
+                    <label for="textImportArea">Itens (separados por vírgula):</label>
+                    <textarea id="textImportArea" rows="6" placeholder="Ex: Arroz, Feijão, Macarrão, Óleo de Soja, Café" aria-label="Área para digitar ou colar a lista de itens separados por vírgula"></textarea>
+                </div>
+                <button id="processTextImport" class="button-green">
+                    <i class="fas fa-plus-circle"></i> Adicionar Itens da Lista
+                </button>
+            </div>
+        </div>
 
-    </main>
+        <!-- ==================== FIM MODAIS ==================== -->
 
-    <footer>
-        <!-- Rodapé opcional -->
-    </footer>
+    </div> <!-- Fim .container -->
 
-    <!-- Inclusão da biblioteca Chart.js via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- NOVO E ESSENCIAL: Inclusão do Date-FNS e seu Adaptador para o Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <!-- FIM DA ADIÇÃO -->
-
-    <!-- Ponto de entrada para o JavaScript modular -->
-    <script type="module" src="./src/main.js"></script>
-    
-    <!-- Paginador Flutuante (Dock) -->
-    <div id="floating-navigator">
-        <!-- O conteúdo (botões) será gerado dinamicamente pelo JavaScript -->
+    <!-- ========== NAVEGADOR FLUTUANTE ========== -->
+    <div id="floating-navigator" class="hidden"> <!-- Começa escondido -->
+        <a href="#" class="nav-button top-button" aria-label="Ir para o Topo" title="Ir para o Topo">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+        <a href="#listaPendentesContainer" class="nav-button pending-button" aria-label="Ir para Itens Pendentes" title="Ir para Itens Pendentes (sem preço)">
+            <i class="fas fa-trash-alt"></i>
+        </a>
+        <a href="#listaComprasContainer" class="nav-button priced-button" aria-label="Ir para Itens no Carrinho" title="Ir para Itens no Carrinho (com preço)">
+            <i class="fas fa-trash-alt"></i>
+        </a>
     </div>
+    <!-- ========== FIM NAVEGADOR FLUTUANTE ========== -->
+
+    <!-- Bibliotecas externas (Carregadas no final para melhor performance) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+    <!-- Script principal da aplicação -->
+    <script src="script.js" defer></script>
 
 </body>
 </html>

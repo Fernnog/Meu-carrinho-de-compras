@@ -1,711 +1,1271 @@
-:root {
-    /* --- Paleta de Cores e Variáveis --- */
-    --gradient-start: #FF8C00; /* Laranja Vibrante */
-    --gradient-mid: #E6007E;   /* Magenta/Rosa */
-    --gradient-end: #00BFFF;   /* Azul Céu */
-    --primary-action: #8A2BE2; /* Roxo Azulado (Violeta) */
-    --primary-action-dark: #701ebd;
-    --primary-action-rgb: 138, 43, 226;
-    --accent-color: var(--gradient-start); /* Laranja como acento */
-    --accent-color-dark: #E07B00;
-    --accent-color-rgb: 255, 140, 0;
-    --background-light: #f8f7fc; /* Fundo quase branco, levemente roxo */
-    --background-card: #FFFFFF; /* Branco puro para cards */
-    --text-color-light: #ffffff;
-    --text-color-dark: #2a2a2a; /* Cor de texto principal (escuro) */
-    --text-color-muted: #6c757d; /* Cinza para textos secundários */
-    --border-color: #e8eaf6; /* Cor de borda suave */
-    --success-color: #28a745; /* Verde sucesso */
-    --success-color-dark: #1e7e34; /* Verde sucesso mais escuro para hover */
-    --success-color-rgb: 40, 167, 69;
-    --danger-color: #dc3545; /* Vermelho perigo */
-    --danger-color-dark: #bb2d3b;
-    --warning-bg-light: #fffbeb; /* Fundo aviso Atrasadas */
-    --warning-border-light: #fde68a; /* Borda aviso Atrasadas */
-    --warning-text-dark: #d97706; /* Texto aviso Atrasadas */
-    --warning-border-strong: #fcd34d; /* Borda H2 Atrasadas */
-    --warning-item-border: #ef4444; /* Borda item Atrasado */
-    --warning-item-text: #dc2626; /* Cor data Atrasada */
-    --drive-blue: #4285F4; /* Azul Google Drive */
-    --drive-blue-rgb: 66, 133, 244;
-    --drive-text-blue: #0b57d0; /* Azul texto link Drive */
-    --disabled-color: #e0e0e0; /* Cinza para desabilitado */
-    --disabled-text-color: #9e9e9e;
-    --marker-inactive-color: #f0f0f5; /* Cor de fundo marcador inativo (padrão) */
-    --marker-inactive-border: #dbe0e4;
-    --marker-active-bg: var(--primary-action); /* Fundo marcador ativo (lido) */
-    --marker-active-border: var(--gradient-mid); /* Borda marcador ativo (lido) */
-    --marker-active-shadow: rgba(var(--primary-action-rgb), 0.4); /* Sombra marcador ativo (lido) */
-    /* Cores para Dia Perdido */
-    --marker-missed-bg: #fee2e2; /* Fundo vermelho bem claro */
-    --marker-missed-border: #fca5a5; /* Borda vermelha clara */
-    --marker-missed-text: #b91c1c; /* Texto 'X' vermelho escuro */
-    --marker-missed-shadow: rgba(220, 53, 69, 0.2); /* Sombra sutil vermelha */
+/* styles.css - Minhas Compras de Mercado */
 
-    --font-sans-serif: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --box-shadow-sm: 0 2px 5px rgba(var(--primary-action-rgb), 0.08);
-    --box-shadow: 0 5px 15px rgba(var(--primary-action-rgb), 0.1);
-    --box-shadow-lg: 0 8px 25px rgba(var(--primary-action-rgb), 0.12);
-    --transition-fast: all 0.2s ease-in-out;
-    --transition-base: all 0.3s ease-in-out;
-    --input-height: 46px; /* Altura padrão para inputs */
-    --button-padding-y: 12px;
-    --button-padding-x: 22px;
-    --base-border-radius: 10px; /* Bordas mais arredondadas */
-    --header-logo-size: 40px;
-    --header-logo-border: 4px;
-    --header-logo-padding: 2px;
-
-    /* NOVAS VARIÁVEIS PARA PAINÉIS MELHORADOS */
-    --panel-border-gradient: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--primary-action) 100%);
-    --panel-border-width: 3px;
-    --panel-padding-enhanced: 25px;
-
-    /* VARIÁVEIS PARA O PAGINADOR FLUTUANTE (Melhoria de Arquitetura) */
-    --navigator-button-size: 58px;
-    --navigator-padding: 13px;
-    --navigator-gap: 16px;
-    --navigator-icon-size: 2rem;
-    --navigator-home-icon-size: 1.7rem;
-    --navigator-add-icon-size: 2.3rem;
+/* --- Reset Básico e Estilos Gerais --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif; /* Fonte padrão */
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+html {
+    scroll-behavior: smooth; /* Rolagem suave */
+}
 
 body {
-    font-family: var(--font-sans-serif);
-    line-height: 1.6;
-    margin: 0;
-    background-color: var(--background-light);
-    color: var(--text-color-dark);
-    font-size: 16px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
+    background-color: #f8f9fa; /* Fundo geral ligeiramente cinza */
+    font-size: 1rem; /* Tamanho de fonte base */
+    line-height: 1.6; /* Espaçamento entre linhas */
+    color: #343a40; /* Cor de texto principal (cinza escuro) */
+    padding-bottom: 70px; /* Adiciona espaço no fundo para não cobrir com navegador flutuante */
 }
 
-/* --- Header Simplificado --- */
+/* --- Header --- */
 header {
-    background: linear-gradient(110deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
-    color: var(--text-color-light);
-    padding: 10px 18px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    position: sticky;
-    top: 0;
-    z-index: 900;
-    min-height: 65px;
-}
-header img#header-logo {
-    height: var(--header-logo-size);
-    width: var(--header-logo-size);
-    border: var(--header-logo-border) solid white;
-    border-radius: 50%;
-    background-color: white;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-    padding: var(--header-logo-padding);
-    box-sizing: content-box;
-    object-fit: contain;
-    display: block;
-    flex-shrink: 0;
-    transition: all var(--transition-base);
-}
-.header-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-    overflow: hidden;
-}
-header h1 {
-    margin: 0;
-    font-size: 1.5em;
-    font-weight: 700;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    line-height: 1.2;
-}
-
-/* Área Status Usuário */
-.user-status-container {
-    text-align: right; font-size: 0.9em; color: var(--text-color-light);
-    white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 10px;
-}
-#user-email {
-    opacity: 0.95; overflow: hidden; text-overflow: ellipsis;
-    max-width: 150px; display: inline-block; vertical-align: middle; font-weight: 600;
-}
-#logout-button {
-    padding: 6px 12px; font-size: 0.85em; background-color: rgba(255, 255, 255, 0.2);
-    color: var(--text-color-light); border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: var(--base-border-radius); transition: var(--transition-fast);
-    box-shadow: none; font-weight: 600; flex-shrink: 0;
-}
-#logout-button:hover:not(:disabled) { background-color: rgba(255, 255, 255, 0.3); border-color: rgba(255, 255, 255, 0.8); transform: scale(1.05); }
-
-/* --- Main Content --- */
-main { max-width: 850px; margin: 25px auto; padding: 0 15px; }
-section {
-    margin-bottom: 25px;
-    padding: var(--panel-padding-enhanced);
-    background-color: var(--background-card);
-    border-radius: var(--base-border-radius);
-    box-shadow: var(--box-shadow);
-    transition: box-shadow var(--transition-base), transform var(--transition-base);
-}
-section:not(.enhanced-panel):hover {
-    box-shadow: var(--box-shadow-lg);
-}
-section h2, section h3 { 
-    color: var(--primary-action); 
-    margin-top: 0; 
-    font-size: 1.5em; 
-    font-weight: 700; 
-    transition: color var(--transition-fast);
-}
-
-/* --- ESTILOS PARA PAINÉIS MELHORADOS COM BORDA GRADIENTE E INTERAÇÃO UNIFICADA --- */
-.enhanced-panel {
-    background-color: var(--background-card); 
-    padding: var(--panel-padding-enhanced);
-    border-radius: var(--base-border-radius);
-    position: relative;
-    box-shadow: var(--box-shadow);
-    overflow: hidden;
-    /* Adicionada transição para o fundo e cor de texto */
-    transition: transform var(--transition-base), box-shadow var(--transition-base), background var(--transition-base), color var(--transition-base);
-}
-.enhanced-panel::before {
-    content: "";
-    position: absolute;
-    top: 0; right: 0; bottom: 0; left: 0;
-    z-index: -1;
-    margin: calc(-1 * var(--panel-border-width));
-    border-radius: inherit;
-    background: var(--panel-border-gradient);
-    transition: filter var(--transition-base);
-}
-.enhanced-panel:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--box-shadow-lg);
-    /* Efeito de fundo e cor de texto adicionado para unificar a experiência */
-    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--primary-action) 100%);
-    color: var(--text-color-light);
-}
-.enhanced-panel:hover::before {
-    filter: brightness(1.15) saturate(1.1);
-}
-.enhanced-panel .perseverance-header h2,
-.enhanced-panel#global-weekly-tracker-section h3 {
-    padding-bottom: 12px;
-    border-bottom: 2px solid rgba(var(--primary-action-rgb), 0.2);
-    margin-bottom: 25px;
-    transition: border-bottom-color var(--transition-fast);
-}
-
-/* MELHORIA DE LEGIBILIDADE DOS TÍTULOS E TEXTOS NO HOVER */
-.enhanced-panel:hover h2,
-.enhanced-panel:hover h3 {
-    color: var(--text-color-light) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.6) !important;
-}
-
-.enhanced-panel:hover .milestone-legend,
-.enhanced-panel:hover .progress-percentage-left,
-.enhanced-panel:hover .day-label {
-    color: var(--text-color-light);
-}
-
-.enhanced-panel#overdue-readings:hover h2 {
-    color: var(--text-color-light) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.6) !important;
-}
-
-/* CORREÇÃO: Garante que os marcadores 'missed' fiquem brancos no hover */
-.enhanced-panel:hover .day-indicator.missed-day .day-label {
-    color: var(--text-color-light);
-}
-.enhanced-panel:hover .day-indicator.missed-day .day-marker::after {
-    color: var(--text-color-light);
-}
-
-/* NOVO: Estilo para o dia atual quando o painel está em modo hover/clicado */
-.enhanced-panel:hover .day-indicator.current-day-highlight {
-    background-color: transparent; /* Remove o fundo roxo sólido */
-    border: 2px solid rgba(255, 255, 255, 0.85); /* Adiciona a borda branca translúcida */
-    box-shadow: none; /* Remove a sombra roxa que não é mais necessária */
-    padding: 6px 3px; /* Ajusta o padding para manter o alinhamento com a nova borda */
-}
-
-/* Garante que o texto do dia atual também fique branco no hover, sobrepondo outras regras */
-.enhanced-panel:hover .day-indicator.current-day-highlight .day-label {
-    color: var(--text-color-light);
-}
-
-/* --- Botões --- */
-button { padding: var(--button-padding-y) var(--button-padding-x); border: none; border-radius: var(--base-border-radius); cursor: pointer; font-size: 1em; font-weight: 600; transition: var(--transition-fast); margin: 5px; box-shadow: none; letter-spacing: 0.5px; line-height: 1.5; vertical-align: middle; min-height: var(--input-height); -webkit-tap-highlight-color: transparent; }
-button:disabled { background-color: var(--disabled-color); color: var(--disabled-text-color); cursor: not-allowed; opacity: 0.7; box-shadow: none; transform: none !important; }
-button:not(:disabled):hover { transform: translateY(-2px); box-shadow: var(--box-shadow-sm); }
-button:not(:disabled):active { transform: translateY(0px) scale(0.98); filter: brightness(0.95); box-shadow: none; }
-button:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(var(--primary-action-rgb), 0.4); }
-.button-primary { background-color: var(--primary-action); color: var(--text-color-light); }
-.button-primary:hover:not(:disabled) { background-color: var(--primary-action-dark); }
-.button-secondary { background-color: var(--accent-color); color: var(--text-color-dark); }
-.button-secondary:hover:not(:disabled) { background-color: var(--accent-color-dark); }
-.button-danger { background-color: var(--danger-color); color: var(--text-color-light); }
-.button-danger:hover:not(:disabled) { background-color: var(--danger-color-dark); }
-.button-special { background-color: var(--success-color); color: var(--text-color-light); }
-.button-special:hover:not(:disabled) { background-color: var(--success-color-dark); }
-.button-edit { background-color: #6c757d; color: var(--text-color-light); }
-.button-edit:hover:not(:disabled) { background-color: #5a6268; }
-
-/* --- Formulários --- */
-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color-muted); font-size: 0.9em; }
-input[type="email"], input[type="password"], input[type="number"], input[type="text"], input[type="date"], input[type="url"], select { width: 100%; padding: 12px 16px; margin-bottom: 18px; border-radius: var(--base-border-radius); border: 1px solid var(--border-color); font-size: 1em; box-sizing: border-box; background-color: #fff; transition: border-color var(--transition-fast), box-shadow var(--transition-fast); line-height: 1.5; min-height: var(--input-height); color: var(--text-color-dark); }
-input::placeholder { color: #aaa; opacity: 1; }
-input:focus, select:focus { outline: none; border-color: var(--primary-action); box-shadow: 0 0 0 3px rgba(var(--primary-action-rgb), 0.2); }
-input[type="number"], input[type="date"] { width: auto; min-width: 130px; display: inline-block; vertical-align: middle; }
-#new-pace-input { width: 80px !important; padding: 10px 12px !important; font-size: 1em !important; margin-left: 8px !important; vertical-align: middle !important; display: inline-block !important; min-height: auto !important; }
-input[type="radio"], input[type="checkbox"] { margin-right: 8px; margin-left: 5px; vertical-align: middle; accent-color: var(--primary-action); width: auto; margin-bottom: 0; height: 18px; width: 18px; cursor: pointer; }
-fieldset label { display: inline-flex; align-items: center; margin-right: 15px; margin-bottom: 12px; font-weight: normal; color: var(--text-color-dark); cursor: pointer; font-size: 0.95em; }
-fieldset label input[type="radio"], fieldset label input[type="checkbox"] { margin-bottom: 0; }
-select[multiple] { height: 160px; padding: 10px; }
-fieldset { border: 1px solid var(--border-color); padding: 20px 25px; margin-bottom: 25px; border-radius: var(--base-border-radius); background-color: rgba(var(--primary-action-rgb), 0.02); }
-legend { font-weight: 700; color: var(--primary-action); padding: 0 10px; font-size: 1.15em; }
-hr { border: 0; height: 1px; background-color: var(--border-color); margin: 30px 0; }
-small { display: block; font-size: 0.85em; color: var(--text-color-muted); margin-top: -10px; margin-bottom: 15px; line-height: 1.4; }
-fieldset:disabled { opacity: 0.5; pointer-events: none; }
-
-/* --- Estilos para o Seletor de Ícones no Formulário --- */
-.icon-selector-fieldset { border-style: dashed; }
-.icon-selector-container { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding-top: 10px; }
-.icon-option { position: relative; }
-.icon-option input[type="radio"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-.icon-option .icon-label { display: flex; justify-content: center; align-items: center; width: 50px; height: 50px; border: 2px solid var(--border-color); border-radius: var(--base-border-radius); font-size: 2em; transition: var(--transition-fast); cursor: pointer; background-color: var(--background-light); }
-.icon-option input[type="radio"]:hover + .icon-label { transform: scale(1.1); border-color: var(--accent-color); }
-.icon-option input[type="radio"]:checked + .icon-label { border-color: var(--primary-action); background-color: rgba(var(--primary-action-rgb), 0.1); transform: scale(1.1); box-shadow: 0 0 0 3px rgba(var(--primary-action-rgb), 0.2); }
-.icon-option input[type="radio"]:focus-visible + .icon-label { box-shadow: 0 0 0 3px rgba(var(--primary-action-rgb), 0.4); }
-
-/* --- Autenticação --- */
-#auth-section { max-width: 450px; margin-left: auto; margin-right: auto; }
-#auth-section h2 { text-align: center; border-bottom: none; font-size: 1.6em; }
-#auth-section button { width: 100%; padding: 14px 20px; margin-top: 20px; font-size: 1.1em; }
-#auth-section p { text-align: center; margin-top: 20px; font-size: 0.9em; }
-#auth-section a { color: var(--accent-color); text-decoration: none; font-weight: 600; }
-#auth-section a:hover { text-decoration: underline; color: var(--accent-color-dark); }
-.error-message { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 12px 18px; border-radius: var(--base-border-radius); margin-bottom: 18px; font-size: 0.95em; text-align: left; }
-.loading-indicator { text-align: center; padding: 15px; font-style: italic; color: var(--text-color-muted); }
-
-/* --- Estilos para o container de botões de criação --- */
-.plan-creation-actions-container { display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; padding: 10px 0; background-color: transparent; box-shadow: none; border: none; }
-#create-new-plan-button, #create-favorite-plan-button { flex-grow: 1; max-width: 350px; }
-
-/* --- Estilos para a exibição de múltiplos planos --- */
-.plans-display-container { display: grid; grid-template-columns: 1fr; gap: 30px; background-color: transparent; padding: 0; box-shadow: none; border: none; margin-bottom: 25px; }
-
-/* Card de Plano reutilizável */
-.plan-card { padding: var(--panel-padding-enhanced); background-color: var(--background-card); border-radius: var(--base-border-radius); box-shadow: var(--box-shadow); transition: var(--transition-base); border: 3px solid transparent; }
-.plan-card:hover { box-shadow: var(--box-shadow-lg); transform: translateY(-2px); }
-.plan-card.active-plan { border-color: var(--primary-action); box-shadow: var(--box-shadow-lg); transform: translateY(-2px); }
-.plan-card .plan-card-icon { font-size: 1.5em; margin-right: 12px; line-height: 1; }
-.plan-card .plan-header-info { align-items: center; display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; flex-wrap: wrap; }
-.plan-card .plan-card-title { margin: 0; padding: 0; border: none; color: var(--primary-action); font-size: 1.5em; font-weight: 700; line-height: 1.3; }
-.plan-card .drive-link-icon { display: inline-flex; align-items: center; justify-content: center; line-height: 0; flex-shrink: 0; padding: 4px; border-radius: 6px; cursor: pointer; background-color: transparent; transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast); width: 28px; height: 28px; vertical-align: middle; }
-.plan-card .drive-link-icon:hover { transform: scale(1.5); background-color: var(--background-light); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12); }
-.plan-card .drive-link-icon img.drive-png-icon { display: block; width: 100%; height: auto; }
-
-/* Barra de Progresso (dentro de .plan-card) */
-.plan-card .progress-container { width: 100%; margin-bottom: 20px; }
-.plan-card .progress-text { display: block; text-align: center; margin-bottom: 5px; font-size: 0.9em; color: var(--text-color-muted); font-weight: 600; }
-.plan-card .progress-bar-track { background-color: var(--marker-inactive-color); border-radius: var(--base-border-radius); height: 12px; overflow: hidden; border: 1px solid var(--border-color); width: 100%; }
-.plan-card .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary-action), var(--gradient-mid)); transition: width 0.5s ease-out; border-radius: inherit; }
-
-/* Leitura Diária e Ações (dentro de .plan-card) */
-.plan-card .daily-reading-header-display { font-size: 1.1em; padding: 15px 20px; margin: 20px 0 0 0; background-color: var(--background-card); border-left: 6px solid; border-image: linear-gradient(to bottom, var(--primary-action), var(--gradient-mid)) 1; color: var(--text-color-dark); border-radius: var(--base-border-radius) var(--base-border-radius) 0 0; box-shadow: var(--box-shadow-sm); line-height: 1.7; }
-.plan-card .daily-reading-header-display p { margin: 0; }
-.plan-card .daily-reading-chapters-list-display { padding: 10px 20px 20px 20px; margin: 0 0 25px 0; background-color: var(--background-card); border-left: 6px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); color: var(--text-color-dark); border-radius: 0 0 var(--base-border-radius) var(--base-border-radius); box-shadow: var(--box-shadow-sm); }
-.plan-card .daily-chapter-item { position: relative; display: flex; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--border-color); font-size: 1.05em; }
-.plan-card .daily-chapter-item:last-child { border-bottom: none; padding-bottom: 0; }
-.plan-card .daily-chapter-item input[type="checkbox"] { width: 20px; height: 20px; margin-right: 15px; accent-color: var(--primary-action); cursor: pointer; flex-shrink: 0; }
-.plan-card .daily-chapter-item label { margin-bottom: 0; font-weight: normal; color: var(--text-color-dark); flex-grow: 1; cursor: pointer; }
-.plan-card .daily-chapter-item input[type="checkbox"]:checked + label { text-decoration: line-through; color: var(--text-color-muted); }
-.plan-card .plan-actions { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-.plan-card .plan-actions button { flex-grow: 1; min-width: 150px; }
-
-/* --- ESTILOS PARA FEEDBACK "SALVO!" (Prioridade 2) --- */
-.save-feedback {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(var(--success-color-rgb), 0.1);
-    color: var(--success-color-dark);
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 0.8em;
-    font-weight: 600;
-    animation: fade-out-up 1.5s ease-out forwards;
-    pointer-events: none; /* Garante que o feedback não interfira com cliques */
-}
-
-@keyframes fade-out-up {
-    0% {
-        opacity: 1;
-        transform: translateY(-50%);
-    }
-    80% {
-        opacity: 1;
-        transform: translateY(-60%);
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(-80%);
-    }
-}
-
-
-/* --- Estilos Periodicidade na Criação --- */
-#periodicity-options .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px 15px; margin-top: 10px; justify-content: flex-start; }
-#periodicity-options .checkbox-group label { display: inline-flex; align-items: center; cursor: pointer; font-weight: normal; color: var(--text-color-dark); margin-bottom: 0; margin-right: 0; font-size: 0.9em; padding: 5px 8px; border: 1px solid transparent; border-radius: var(--base-border-radius); transition: background-color var(--transition-fast), border-color var(--transition-fast); }
-#periodicity-options .checkbox-group label:hover { background-color: var(--background-light); }
-#periodicity-options input[type="checkbox"] { margin-right: 6px; width: 16px; height: 16px; accent-color: var(--primary-action); }
-
-/* --- Modais --- */
-.modal { position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(30, 30, 50, 0.7); display: none; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity var(--transition-base), visibility 0s linear var(--transition-base); padding: 15px; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
-.modal[style*="display: flex"] { opacity: 1; visibility: visible; transition: opacity var(--transition-base); }
-.modal-content { background-color: var(--background-card); padding: 30px; border-radius: var(--base-border-radius); width: 100%; max-width: 550px; position: relative; box-shadow: var(--box-shadow-lg); transform: scale(0.95) translateY(10px); transition: transform var(--transition-base), opacity var(--transition-base); opacity: 0; }
-.modal[style*="display: flex"] .modal-content { transform: scale(1) translateY(0); opacity: 1; }
-.modal-content-scrollable { max-height: 80vh; overflow-y: auto; }
-.close-button { position: absolute; top: 10px; right: 15px; font-size: 32px; font-weight: 300; color: var(--text-color-muted); background: none; border: none; padding: 5px; line-height: 1; cursor: pointer; transition: color var(--transition-fast), transform var(--transition-fast); }
-.close-button:hover { color: var(--danger-color); transform: rotate(90deg); }
-.modal h2 { margin-top: 0; margin-bottom: 20px; color: var(--primary-action); font-size: 1.5em; text-align: center; }
-.modal p { text-align: center; color: var(--text-color-muted); margin-bottom: 25px; }
-.modal fieldset { margin-top: 20px; border-color: var(--border-color); background: none; padding: 15px 20px; }
-.modal fieldset legend { font-size: 1.1em; }
-.modal fieldset label { display: block; margin-bottom: 15px; margin-right: 0; }
-.modal fieldset label:has(#new-pace-input) { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
-.modal button#confirm-recalculate { margin-top: 25px; float: right; width: auto; }
-.modal .modal-content::after { content: ""; display: table; clear: both; }
-
-#stats-content p, #history-list p { text-align: left; color: var(--text-color-dark); margin-bottom: 10px; }
-#stats-content strong { color: var(--primary-action); }
-#stats-content hr { margin: 15px 0; }
-#stats-content small { display: block; margin-top: 15px; font-size: 0.85em; color: var(--text-color-muted); text-align: center; }
-.history-list-container { max-height: 45vh; overflow-y: auto; padding-right: 10px; }
-.history-entry { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed var(--border-color); }
-.history-entry:last-child { border-bottom: none; }
-.history-date { font-weight: bold; color: var(--primary-action); display: block; margin-bottom: 5px; }
-.history-chapters { font-size: 0.95em; color: var(--text-color-muted); word-wrap: break-word; line-height: 1.5; }
-
-/* NOVO: Estilos para o container do gráfico de estatísticas */
-.stats-chart-container {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    height: 280px; /* Altura inicial, pode ser ajustada */
-    margin: 25px 0;
-    padding: 15px;
-    background-color: var(--background-light);
-    border-radius: var(--base-border-radius);
-    border: 1px solid var(--border-color);
-}
-
-/* --- INÍCIO: ALTERAÇÕES PARA A PRIORIDADE 1 --- */
-/* --- Estilos Seção Leituras Atrasadas e Próximas --- */
-#overdue-readings h2 { color: var(--warning-text-dark); border-bottom: 2px solid var(--warning-border-strong); font-size: 1.4em; margin-bottom: 15px; padding-bottom: 10px; }
-.enhanced-panel#overdue-readings h2 { color: var(--warning-text-dark) !important; border-bottom-color: var(--warning-border-strong) !important; }
-.overdue-readings-container { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
-.overdue-reading-item { background-color: var(--background-card); padding: 15px; border-radius: var(--base-border-radius); border: 1px solid var(--border-color); border-left: 5px solid var(--warning-item-border); box-shadow: var(--box-shadow-sm); transition: transform var(--transition-fast), box-shadow var(--transition-fast); cursor: pointer; display: flex; flex-direction: column; gap: 8px; }
-.overdue-reading-item:hover { transform: translateY(-3px); box-shadow: var(--box-shadow); }
-.overdue-date { font-weight: 700; font-size: 1.1em; color: var(--warning-item-text); margin-bottom: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
-.overdue-plan-name { font-weight: 600; font-size: 0.95em; color: var(--text-color-dark); margin-bottom: 0; display: flex; align-items: center; gap: 8px; }
-.overdue-chapters { font-size: 0.9em; color: var(--text-color-muted); line-height: 1.5; word-break: break-word; }
-
-/* ESTILOS PARA SUGESTÃO DE RECÁLCULO */
-.recalc-suggestion-item {
-    background-color: var(--warning-bg-light);
-    padding: 18px;
-    border-radius: var(--base-border-radius);
-    border: 2px dashed var(--warning-border-strong);
-    box-shadow: none;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    transition: var(--transition-fast);
-}
-.recalc-suggestion-item:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--box-shadow);
-    border-style: solid;
-}
-.recalc-suggestion-item .recalc-plan-name {
-    font-weight: 700;
-    font-size: 1.1em;
-    color: var(--warning-text-dark);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.recalc-suggestion-item .recalc-suggestion-text {
-    font-size: 0.95em;
-    color: var(--text-color-muted);
-    line-height: 1.5;
-    max-width: 90%;
-    margin: 0;
-}
-.recalc-suggestion-item .recalc-suggestion-button {
-    margin: 5px 0 0 0;
-    background-color: var(--primary-action);
-    color: var(--text-color-light);
-    width: auto;
-    padding: 10px 20px;
-}
-.recalc-suggestion-item .recalc-suggestion-button:hover:not(:disabled) {
-    background-color: var(--primary-action-dark);
-    transform: translateY(-2px);
+    width: 100%;
+    padding: 10px 0 5px 0; /* Espaçamento interno */
+    background: linear-gradient(to right, #006400, #FFD700); /* Gradiente verde-dourado */
+    color: #fff; /* Texto branco */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    position: sticky; /* Mantém o header fixo no topo ao rolar */
+    top: 0;
+    z-index: 900; /* Abaixo dos modais */
 }
 
-#upcoming-readings h2 { border-bottom: 2px solid var(--primary-action); font-size: 1.4em; margin-bottom: 15px; padding-bottom: 10px; }
-.upcoming-readings-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px; }
-.upcoming-reading-item { background-color: var(--background-card); padding: 15px; border-radius: var(--base-border-radius); border: 1px solid var(--border-color); box-shadow: var(--box-shadow-sm); transition: transform var(--transition-fast), box-shadow var(--transition-fast); cursor: pointer; display: flex; flex-direction: column; gap: 8px; }
-.upcoming-reading-item:hover { transform: translateY(-3px); box-shadow: var(--box-shadow); }
-.upcoming-date { font-weight: 700; font-size: 1.1em; color: var(--primary-action); margin-bottom: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
-.upcoming-plan-name { font-weight: 600; font-size: 0.95em; color: var(--text-color-dark); margin-bottom: 0; display: flex; align-items: center; gap: 8px; }
-.upcoming-chapters { font-size: 0.9em; color: var(--text-color-muted); line-height: 1.5; word-break: break-word; }
-/* --- FIM: ALTERAÇÕES PARA A PRIORIDADE 1 --- */
-
-/* --- Painel de Perseverança Aprimorado --- */
-.perseverance-header h2 { text-align: center; color: var(--primary-action); margin-top: 0; font-size: 1.4em; font-weight: 700; }
-.milestone-icons-area { display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; min-height: 45px; }
-.milestone-icon { font-size: 2.2em; display: inline-block; /* Ícone da coroa precisa ser inline-block */ transition: transform 0.3s ease-out, text-shadow 0.3s ease-out; cursor: default; }
-.milestone-icon.achieved { transform: scale(1.1); -webkit-animation: icon-pop 0.4s; animation: icon-pop 0.4s; text-shadow: 0 3px 8px rgba(var(--primary-action-rgb), 0.35); }
-@keyframes icon-pop { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1.1); } }
-.perseverance-bar-container { width: 100%; margin-bottom: 12px; }
-.progress-bar { position: relative; height: 28px; background-color: var(--marker-inactive-color); border: 1px solid var(--border-color); border-radius: var(--base-border-radius); overflow: hidden; }
-.progress { position: absolute; top: 0; left: 0; height: 100%; width: 0; border-radius: var(--base-border-radius); background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end)); transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1); overflow: hidden; }
-.progress-shine-overlay { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); animation: shineEffect 4s infinite linear; }
-@keyframes shineEffect { from { left: -100%; } to { left: 100%; } }
-.progress-percentage-left { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-color-light); font-weight: 600; font-size: 0.9em; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); z-index: 2; transition: color var(--transition-fast); }
-.milestone-legend { text-align: center; font-size: 0.85em; color: var(--text-color-muted); transition: color var(--transition-fast); }
-.milestone-legend span { white-space: nowrap; }
-
-/* INÍCIO DAS MODIFICAÇÕES NO CSS */
-/* Container para os novos marcos cumulativos */
-#cumulative-milestones-container {
+.logo-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px; /* Espaçamento entre os itens de marco */
-    flex-wrap: wrap; /* Permite que os ícones quebrem a linha em telas menores */
+    padding: 5px 0;
+    margin-bottom: 5px;
 }
 
-/* Item individual de marco (contém o ícone e o contador) */
-.milestone-item {
+.logo-background-circle {
+    background-color: white; /* Fundo branco para logo */
+    border-radius: 50%; /* Círculo perfeito */
     display: inline-flex;
-    align-items: baseline; /* Alinha o ícone e o texto do contador na base */
-    line-height: 1;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    width: fit-content;
+    height: fit-content;
+    overflow: hidden; /* Garante que a imagem fique dentro do círculo */
 }
 
-/* Estilo para o ícone dentro do item de marco */
-.milestone-item .icon {
-    font-size: 2.2em; /* Mantém o tamanho original do .milestone-icon */
-    display: inline-block;
-    /* Animação que será adicionada via JS */
-    transition: transform 0.3s ease-out, text-shadow 0.3s ease-out;
+.logo {
+    width: 15vw; /* Largura responsiva */
+    max-width: 80px; /* Largura máxima */
+    min-width: 45px; /* Largura mínima */
+    height: auto; /* Altura automática */
+    display: block;
+    padding: 6px; /* Espaçamento interno no círculo */
+    box-sizing: border-box;
+    border-radius: 50%; /* Garante arredondamento se a imagem não for quadrada */
 }
 
-/* Estilo para o contador (ex: x2, x3) */
-.milestone-item .counter {
-    font-size: 1.1em;
-    font-weight: 700;
-    color: var(--primary-action);
-    margin-left: 2px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+h1 {
+    font-size: 1.6rem; /* Tamanho do título */
+    color: #ffffff;
+    margin-top: 0;
+    padding: 0 10px; /* Espaçamento lateral */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Sombra no texto */
 }
 
-/* Animação de 'pop' para ser aplicada via JS */
-.milestone-item .icon.achieved {
-    transform: scale(1.1);
-    -webkit-animation: icon-pop 0.4s;
-    animation: icon-pop 0.4s;
-    text-shadow: 0 3px 8px rgba(var(--primary-action-rgb), 0.35);
+.header-divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.3); /* Linha divisória suave */
+    margin: 0.5rem auto; /* Espaçamento vertical e centralização */
+    width: 90%; /* Largura da linha */
 }
-/* FIM DAS MODIFICAÇÕES NO CSS */
 
-/* Painel de Progresso Semanal */
-#global-weekly-tracker-section h3 { margin-top: 0; margin-bottom: 20px; text-align: center; color: var(--primary-action); font-size: 1.2em; font-weight: 700; transition: color var(--transition-fast); }
-.weekly-tracker-container .week-days { display: flex; justify-content: space-around; align-items: center; text-align: center; flex-wrap: wrap; gap: 8px; }
-.weekly-tracker-container .day-indicator { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: default; flex-basis: calc(100% / 7 - 10px); min-width: 42px; min-height: 70px; transition: transform var(--transition-fast), background-color var(--transition-fast); border-radius: calc(var(--base-border-radius) / 1.5); }
-.weekly-tracker-container .day-indicator.current-day-highlight { background-color: rgba(var(--primary-action-rgb), 0.15); padding: 8px 5px; box-shadow: 0 2px 4px rgba(var(--primary-action-rgb), 0.1); transform: scale(1.03); }
-.weekly-tracker-container .day-indicator.current-day-highlight .day-label { color: var(--primary-action); font-weight: 700; }
-.weekly-tracker-container .day-label { font-size: 0.75em; font-weight: 600; color: var(--text-color-muted); margin-bottom: 6px; text-transform: uppercase; transition: color var(--transition-fast); }
-.weekly-tracker-container .day-marker { width: 32px; height: 32px; border-radius: 50%; background-color: var(--marker-inactive-color); border: 2px solid var(--marker-inactive-border); display: flex; justify-content: center; align-items: center; color: var(--text-color-light); font-weight: bold; transition: var(--transition-base); position: relative; }
-.weekly-tracker-container .day-marker::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; font-weight: bold; line-height: 1; transition: color var(--transition-fast); }
-.weekly-tracker-container .day-indicator.active .day-marker { background: linear-gradient(135deg, var(--primary-action), var(--gradient-mid)); border-color: transparent; color: var(--text-color-light); box-shadow: 0 0 12px var(--marker-active-shadow); transform: scale(1.1); }
-.weekly-tracker-container .day-indicator.active .day-marker::after { content: '✓'; color: var(--text-color-light); text-shadow: 1px 1px 1px rgba(0,0,0,0.2); }
-.weekly-tracker-container .day-indicator.missed-day .day-marker { background-color: var(--marker-missed-bg); border-color: var(--marker-missed-border); box-shadow: 0 0 8px var(--marker-missed-shadow); transform: scale(1.05); }
-.weekly-tracker-container .day-indicator.missed-day .day-marker::after { content: '✕'; color: var(--marker-missed-text); text-shadow: none; }
-.weekly-tracker-container .day-indicator.missed-day .day-label { color: var(--marker-missed-text); }
+/* --- Container Principal --- */
+.container {
+    max-width: 95%; /* Largura máxima responsiva */
+    margin: 15px auto; /* Margem superior/inferior e centralização */
+    padding: 15px; /* Espaçamento interno */
+    background-color: #fff; /* Fundo branco */
+    border-radius: 12px; /* Bordas arredondadas */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada */
+}
 
-/* --- Estilos do Paginador Flutuante (Dock) --- */
-#floating-navigator {
-    position: fixed;
-    bottom: 20px;
+/* --- Botões de Ação Superiores (Importar, Relatório, Limpar) --- */
+.top-actions {
+    display: flex;
+    justify-content: center; /* Centraliza botões */
+    flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+    gap: 10px; /* Espaço entre botões */
+    margin-bottom: 25px; /* Espaço abaixo dos botões */
+}
+
+.top-action-btn {
+    padding: 8px 15px; /* Espaçamento interno */
+    font-size: 0.9rem; /* Tamanho da fonte */
+    border: none; /* Sem borda */
+    border-radius: 20px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de mão */
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s; /* Transições suaves */
+    display: inline-flex; /* Alinha ícone e texto */
+    align-items: center;
+    gap: 5px; /* Espaço entre ícone e texto */
+    background-color: #FFD700; /* Dourado */
+    color: #333; /* Texto escuro */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra leve */
+    font-weight: bold; /* Texto em negrito */
+}
+
+.top-action-btn i {
+    font-size: 1em; /* Ícone com tamanho relativo à fonte */
+}
+
+.top-action-btn:hover {
+    background-color: #E6C200; /* Dourado mais escuro no hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Sombra maior no hover */
+}
+
+.top-action-btn:active {
+    background-color: #D4A600; /* Dourado ainda mais escuro no clique */
+    transform: scale(0.97); /* Efeito de pressionar */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Sombra menor no clique */
+}
+
+/* Estilo específico para botões de perigo (Limpar) */
+.top-action-btn.danger {
+    background-color: #dc3545; /* Vermelho */
+    color: white; /* Texto branco */
+}
+.top-action-btn.danger:hover {
+    background-color: #c82333; /* Vermelho mais escuro */
+}
+.top-action-btn.danger:active {
+    background-color: #bd2130; /* Vermelho ainda mais escuro */
+}
+
+/* --- Grupo de Inputs (Label + Input/Select) --- */
+.input-group {
+    margin-bottom: 15px; /* Espaço abaixo de cada grupo */
+    display: flex;
+    flex-direction: column; /* Label acima do input */
+    align-items: flex-start; /* Alinha itens à esquerda */
+    gap: 5px; /* Espaço entre label e input */
+}
+
+label {
+    display: block; /* Ocupa linha inteira */
+    margin-bottom: 3px; /* Pequeno espaço abaixo do label */
+    color: #495057; /* Cinza escuro */
+    font-size: 0.95rem; /* Tamanho da fonte do label */
+    font-weight: bold; /* Negrito */
+}
+
+input[type="text"], input[type="number"], select, textarea { /* Inclui textarea */
+    width: 100%; /* Ocupa toda largura disponível */
+    padding: 12px; /* Espaçamento interno generoso */
+    border: 1px solid #ced4da; /* Borda cinza suave */
+    border-radius: 8px; /* Bordas arredondadas */
+    font-size: 1.1rem; /* Tamanho da fonte dentro do input */
+    box-sizing: border-box; /* Padding e borda incluídos na largura */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Transições suaves no foco */
+    background-color: #fff; /* Garante fundo branco */
+}
+
+input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+    outline: none; /* Remove contorno padrão do navegador */
+    border-color: #006400; /* Borda verde escura no foco */
+    box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.15); /* Sombra de foco verde suave */
+}
+
+/* Estilo específico para o input de Orçamento */
+#orcamento {
+    width: 100%; /* Ocupa largura do container */
+    max-width: 180px; /* Largura máxima */
+    font-weight: bold; /* Negrito */
+    text-align: right; /* Alinha valor à direita */
+    font-size: 1.2rem; /* Fonte um pouco maior */
+}
+/* Placeholder do orçamento */
+#orcamento::placeholder {
+    font-weight: normal;
+    text-align: right;
+}
+
+/* --- Barra de Progresso --- */
+.progress-bar-container {
+    width: 100%; /* Largura total */
+    margin-bottom: 10px; /* Reduzido para dar espaço ao novo painel */
+    position: relative; /* Para posicionar o texto da porcentagem */
+    background-color: #e9ecef; /* Fundo cinza suave */
+    border-radius: 15px; /* Bem arredondado */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra interna */
+    overflow: hidden; /* Esconde o que exceder as bordas arredondadas */
+    height: 28px; /* Altura da barra */
+}
+
+#barraProgresso {
+    width: 100%; /* Ocupa toda a largura do container */
+    height: 100%; /* Ocupa toda altura do container */
+    border-radius: 15px; /* Mesmo arredondamento do container */
+    appearance: none; /* Remove estilo padrão do navegador */
+    -webkit-appearance: none;
+    border: none; /* Sem borda */
+    background-color: transparent; /* Fundo definido pelo container */
+    transition: width 0.5s ease-in-out, background 0.4s ease; /* Transição suave da largura E COR */
+}
+
+/* Estilo da barra de progresso (verde -> dourado) - Webkit (Chrome, Safari, Edge) */
+#barraProgresso::-webkit-progress-value {
+    background: linear-gradient(to right, #28a745, #FFD700); /* Gradiente verde -> dourado */
+    border-radius: 15px; /* Mantém arredondamento interno */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset; /* Sombra interna sutil */
+    transition: background 0.4s ease; /* Transição suave de cor */
+}
+#barraProgresso::-webkit-progress-bar { /* Estilo do fundo (track) */
+     background-color: transparent; /* Definido pelo container */
+     border-radius: 15px;
+}
+
+/* Estilo da barra de progresso (verde -> dourado) - Mozilla (Firefox) */
+#barraProgresso::-moz-progress-bar {
+    background: linear-gradient(to right, #28a745, #FFD700); /* Gradiente verde -> dourado */
+    border-radius: 15px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
+    transition: background 0.4s ease; /* Transição suave de cor */
+}
+
+/* Estilo quando estourar o orçamento (classe .over-budget) - Webkit */
+.progress-bar-container.over-budget #barraProgresso::-webkit-progress-value {
+    background: linear-gradient(to right, #dc3545, #ffc107); /* Gradiente vermelho -> laranja */
+}
+
+/* Estilo quando estourar o orçamento (classe .over-budget) - Mozilla */
+.progress-bar-container.over-budget #barraProgresso::-moz-progress-bar {
+    background: linear-gradient(to right, #dc3545, #ffc107); /* Gradiente vermelho -> laranja */
+}
+
+/* Texto da porcentagem sobre a barra */
+#porcentagemProgresso {
+    position: absolute;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(0);
-    z-index: 950;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    padding: var(--navigator-padding);
-    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.12);
-    border-radius: 65px;
+    transform: translate(-50%, -50%); /* Centraliza perfeitamente */
+    color: #fff; /* Branco para contraste */
+    font-weight: bold;
+    font-size: 0.9rem; /* Tamanho da fonte */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Sombra para legibilidade */
+    pointer-events: none; /* Não interfere com cliques na barra */
+    white-space: nowrap; /* Evita quebra de linha */
+}
+
+/* --- (NOVO) Painel de Informação Sutil (Último Item) --- */
+.painel-info-sutil {
+    background-color: #eef1f5; /* Fundo cinza bem claro/azulado */
+    border: 1px solid #d6dde7; /* Borda suave */
+    padding: 8px 12px; /* Espaçamento interno menor */
+    margin-top: 10px; /* Espaço acima (após a barra de progresso) */
+    margin-bottom: 10px; /* Espaço abaixo (antes do painel total) */
+    text-align: center; /* Centraliza texto */
+    font-size: 0.9rem; /* Fonte ligeiramente menor */
+    color: #495057; /* Cor de texto cinza escuro */
+    border-radius: 6px; /* Bordas arredondadas suaves */
+    transition: opacity 0.4s ease-out, max-height 0.4s ease-out, margin 0.4s ease-out, padding 0.4s ease-out; /* Transição suave */
+    opacity: 0; /* Começa invisível para animação */
+    max-height: 0; /* Começa colapsado */
+    overflow: hidden; /* Esconde conteúdo enquanto colapsado */
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-width: 0;
+}
+.painel-info-sutil.show { /* Classe para mostrar o painel */
+    opacity: 1;
+    max-height: 100px; /* Altura máxima suficiente para o conteúdo */
+    /* Margens e paddings voltam ao normal quando visível (definidos no estilo base) */
+    padding: 8px 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-width: 1px;
+}
+
+#ultimoItemInfo { /* Estilo para o span que contém a info */
+    font-weight: bold; /* Destaca a informação do item */
+    color: #0056b3; /* Azul para destacar */
+}
+/* --- FIM DO NOVO PAINEL --- */
+
+
+/* --- Painéis de Total e Contagem --- */
+#painelTotal {
+    background-color: #e9f5e9; /* Verde bem claro */
+    border: 1px solid #c8e6c9; /* Borda verde clara */
+    padding: 15px; /* Espaçamento interno */
+    margin-bottom: 10px; /* Espaço abaixo */
+    text-align: center; /* Centraliza texto */
+    font-size: 2.5rem; /* Tamanho grande para destaque */
+    color: #006400; /* Verde escuro */
+    border-radius: 8px; /* Bordas arredondadas */
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Transição suave */
+    font-weight: bold; /* Negrito */
+}
+
+#painelContagemItens {
+    background-color: #fff8e1; /* Amarelo bem claro */
+    border: 1px solid #ffecb3; /* Borda amarela clara */
+    padding: 10px; /* Espaçamento interno */
+    margin-bottom: 15px; /* Espaço abaixo */
+    text-align: center; /* Centraliza texto */
+    font-size: 1.1rem; /* Tamanho da fonte */
+    color: #856404; /* Cor de texto marrom/dourado escuro */
+    border-radius: 8px; /* Bordas arredondadas */
+    font-weight: normal; /* Fonte normal */
+}
+#painelContagemItens span { /* Estilo para os números de contagem */
+    font-weight: bold; /* Negrito */
+    color: #e65100; /* Laranja escuro */
+}
+
+/* --- Área de Entrada de Item (Voz/Digitação) --- */
+.input-with-mic { /* Usado no modal E NO PRINCIPAL */
     display: flex;
     align-items: center;
-    gap: var(--navigator-gap);
-    transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
-    opacity: 0;
-    visibility: hidden;
+    width: 100%;
+    gap: 5px; /* Espaço entre input e botão mic */
 }
-#floating-navigator.visible {
+.input-with-mic input { flex-grow: 1; min-width: 0; } /* Input ocupa espaço restante */
+
+.voice-input { /* Container do input principal */
+    position: relative; /* Para posicionar feedback */
+    margin-bottom: 15px; /* Espaçamento */
+}
+.voice-input-wrapper { /* Alinha input e botões */
+    display: flex;
+    align-items: center; /* Alinha verticalmente */
+    gap: 8px; /* Espaço entre elementos */
+    width: 100%;
+}
+#vozInput { /* Input principal */
+    flex: 1; /* Ocupa espaço restante */
+    min-width: 0; /* Permite encolher se necessário */
+}
+
+/* --- Botões de Ação Redondos (Mic, Add, Clear Input) --- */
+.mic-btn, .action-btn {
+    padding: 0; /* Remove padding interno */
+    width: 45px; /* Tamanho fixo */
+    height: 45px; /* Tamanho fixo */
+    font-size: 1.2rem; /* Tamanho do ícone */
+    border: none;
+    border-radius: 50%; /* Círculo */
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0; /* Impede que encolham */
+    color: white; /* Cor do ícone padrão */
+}
+.mic-btn:disabled { /* Estilo para botão desabilitado (sem API de voz) */
+    background-color: #adb5bd; /* Cinza */
+    cursor: not-allowed; /* Cursor indicando não permitido */
+    box-shadow: none; /* Sem sombra */
+    opacity: 0.7;
+}
+
+/* Botão Microfone e Adicionar (Principal)*/
+#ativarVoz, #inserirItem {
+    background-color: #28a745; /* Verde vibrante */
+}
+#ativarVoz:hover:not(:disabled), #inserirItem:hover {
+    background-color: #218838; /* Verde mais escuro no hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+#ativarVoz:active:not(:disabled), #inserirItem:active {
+    background-color: #1e7e34; /* Verde ainda mais escuro no active */
+    transform: scale(0.95); /* Efeito de pressionar */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+/* Classe adicionada via JS quando gravando */
+.mic-btn.recording, #ativarVoz.recording { /* Aplica a ambos os tipos de mic */
+    background-color: #dc3545; /* Vermelho para indicar gravação */
+    animation: pulse 1.5s infinite; /* Animação de pulsar */
+}
+
+/* Botão Limpar Input (Principal) */
+#limparInput {
+    background-color: #ffc107; /* Amarelo/Laranja */
+    color: #333; /* Texto/ícone escuro para contraste */
+}
+#limparInput:hover {
+    background-color: #e0a800; /* Amarelo mais escuro */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+#limparInput:active {
+    background-color: #d39e00; /* Amarelo ainda mais escuro */
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Microfone dentro do Modal (Estilo base para todos os mics do modal) */
+.modal-mic-btn {
+    background-color: #6c757d; /* Cinza padrão */
+    color: white;
+    width: 40px; /* Um pouco menor que os principais */
+    height: 40px;
+    font-size: 1.1rem;
+    /* Herda .mic-btn:disabled */
+}
+.modal-mic-btn:hover:not(:disabled) {
+    background-color: #5a6268; /* Cinza mais escuro */
+}
+.modal-mic-btn:active:not(:disabled) {
+    background-color: #545b62; /* Cinza ainda mais escuro */
+    transform: scale(0.95);
+}
+/* Classe de gravação para mics do modal */
+.modal-mic-btn.recording {
+    background-color: #dc3545; /* Vermelho para indicar gravação */
+    animation: pulse 1.5s infinite; /* Animação de pulsar */
+}
+
+
+/* Animação de pulsar para gravação (reutilizada) */
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+    50% { transform: scale(1.05); box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4); } /* Sombra vermelha no pulso */
+    100% { transform: scale(1); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+}
+
+/* --- Feedback de Voz (Principal, abaixo do input) --- */
+.voz-feedback {
+    margin-top: 8px; /* Espaço acima */
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 6px; /* Arredondado */
+    /* display: none;  Oculto por padrão, mas a classe 'show' controla */
+    opacity: 0; /* Para transição fade-in/out */
+    max-height: 0; /* Para transição de altura */
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin 0.3s ease-in-out, padding 0.3s ease-in-out; /* Transição suave */
+    border: 1px solid transparent; /* Borda base */
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.voz-feedback.show { /* Classe para mostrar com fade-in e altura */
+    opacity: 1;
+    max-height: 100px; /* Altura suficiente */
+    padding: 8px 12px;
+    margin-top: 8px;
+    margin-bottom: 10px; /* Adiciona espaço abaixo quando visível */
+}
+/* Estilos por tipo de feedback (Principal) */
+.voz-feedback.success {
+    background-color: #d4edda; color: #155724; border-color: #c3e6cb;
+}
+.voz-feedback.error {
+    background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;
+}
+.voz-feedback.info {
+    background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; /* Azul claro */
+}
+
+/* --- Filtro por Categoria (Select) --- */
+#categoriaFiltro {
+    padding: 12px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: white;
+    cursor: pointer;
+}
+#categoriaFiltro:focus {
+    border-color: #006400;
+    box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.15);
+    outline: none;
+}
+
+/* --- Listas de Compras (Pendentes e Confirmados) --- */
+/* Estilo dos títulos H2 das listas */
+#listaPendentesContainer h2,
+#listaComprasContainer h2 {
+    margin-top: 25px; /* Espaço acima */
+    margin-bottom: 15px; /* Espaço abaixo */
+    font-size: 1.4rem; /* Tamanho */
+    color: #006400; /* Verde escuro */
+    text-align: center; /* Centralizado */
+    font-weight: bold;
+    padding-bottom: 8px; /* Espaço para a linha abaixo */
+    border-bottom: 2px solid #FFD700; /* Linha dourada embaixo */
+    display: inline-block; /* Para a borda ficar só no texto */
+    position: relative; /* Necessário para centralizar com transform */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Espaçamento entre as duas listas */
+#listaPendentesContainer {
+    margin-bottom: 30px; /* Adiciona espaço abaixo da lista de pendentes */
+    /* display: none; Controlado por JS */
+}
+/* #listaComprasContainer { */
+    /* display: none; Controlado por JS */
+/* } */
+
+/* Cabeçalho de Categoria */
+.category-header {
+    background-color: #e9f5e9; /* Fundo verde bem claro */
+    color: #004d00; /* Verde mais escuro para texto */
+    padding: 10px 15px; /* Espaçamento interno */
+    margin-top: 20px; /* Espaço ENTRE categorias (removido do primeiro via JS se necessário) */
+    margin-bottom: 0; /* Sem margem inferior, conecta com o primeiro item */
+    border-radius: 8px 8px 0 0; /* Arredondado só em cima */
+    font-weight: bold;
+    font-size: 1.15rem;
+    border-bottom: 1px solid #c8e6c9; /* Linha divisória suave */
+    cursor: default; /* Não é clicável */
+}
+/* Remove margem superior do PRIMEIRO cabeçalho da lista */
+.category-group:first-of-type .category-header {
+    margin-top: 0;
+}
+
+/* Grupo de Categoria (Wrapper para header e itens) */
+.category-group {
+    transition: opacity 0.3s ease-out, max-height 0.4s ease-out, margin 0.3s ease-out; /* Animação suave para filtro */
+    overflow: hidden; /* Necessário para animar max-height */
+    opacity: 1;
+    max-height: 10000px; /* Valor grande arbitrário para permitir conteúdo */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Leve sombra para destacar o grupo */
+    border-radius: 8px; /* Arredonda o grupo inteiro */
+    margin-bottom: 10px; /* Espaço entre grupos de categoria */
+    background-color: #fff; /* Garante fundo branco para o grupo */
+}
+/* Classe para ocultar grupo no filtro */
+.category-group.hidden {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    overflow: hidden; /* Garante que não ocupe espaço */
+    /* Adiciona transições para propriedades afetadas */
+    transition: opacity 0.3s ease-out, max-height 0.4s ease-out, margin 0.3s ease-out, padding 0.3s ease-out, border 0.3s ease-out;
+}
+
+/* Lista de Itens UL */
+#listaPendentes,
+#listaCompras {
+    list-style: none; /* Remove marcadores padrão */
+    padding: 0;
+    margin: 0; /* Remove margens padrão da UL */
+}
+
+/* Mensagem de lista vazia ou filtro sem resultados */
+#listaPendentes li.lista-vazia,
+#listaPendentes li.filtro-sem-resultados,
+#listaCompras li.lista-vazia,
+#listaCompras li.filtro-sem-resultados {
+    text-align: center;
+    padding: 20px;
+    color: #6c757d; /* Cinza */
+    font-style: italic;
+    background-color: transparent; /* Fundo é do container */
+    border: none;
+    cursor: default;
+    box-shadow: none; /* Garante sem sombra */
+    margin: 10px 0; /* Espaçamento para a mensagem */
+    border-radius: 8px; /* Arredonda se estiver fora de um grupo */
+    /* Garante que não tenha hover */
+    transition: none;
+    transform: none;
+}
+#listaPendentes li.lista-vazia:hover,
+#listaPendentes li.filtro-sem-resultados:hover,
+#listaCompras li.lista-vazia:hover,
+#listaCompras li.filtro-sem-resultados:hover {
+    background-color: transparent;
+    transform: none;
+}
+
+/* Item Individual da Lista (LI) */
+#listaPendentes li:not(.lista-vazia):not(.filtro-sem-resultados), /* Aplica a LI normais */
+#listaCompras li:not(.lista-vazia):not(.filtro-sem-resultados) {
+    display: flex; /* Alinha conteúdo e botão lado a lado */
+    justify-content: space-between; /* Espaça conteúdo e botão */
+    align-items: center; /* Alinha verticalmente */
+    padding: 12px 15px; /* Espaçamento interno */
+    background-color: #fff; /* Fundo branco padrão (grupo já tem) */
+    margin: 0; /* Sem margem entre itens da mesma categoria */
+    font-size: 1.1rem;
+    border: none; /* Borda é gerenciada pelo grupo */
+    border-top: 1px solid #f1f3f5; /* Linha MUITO suave separando itens */
+    transition: background-color 0.2s ease-out, transform 0.2s ease-out; /* Transições suaves */
+    cursor: pointer; /* Indica que é clicável (para editar) */
+    border-radius: 0; /* Sem arredondamento individual */
+}
+/* Arredonda o último item do grupo */
+.category-group li:last-child {
+    border-radius: 0 0 8px 8px;
+}
+/* Remove borda superior do primeiro item após o header */
+.category-header + li {
+    border-top: none;
+}
+
+/* Efeito Hover no item (exceto mensagens) */
+#listaPendentes li:hover:not(.lista-vazia):not(.filtro-sem-resultados),
+#listaCompras li:hover:not(.lista-vazia):not(.filtro-sem-resultados) {
+    background-color: #f8f9fa; /* Fundo cinza bem claro */
+    transform: translateX(3px); /* Leve deslocamento para direita */
+}
+
+/* Estilo para Item Pendente (Valor Zero ou Nulo) - Aplica fundo rosa */
+li.item-pendente {
+    background-color: #fff8f8; /* Fundo rosa bem claro */
+}
+li.item-pendente:hover:not(.lista-vazia):not(.filtro-sem-resultados) {
+    background-color: #ffebec; /* Rosa um pouco mais escuro no hover */
+}
+
+/* Container das Informações do Item (Qtd, Desc, Preço) */
+.item-info {
+    display: flex;
+    flex-grow: 1; /* Ocupa espaço disponível */
+    align-items: center; /* Alinha verticalmente */
+    gap: 10px; /* Espaço entre qtd, desc, preço */
+    flex-wrap: wrap; /* Permite quebrar linha se não couber */
+    margin-right: 10px; /* Espaço antes do botão de excluir */
+    overflow: hidden; /* Evita que texto longo empurre o botão */
+}
+
+/* Quantidade */
+.item-qtd {
+    font-weight: bold;
+    color: #495057; /* Cinza escuro */
+    background-color: #e9ecef; /* Fundo cinza claro */
+    padding: 3px 8px; /* Padding */
+    border-radius: 5px; /* Arredondado */
+    font-size: 0.9em; /* Pouco menor */
+    white-space: nowrap; /* Não quebra linha */
+    flex-shrink: 0; /* Não encolhe */
+}
+
+/* Descrição */
+.item-desc {
+    flex-grow: 1; /* Ocupa espaço principal */
+    min-width: 100px; /* Largura mínima antes de quebrar */
+    color: #343a40; /* Cor principal do texto */
+    white-space: normal; /* Permite quebra de linha */
+    word-break: break-word; /* Quebra palavras longas se necessário */
+    font-weight: 500; /* Leve negrito */
+}
+
+/* Preço Unitário */
+.item-preco {
+    color: #28a745; /* Verde */
+    font-weight: bold;
+    white-space: nowrap; /* Não quebra linha */
+    font-size: 1.05em; /* Pouco maior */
+    margin-left: auto; /* Tenta empurrar para a direita se houver espaço */
+    padding-left: 10px; /* Espaço à esquerda */
+    flex-shrink: 0; /* Não encolhe */
+}
+/* Esconde espaço reservado se o preço for vazio (gerado por JS) */
+.item-preco:empty {
+    display: none;
+}
+
+/* Botão de Excluir Item (Lixeira) */
+#listaPendentes .excluir-item,
+#listaCompras .excluir-item {
+    background-color: #28a745; /* VERDE por padrão (item com preço) */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Circular */
+    width: 36px; /* Tamanho */
+    height: 36px;
+    font-size: 1rem; /* Tamanho ícone */
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Não encolhe */
+    transition: background-color 0.2s, transform 0.15s, filter 0.2s; /* Adiciona filter */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Botão Excluir para item SEM valor (pendente) - Classe "sem-valor" */
+#listaPendentes .excluir-item.sem-valor,
+#listaCompras .excluir-item.sem-valor { /* Mantém caso algum item com preço seja zerado */
+    background-color: #dc3545; /* VERMELHO para item sem valor */
+}
+
+/* Efeito Hover nos botões de excluir */
+#listaPendentes .excluir-item:hover,
+#listaCompras .excluir-item:hover {
+    transform: scale(1.1); /* Aumenta um pouco */
+    filter: brightness(90%); /* Escurece levemente a cor atual (verde ou vermelho) */
+}
+
+/* --- Total Oculto (Mantido por JS, sem estilo visual) --- */
+.total {
+    display: none;
+}
+
+/* --- Modais --- */
+.modal {
+    display: none; /* Oculto por padrão */
+    position: fixed; /* Fica fixo na tela */
+    z-index: 1000; /* Sobrepõe outros elementos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Permite scroll se conteúdo for maior */
+    background-color: rgba(0,0,0,0.6); /* Fundo semi-transparente mais escuro */
+    animation: fadeIn 0.3s ease-out; /* Animação de entrada do fundo */
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-content {
+    background-color: #fefefe; /* Fundo branco do conteúdo */
+    margin: 10% auto; /* Centraliza verticalmente (aproximado) e horizontalmente */
+    padding: 25px; /* Espaçamento interno */
+    border: 1px solid #bbb; /* Borda suave */
+    width: 90%; /* Largura responsiva */
+    max-width: 500px; /* Largura máxima padrão */
+    border-radius: 10px; /* Bordas arredondadas */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Sombra pronunciada */
+    position: relative; /* Para posicionar o botão fechar */
+    animation: slideIn 0.4s ease-out; /* Animação de entrada do conteúdo */
+}
+@keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Botão Fechar (X) genérico para todos os modais */
+.fechar-modal {
+    color: #aaa; /* Cinza claro */
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 32px; /* Tamanho grande */
+    font-weight: bold;
+    line-height: 1; /* Ajusta altura da linha */
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.fechar-modal:hover,
+.fechar-modal:focus {
+    color: #333; /* Escurece no hover/focus */
+    text-decoration: none;
+}
+
+/* Título dentro do Modal */
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #006400; /* Verde escuro */
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+/* Botões principais dentro dos Modais (Salvar, Continuar, etc.) */
+.button-green, .button-gold {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 25px; /* Bem arredondado */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px; /* Espaço acima do botão */
+    width: 100%; /* Ocupa largura total por padrão */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-weight: bold;
+    text-transform: uppercase; /* Opcional: letras maiúsculas */
+    letter-spacing: 0.5px; /* Opcional: espaçamento letras */
+}
+/* Botão Verde (Salvar, Processar) */
+.button-green {
+    background-color: #28a745; /* Verde vibrante */
+    color: white;
+}
+.button-green:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+.button-green:active {
+    background-color: #1e7e34;
+    transform: translateY(1px); /* Efeito de pressionar */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+/* Botão Dourado (Continuar, Escolher XLSX) */
+.button-gold {
+    background-color: #FFD700; /* Dourado */
+    color: #333; /* Texto escuro */
+}
+.button-gold:hover {
+    background-color: #E6C200;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+.button-gold:active {
+    background-color: #D4A600;
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Estilos Específicos para Modais de Importação --- */
+
+/* Modal de Informação de Importação XLSX */
+.import-info-modal .modal-content {
+    max-width: 600px; /* Pode ser um pouco maior */
+}
+.import-info-content p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+    color: #495057;
+    text-align: left; /* Alinha texto à esquerda */
+}
+.import-info-content ul {
+    margin: 10px 0 15px 25px; /* Recuo da lista */
+    list-style: disc; /* Estilo de marcador */
+    color: #495057;
+    text-align: left; /* Alinha itens da lista à esquerda */
+}
+.import-info-content li {
+    margin-bottom: 5px;
+}
+.import-info-content a {
+    color: #006400; /* Verde escuro para link */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s, text-decoration 0.2s;
+}
+.import-info-content a:hover {
+    color: #004d00; /* Verde mais escuro no hover */
+    text-decoration: underline;
+}
+
+/* Modal de Escolha de Importação */
+#modalImportChoice .modal-content {
+    max-width: 450px; /* Mais estreito */
+    text-align: center; /* Centraliza conteúdo */
+}
+#modalImportChoice p {
+    margin-bottom: 20px;
+    color: #495057;
+}
+/* Botões dentro do modal de escolha */
+#modalImportChoice .button-gold,
+#modalImportChoice .button-green {
+    width: 90%; /* Ajusta largura dos botões de escolha */
+    max-width: 300px; /* Limita largura máxima */
+    margin-left: auto;
+    margin-right: auto;
+    display: block; /* Garante que ocupem a largura definida */
+}
+#modalImportChoice .button-gold {
+    margin-bottom: 15px; /* Espaço entre os botões de escolha */
+}
+
+/* Modal para Importação por Texto */
+#modalTextImport .modal-content {
+    max-width: 550px; /* Largura intermediária */
+}
+#modalTextImport p {
+    margin-bottom: 15px;
+    color: #495057;
+    text-align: left; /* Alinha descrição à esquerda */
+}
+/* Ajuste label dentro do modal de texto */
+#modalTextImport .input-group label {
+    text-align: left; /* Alinha label à esquerda */
+    width: 100%;
+    margin-bottom: 5px;
+}
+/* Textarea no modal de texto */
+#textImportArea { /* Já herda estilos de textarea, mas podemos ajustar */
+    height: 120px; /* Altura inicial */
+    resize: vertical; /* Permite redimensionar verticalmente */
+    font-size: 1rem; /* Tamanho da fonte dentro da textarea */
+}
+/* Botão de processar texto */
+#modalTextImport .button-green {
+    width: 100%; /* Botão ocupa largura total */
+    margin-top: 20px; /* Mais espaço acima do botão */
+}
+
+/* --- Estilos para Awesomplete (Sugestões de Autocomplete) --- */
+div.awesomplete { /* Container principal do Awesomplete */
+    width: 100%; /* Ocupa a largura do wrapper (.voice-input-wrapper) */
+    display: block; /* Garante que ocupe espaço corretamente */
+    flex: 1; /* Faz com que ocupe o espaço flexível no wrapper */
+    position: relative; /* Necessário para posicionar a lista de sugestões */
+}
+.awesomplete > ul { /* Lista de sugestões */
+    position: absolute; /* Posicionamento absoluto em relação ao input */
+    left: 0;
+    z-index: 999; /* Acima de outros elementos normais */
+    min-width: 100%; /* Largura mínima igual ao input */
+    box-sizing: border-box; /* Garante que padding/border não aumentem a largura */
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.15); /* Borda um pouco mais visível */
+    box-shadow: 0.2em 0.3em 0.5em rgba(0,0,0,0.1);
+    border-radius: 0 0 8px 8px; /* Arredondado embaixo */
+    margin-top: -1px; /* Sobrepõe borda inferior do input */
+    max-height: 220px; /* Altura máxima com scroll */
+    overflow-y: auto; /* Scroll vertical se necessário */
+}
+.awesomplete > ul:empty { /* Esconde lista vazia */
+    display: none;
+}
+.awesomplete > ul li { /* Item da lista */
+    position: relative;
+    padding: 0.6em 0.8em; /* Mais padding vertical */
+    cursor: pointer;
+    background: #fff;
+    transition: background-color 0.1s;
+    font-size: 1rem; /* Tamanho de fonte consistente */
+    color: #333; /* Cor do texto */
+    border-bottom: 1px solid #eee; /* Linha separadora suave */
+    text-align: left; /* Garante alinhamento à esquerda */
+}
+.awesomplete > ul li:last-child {
+    border-bottom: none; /* Remove borda do último item */
+}
+.awesomplete > ul li:hover { /* Hover no item */
+    background: #f0f0f0; /* Cinza claro */
+}
+.awesomplete > ul li[aria-selected="true"] { /* Item selecionado (setas/mouse) */
+    background: #006400; /* Verde escuro */
+    color: white; /* Texto branco */
+}
+.awesomplete mark { /* Destaca texto correspondente */
+    background: #ffdd77; /* Amarelo claro */
+    border-radius: 2px;
+    padding: 0.1em 0;
+    margin: -0.1em 0;
+    box-shadow: none;
+    color: inherit; /* Mantém cor original (preto ou branco se selecionado) */
+    font-weight: bold; /* Destaca em negrito */
+}
+.awesomplete li[aria-selected="true"] mark { /* Destaca texto no item selecionado */
+    background: #ffeb99; /* Amarelo mais claro */
+    color: #333; /* Cor escura para contraste sobre fundo verde */
+}
+
+/* ============================================================ */
+/* --- ESTILOS - Modal de Edição (Incluindo Edição por Voz) --- */
+/* ============================================================ */
+
+/* Divisória dentro do modal */
+.modal-divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 20px 0; /* Espaçamento vertical */
+}
+
+/* Wrapper para o input de voz no modal */
+.voice-input-modal .input-with-mic {
+    gap: 8px; /* Ajuste o espaçamento se necessário */
+}
+
+/* Botões de ação dentro do modal (check, limpar) - Herda .action-btn mas com ajustes */
+.modal-action-btn {
+    padding: 0;
+    width: 40px; /* Tamanho similar aos mics do modal */
+    height: 40px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    color: white;
+}
+/* Estilo perigo também para botões de ação no modal */
+.modal-action-btn.danger {
+    background-color: #dc3545;
+    color: white;
+}
+.modal-action-btn.danger:hover { background-color: #c82333; }
+.modal-action-btn.danger:active { background-color: #bd2130; }
+
+
+/* Botão Processar (Check) */
+#processarEdicaoVoz {
+    background-color: #28a745; /* Verde (similar ao add principal) */
+}
+#processarEdicaoVoz:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+#processarEdicaoVoz:active {
+    background-color: #1e7e34;
+    transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão Limpar Comando Voz (X) - Reutiliza estilo danger */
+#limparEdicaoVoz {
+    /* Usa .modal-action-btn.danger */
+}
+
+/* Área de feedback de voz dentro do modal */
+.modal-feedback {
+    margin-top: 8px;
+    font-size: 0.85rem; /* Um pouco menor */
+    padding: 6px 10px;
+    border-radius: 4px;
+    /* display: none; */ /* Controlado pela classe .show */
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, margin 0.3s ease-in-out, padding 0.3s ease-in-out;
+    border: 1px solid transparent;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.modal-feedback.show {
+    /* display: block; */ /* display não é animável, usar opacity/height */
+    opacity: 1;
+    max-height: 80px; /* Altura suficiente */
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-bottom: 5px; /* Espaço abaixo quando visível */
+}
+/* Estilos por tipo de feedback (reutiliza os nomes de classe) */
+.modal-feedback.success {
+    background-color: #d4edda; color: #155724; border-color: #c3e6cb;
+}
+.modal-feedback.error {
+    background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;
+}
+.modal-feedback.info {
+    background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb;
+}
+
+/* Garante que o input de voz no modal ocupe espaço */
+#editarVozInput {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+/* Ajuste opcional no espaçamento dos grupos no modal */
+#modalEdicao .input-group {
+    margin-bottom: 12px; /* Um pouco menos de espaço entre grupos no modal */
+}
+
+/* ================================================== */
+/* --- FIM DOS ESTILOS DO MODAL DE EDIÇÃO --- */
+/* ================================================== */
+
+
+/* --- Media Queries para Responsividade --- */
+
+/* Telas Pequenas (Smartphones < 480px) */
+@media (max-width: 480px) {
+    body { font-size: 0.95rem; }
+    body { font-size: 0.95rem; padding-bottom: 60px; } /* Ajusta padding inferior */
+    h1 { font-size: 1.4rem; }
+    .container { padding: 10px; margin: 10px auto; max-width: 98%; border-radius: 8px; } /* Aumenta max-width um pouco */
+    .container { padding: 10px; margin: 10px auto; max-width: 98%; border-radius: 8px; }
+    label { font-size: 0.9rem; }
+    input[type="text"], input[type="number"], select, textarea { padding: 10px; font-size: 1rem; border-radius: 6px; }
+    #orcamento { max-width: 140px; font-size: 1.1rem; }
+    .top-actions { margin-bottom: 20px; gap: 8px;}
+    .top-action-btn { padding: 7px 12px; font-size: 0.85rem; } /* Ajuste padding */
+    #painelTotal { font-size: 1.8rem; padding: 12px; } /* Reduz um pouco */
+    .top-action-btn { padding: 7px 12px; font-size: 0.85rem; }
+    #painelTotal { font-size: 1.8rem; padding: 12px; }
+    #painelContagemItens { font-size: 1rem; padding: 8px; }
+    .painel-info-sutil { font-size: 0.85rem; padding: 6px 10px; } /* Ajuste painel info */
+    .voice-input-wrapper { gap: 5px; } /* Ajuste gap principal */
+    .mic-btn, .action-btn { width: 40px; height: 40px; font-size: 1.1rem; } /* Ajuste botões principais */
+    .painel-info-sutil { font-size: 0.85rem; padding: 6px 10px; }
+    .voice-input-wrapper { gap: 5px; }
+    .mic-btn, .action-btn { width: 40px; height: 40px; font-size: 1.1rem; }
+
+    #listaPendentesContainer h2, /* Ajuste título mobile */
+    #listaPendentesContainer h2,
+    #listaComprasContainer h2 { font-size: 1.2rem; margin-bottom: 12px; padding-bottom: 6px; }
+    #listaPendentesContainer { margin-bottom: 20px; } /* Reduz espaço mobile */
+    #listaPendentesContainer { margin-bottom: 20px; }
+    .category-header { padding: 8px 12px; font-size: 1.05rem; border-radius: 6px 6px 0 0; }
+    .category-group { border-radius: 6px; margin-bottom: 8px; } /* Ajusta grupo mobile */
+    .category-group { border-radius: 6px; margin-bottom: 8px; }
+    #listaPendentes li:not(.lista-vazia):not(.filtro-sem-resultados),
+    #listaCompras li:not(.lista-vazia):not(.filtro-sem-resultados) { padding: 10px 12px; font-size: 1rem; }
+    #listaPendentes li:last-child,
+    #listaCompras li:last-child { border-radius: 0 0 6px 6px; }
+    .item-qtd { padding: 2px 6px; font-size: 0.85em; }
+    .item-preco { font-size: 1em; }
+    #listaPendentes .excluir-item,
+    #listaCompras .excluir-item { width: 32px; height: 32px; font-size: 0.9rem; }
+    .modal-content { padding: 20px; margin: 5% auto; width: 95%; max-width: none; } /* Ajusta modal para tela cheia, menos margem */
+    .modal-content { padding: 20px; margin: 5% auto; width: 95%; max-width: none; }
+    .modal-content h2 { font-size: 1.3rem; }
+    .fechar-modal { font-size: 28px; top: 8px; right: 12px; }
+    .button-green, .button-gold { padding: 11px 15px; font-size: 1rem;} /* Ajuste padding botão modal */
+    .button-green, .button-gold { padding: 11px 15px; font-size: 1rem;}
+    .progress-bar-container { height: 24px; border-radius: 12px; }
+    #barraProgresso, #barraProgresso::-webkit-progress-value, #barraProgresso::-moz-progress-bar { border-radius: 12px; }
+    #porcentagemProgresso { font-size: 0.8rem; }
+    .logo { max-width: 60px; min-width: 40px; padding: 5px;} /* Ajuste logo */
+    .logo { max-width: 60px; min-width: 40px; padding: 5px;}
+
+    /* Ajuste modal edicao voz mobile */
+     .modal-mic-btn, .modal-action-btn { width: 38px; height: 38px; font-size: 1rem; }
+     .voice-input-modal .input-with-mic { gap: 5px; }
+    .modal-mic-btn, .modal-action-btn { width: 38px; height: 38px; font-size: 1rem; }
+    .voice-input-modal .input-with-mic { gap: 5px; }
+}
+
+/* Telas Médias (Tablets 481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    body { padding-bottom: 65px; } /* Ajusta padding inferior */
+    h1 { font-size: 1.5rem; }
+    .container { max-width: 90%; padding: 15px; }
+    label { font-size: 0.9rem; }
+    input[type="text"], input[type="number"], select, textarea { font-size: 1.05rem; padding: 11px; } /* Ajuste padding */
+    input[type="text"], input[type="number"], select, textarea { font-size: 1.05rem; padding: 11px; }
+    .top-actions { margin-bottom: 25px; }
+    #painelTotal { font-size: 2.2rem; }
+    #painelContagemItens { font-size: 1.05rem; }
+    .mic-btn, .action-btn { width: 44px; height: 44px; font-size: 1.1rem; } /* Ajuste botões principais */
+    .top-action-btn { padding: 8px 14px; font-size: 0.9rem; } /* Ajuste padding/fonte */
+    .mic-btn, .action-btn { width: 44px; height: 44px; font-size: 1.1rem; }
+    .top-action-btn { padding: 8px 14px; font-size: 0.9rem; }
+    #listaPendentesContainer h2,
+    #listaComprasContainer h2 { font-size: 1.25rem; }
+    .category-header { font-size: 1.1rem; } /* Ajuste fonte */
+    .category-header { font-size: 1.1rem; }
+    #listaPendentes li:not(.lista-vazia):not(.filtro-sem-resultados),
+    #listaCompras li:not(.lista-vazia):not(.filtro-sem-resultados) { font-size: 1.05rem; padding: 11px 13px; } /* Ajuste padding */
+    #listaCompras li:not(.lista-vazia):not(.filtro-sem-resultados) { font-size: 1.05rem; padding: 11px 13px; }
+    .modal-content { max-width: 500px; margin: 12% auto; }
+    .logo { max-width: 70px; min-width: 45px; padding: 6px;} /* Ajuste logo */
+    .logo { max-width: 70px; min-width: 45px; padding: 6px;}
+
+    /* Ajuste modal edicao voz tablet */
+    .modal-mic-btn, .modal-action-btn { width: 40px; height: 40px; font-size: 1.1rem; }
+}
+
+/* Telas Maiores (Desktops pequenos > 769px) */
+@media (min-width: 769px) {
+    .container { max-width: 800px; /* Limita largura máxima em telas maiores */ }
+    .modal-content { margin: 10% auto; } /* Ajusta margem vertical modal */
+    /* body { font-size: 1.05rem; } */ /* Opcional: aumentar fonte base */
+    body { padding-bottom: 70px; } /* Ajusta padding inferior */
+    .container { max-width: 800px; }
+    .modal-content { margin: 10% auto; }
+}
+
+
+/* =========================================== */
+/* --- ESTILOS NAVEGADOR FLUTUANTE --- */
+/* =========================================== */
+
+#floating-navigator {
+    position: fixed;
+    bottom: 15px; /* Espaço da borda inferior */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Ajuste fino da centralização */
+    width: auto; /* Largura automática baseada no conteúdo */
+    background-color: rgba(255, 255, 255, 0.9); /* Fundo branco semi-transparente */
+    padding: 8px 10px; /* Padding interno */
+    z-index: 990; /* Abaixo dos modais, mas acima do resto */
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.15); /* Sombra suave */
+    border-radius: 25px; /* Bordas bem arredondadas (formato pílula) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Espaço entre os botões */
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
     opacity: 1;
     visibility: visible;
+    transform: translateX(-50%) translateY(0); /* Posição normal */
 }
-#floating-navigator.hidden-at-bottom {
-    transform: translateX(-50%) translateY(calc(100% + 25px));
+
+#floating-navigator.hidden {
     opacity: 0;
     visibility: hidden;
+    transform: translateX(-50%) translateY(calc(100% + 20px)); /* Desliza para baixo ao esconder */
 }
+
 #floating-navigator .nav-button {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: var(--navigator-button-size);
-    height: var(--navigator-button-size);
-    border: 2px solid var(--border-color);
-    border-radius: 50%;
+    width: 45px;  /* Tamanho do botão */
+    height: 45px;
+    border: none;
+    border-radius: 50%; /* Botões circulares */
     text-decoration: none;
-    color: var(--text-color-dark);
-    font-size: var(--navigator-icon-size);
+    color: white; /* Cor do ícone padrão */
+    font-size: 1.2rem; /* Tamanho do ícone */
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
-    background-color: #fff;
-    box-shadow: var(--box-shadow-sm);
-    padding: 0;
-    line-height: 1;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
+
 #floating-navigator .nav-button:hover {
-    transform: scale(1.1);
-    box-shadow: var(--box-shadow);
-    border-color: var(--accent-color);
+    transform: scale(1.08); /* Aumenta um pouco no hover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
-#floating-navigator .nav-button.home-button {
-    font-size: var(--navigator-home-icon-size);
-    font-weight: bold;
-    color: var(--text-color-dark);
-    border-color: var(--border-color);
-}
-#floating-navigator .nav-button.home-button:hover {
-    border-color: var(--accent-color);
-}
-#floating-navigator .nav-button.add-plan-button {
-    color: var(--text-color-light);
-    background-color: var(--success-color);
-    border-color: transparent;
-    font-size: var(--navigator-add-icon-size);
-    font-weight: bold;
-}
-#floating-navigator .nav-button.add-plan-button:hover {
-    background-color: var(--success-color-dark);
+#floating-navigator .nav-button:active {
+    transform: scale(0.95); /* Efeito de pressionar */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* --- ADICIONADO: Estilo para o botão ativo no paginador --- */
-#floating-navigator .nav-button.active-nav {
-    border-color: var(--primary-action);
-    transform: scale(1.1);
-    box-shadow: 0 0 0 3px rgba(var(--primary-action-rgb), 0.3);
+/* Cores específicas para cada botão */
+#floating-navigator .top-button {
+    background-color: #6c757d; /* Cinza */
+}
+#floating-navigator .top-button:hover {
+    background-color: #5a6268;
 }
 
-/* --- Media Queries (Ajustes Responsivos) --- */
-@media (max-width: 768px) {
-     main { max-width: 100%; }
-     section, .enhanced-panel, .plan-card { padding: 20px; }
-     section h2, section h3, .plan-card .plan-card-title { font-size: 1.4em; }
-     #overdue-readings h2, #upcoming-readings h2 { font-size: 1.3em; }
-     .modal-content { padding: 25px; max-width: calc(100% - 30px); }
-     header h1 { font-size: 1.4em; }
-     .header-content { align-items: center; }
-     .user-status-container { gap: 5px;} #user-email { max-width: 100px;} #logout-button { padding: 5px 10px; font-size: 0.8em; }
-     .upcoming-readings-container { grid-template-columns: 1fr; }
-     .plan-card .drive-link-icon { width: 26px; height: 26px; padding: 3px; border-radius: 5px; }
-    .weekly-tracker-container .day-indicator { min-width: 38px; min-height: 65px; }
-    .weekly-tracker-container .day-indicator.current-day-highlight { padding: 6px 4px; }
-    .weekly-tracker-container .day-marker { width: 30px; height: 30px; }
-    .weekly-tracker-container .day-marker::after { font-size: 16px; }
-     .plan-card .daily-reading-header-display { padding: 12px 15px; }
-     .plan-card .daily-reading-chapters-list-display { padding: 8px 15px 15px 15px; }
-     .plan-card .daily-chapter-item { padding: 8px 0; font-size: 1em; }
-     .plan-card .daily-chapter-item input[type="checkbox"] { width: 18px; height: 18px; margin-right: 12px; }
+#floating-navigator .pending-button {
+    background-color: #dc3545; /* Vermelho (igual lixeira sem valor) */
+}
+#floating-navigator .pending-button:hover {
+    background-color: #c82333;
 }
 
-@media (max-width: 600px) {
-    body { font-size: 15px; }
-    header { flex-direction: column; align-items: center; padding: 15px; text-align: center; position: static; min-height: auto; }
-    header img#header-logo { --new-logo-size: 60px; height: var(--new-logo-size); width: var(--new-logo-size); --new-logo-border: 5px; --new-logo-padding: 3px; border-width: var(--new-logo-border); padding: var(--new-logo-padding); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25); margin-bottom: 15px; }
-    .header-content { width: 100%; align-items: center; } header h1 { font-size: 1.3em; margin: 0 0 5px 0; }
-    .user-status-container { width: 100%; margin-top: 10px; flex-direction: column; gap: 8px; }
-    #user-email { max-width: 90%; text-align: center; } #logout-button { width: auto; padding: 8px 15px; }
-    main { margin: 15px auto; padding: 0 10px; }
-    section, .enhanced-panel, .plan-card { padding: 15px; margin-bottom: 20px; }
-    section h2, section h3, .plan-card .plan-card-title { font-size: 1.3em; }
-    #overdue-readings h2, #upcoming-readings h2 { font-size: 1.2em; }
-    .modal-content { padding: 20px; max-width: calc(100% - 20px); } .modal h2 { font-size: 1.4em; }
-    .plan-card .plan-actions { flex-direction: column; gap: 8px; } .plan-card .plan-actions button { width: 100%; margin: 0; min-width: auto; }
-    input[type="email"], input[type="password"], input[type="number"], input[type="text"], input[type="date"], input[type="url"], select { padding: 10px 14px; min-height: 44px; }
-    select[multiple] { height: 140px; }
-    fieldset label { display: block; margin-right: 0; margin-bottom: 10px; }
-    .modal fieldset label:has(#new-pace-input){ flex-wrap: wrap; justify-content: space-between; }
-    #new-pace-input { margin-top: 5px; width: 100% !important; text-align: center; }
-    #periodicity-options .checkbox-group { justify-content: space-around; gap: 8px; }
-    #periodicity-options .checkbox-group label { font-size: 0.85em; padding: 4px 6px; }
-    #global-weekly-tracker-section.enhanced-panel { padding: 15px 10px; }
-    .weekly-tracker-container .week-days { gap: 4px; }
-    .weekly-tracker-container .day-indicator { min-width: 30px; min-height: 60px; flex-basis: calc(100% / 7 - 5px); border-radius: calc(var(--base-border-radius) / 2); }
-    .weekly-tracker-container .day-indicator.current-day-highlight { padding: 5px 3px; }
-    .weekly-tracker-container .day-label { font-size: 0.65em; margin-bottom: 4px;}
-    .weekly-tracker-container .day-marker { width: 26px; height: 26px; }
-    .weekly-tracker-container .day-marker::after { font-size: 13px; }
-    .plan-card .daily-reading-header-display { padding: 10px 15px; font-size: 1em; }
-    .plan-card .daily-reading-chapters-list-display { padding: 5px 15px 15px 15px; }
-    .plan-card .daily-chapter-item { padding: 6px 0; font-size: 0.95em; }
-    .plan-card .daily-chapter-item input[type="checkbox"] { width: 16px; height: 16px; margin-right: 10px; }
-    .plan-card .drive-link-icon { width: 24px; height: 24px; padding: 3px; border-radius: 5px; }
-    .overdue-reading-item, .upcoming-reading-item { padding: 12px; }
-    .overdue-date, .upcoming-date { font-size: 1em; }
-    .perseverance-header h2 { font-size: 1.3em; }
-    
-    /* MODIFICAÇÃO: Ajuste do tamanho dos ícones de marco em telas pequenas */
-    .milestone-icon { font-size: 1.8em; }
-    .milestone-item .icon { font-size: 1.8em; }
-    .milestone-item .counter { font-size: 0.9em; }
+#floating-navigator .priced-button {
+    background-color: #28a745; /* Verde (igual lixeira com valor) */
+}
+#floating-navigator .priced-button:hover {
+    background-color: #218838;
+}
 
-    .progress-bar { height: 26px; }
-    .progress-percentage-left { font-size: 0.8em; left: 10px; }
-    .milestone-legend { font-size: 0.75em; }
-    
-    /* NOVO: Media query para o container do gráfico */
-    .stats-chart-container {
-        height: 220px; /* Reduz a altura em telas pequenas */
-        padding: 10px;
+/* Ajuste fino para telas muito pequenas, se necessário */
+@media (max-width: 360px) {
+    body { padding-bottom: 55px; } /* Ajusta padding inferior mobile */
+    #floating-navigator {
+        bottom: 10px; /* Menos espaço inferior */
+        gap: 10px; /* Reduz espaço entre botões */
+        padding: 6px 8px;
+    }
+    #floating-navigator .nav-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
     }
 }
+
+/* =========================================== */
+/* --- FIM ESTILOS NAVEGADOR FLUTUANTE --- */
+/* =========================================== */

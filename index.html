@@ -5,20 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minhas Compras de Mercado</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" href="imagens/favicon.ico" type="image/x-icon">
-    <!-- Awesomplete CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <header>
-        <!-- Logo com fundo branco -->
         <div class="logo-container">
-            <div class="logo-background-circle"> <!-- Wrapper para o círculo branco -->
-                <img src="imagens/logo.png" alt="Logo Minhas Compras" class="logo">
-            </div>
+            <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+              <defs>
+                <linearGradient id="cartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#10B981" />
+                  <stop offset="100%" stop-color="#047857" />
+                </linearGradient>
+                <linearGradient id="coinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#FBBF24" />
+                  <stop offset="100%" stop-color="#B45309" />
+                </linearGradient>
+                <style>
+                  .svg-bg { fill: #FFFFFF; }
+                  .cart-body { fill: url(#cartGrad); }
+                  .cart-frame { stroke: #047857; stroke-width: 12; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+                  .wheel { fill: #047857; }
+                  .coin { fill: url(#coinGrad); }
+                  .coin-text { fill: #FFFFFF; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; font-weight: 800; font-size: 24px; }
+                  .dollar-sign { fill: #FFFFFF; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; font-weight: 800; font-size: 56px; }
+            
+                  @keyframes float {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-8px); }
+                  }
+                  @keyframes dropIn {
+                    0% { transform: translateY(-100px) scale(0.8); opacity: 0; }
+                    60% { transform: translateY(10px) scale(1.05); opacity: 1; }
+                    100% { transform: translateY(0px) scale(1); opacity: 1; }
+                  }
+                  @keyframes pulseScale {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.08); }
+                  }
+            
+                  .g-cart { animation: float 4s ease-in-out infinite; transform-origin: center; }
+                  .g-coin-1 { animation: dropIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; opacity: 0; animation-delay: 0.2s; }
+                  .g-coin-2 { animation: dropIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; opacity: 0; animation-delay: 0.5s; }
+                  .g-coin-3 { animation: dropIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; opacity: 0; animation-delay: 0.8s; }
+                  .g-dollar { animation: pulseScale 3s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+                </style>
+              </defs>
+            
+              <rect width="400" height="400" class="svg-bg" rx="40" />
+            
+              <g class="g-cart">
+                <path class="cart-frame" d="M 60 100 L 90 100 L 120 250 L 290 250 L 320 140 L 105 140" />
+                <path class="cart-body" d="M 110 140 L 315 140 L 285 240 L 125 240 Z" />
+                <text x="210" y="215" text-anchor="middle" class="dollar-sign g-dollar">$</text>
+                <circle cx="150" cy="285" r="18" class="wheel" />
+                <circle cx="260" cy="285" r="18" class="wheel" />
+              </g>
+            
+              <g class="g-coin-1" transform="translate(140, 60)">
+                <circle cx="0" cy="0" r="22" class="coin" />
+                <text x="0" y="8" text-anchor="middle" class="coin-text">$</text>
+              </g>
+              <g class="g-coin-2" transform="translate(210, 40)">
+                <circle cx="0" cy="0" r="28" class="coin" />
+                <text x="0" y="10" text-anchor="middle" class="coin-text" style="font-size: 28px;">$</text>
+              </g>
+              <g class="g-coin-3" transform="translate(280, 70)">
+                <circle cx="0" cy="0" r="20" class="coin" />
+                <text x="0" y="7" text-anchor="middle" class="coin-text" style="font-size: 20px;">$</text>
+              </g>
+            </svg>
         </div>
         <h1>Minhas compras de Mercado</h1>
         <hr class="header-divider">
@@ -26,50 +84,41 @@
 
     <div class="container">
 
-        <!-- Botões de Ação Principais (Acima do orçamento) -->
         <div class="top-actions">
             <button id="importar" class="top-action-btn">
-                <i class="fas fa-file-import"></i> Importar <!-- Ícone atualizado -->
+                <i class="fas fa-file-import"></i> Importar
             </button>
             <button id="relatorio" class="top-action-btn">
-                <i class="fas fa-file-excel"></i> Relatório <!-- Ícone atualizado -->
+                <i class="fas fa-file-excel"></i> Relatório
             </button>
             <button id="limparLista" class="top-action-btn danger">
                 <i class="fas fa-trash-alt"></i> Limpar Tudo
             </button>
         </div>
 
-        <!-- Campo de Orçamento e Barra de Progresso -->
         <div class="input-group">
             <label for="orcamento">Orçamento (R$):</label>
-            <input type="text" id="orcamento" placeholder="200,00" inputmode="decimal"> <!-- Adicionado inputmode -->
+            <input type="text" id="orcamento" placeholder="200,00" inputmode="decimal">
         </div>
         <div class="progress-bar-container">
             <progress id="barraProgresso" value="0" max="100"></progress>
             <span id="porcentagemProgresso">0%</span>
         </div>
 
-        <!-- (NOVO) Painel do Último Item Adicionado -->
         <div id="painelUltimoItem" class="painel-info-sutil" style="display: none;" aria-live="polite">
             Último: <span id="ultimoItemInfo">Nenhum item adicionado recentemente.</span>
         </div>
-        <!-- Fim do Novo Painel -->
-
-        <!-- Painel de Total -->
         <div id="painelTotal">
             Total: R$ <span id="totalValorPainel">0,00</span>
         </div>
 
-        <!-- Painel de Contagem de Itens (Labels ajustados para refletir contagem de itens com preço) -->
         <div id="painelContagemItens">
             Itens (com preço): <span id="contagemNomes">0</span> nomes / <span id="contagemUnidades">0</span> unidades
         </div>
 
-        <!-- Entrada por Voz com Autocomplete -->
         <div class="input-group voice-input">
             <label for="vozInput">Adicionar Item (Ex.: "qtd 2 biscoito preco 2,50"):</label>
             <div class="voice-input-wrapper">
-                <!-- Input com Awesomplete será anexado aqui pelo JS -->
                 <input type="text" id="vozInput" placeholder="Dite aqui ou digite..." aria-label="Campo para adicionar item por texto ou voz">
                 <button id="ativarVoz" class="mic-btn" aria-label="Ativar Ditado por Voz" title="Ativar Ditado por Voz">
                     <i class="fas fa-microphone"></i>
@@ -78,13 +127,11 @@
                     <i class="fas fa-plus"></i>
                 </button>
                 <button id="limparInput" class="action-btn danger" aria-label="Limpar Campo" title="Limpar Campo de Entrada">
-                    <i class="fas fa-times"></i> <!-- Ícone 'x' mais apropriado -->
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="voz-feedback"></div> <!-- Área para feedback de sucesso/erro -->
-        </div>
+            <div class="voz-feedback"></div> </div>
 
-        <!-- Filtro por Categoria -->
         <div class="input-group">
             <label for="categoriaFiltro">Filtrar por Categoria:</label>
             <select id="categoriaFiltro" aria-label="Selecionar categoria para filtrar a lista">
@@ -96,41 +143,25 @@
             </select>
         </div>
 
-        <!-- NOVA Seção: Lista de Compras (Itens Pendentes/Sem Preço) -->
-        <div id="listaPendentesContainer" style="display: none;"> <!-- Começa escondido, JS controla -->
-             <h2>Lista de Compras (Pendentes)</h2>
+        <div id="listaPendentesContainer" style="display: none;"> <h2>Lista de Compras (Pendentes)</h2>
              <ul id="listaPendentes">
-                 <!-- Itens PENDENTES serão inseridos aqui pelo JavaScript -->
-                 <!-- Exemplo de mensagem de lista vazia (adicionado/removido via JS): -->
-                 <!-- <li class="lista-vazia">Nenhum item pendente encontrado.</li> -->
-             </ul>
+                 </ul>
         </div>
 
-        <!-- Seção Existente: Itens no Carrinho (Itens Com Preço) -->
-        <div id="listaComprasContainer" style="display: none;"> <!-- Começa escondido, JS controla -->
-             <h2>Itens no Carrinho</h2>
+        <div id="listaComprasContainer" style="display: none;"> <h2>Itens no Carrinho</h2>
              <ul id="listaCompras">
-                 <!-- Itens COM PREÇO serão inseridos aqui pelo JavaScript -->
-                 <!-- Exemplo de mensagem de lista vazia (adicionado/removido via JS): -->
-                 <!-- <li class="lista-vazia">Nenhum item com preço definido no carrinho.</li> -->
-             </ul>
+                 </ul>
         </div>
 
-        <!-- Total Oculto (mantido por referência no JS, pode ser removido se não usado) -->
         <div class="total" style="display: none;">
             Total: R$ <span id="totalValor">0,00</span>
         </div>
 
-        <!-- ==================== MODAIS ==================== -->
-
-        <!-- Modal de Edição -->
         <div id="modalEdicao" class="modal" aria-labelledby="modalEdicaoTitulo" role="dialog" aria-modal="true">
              <div class="modal-content">
-                <!-- Botão Fechar Genérico (usa data-target) -->
                 <span class="fechar-modal" data-target="modalEdicao" aria-label="Fechar Modal de Edição" title="Fechar">×</span>
                 <h2 id="modalEdicaoTitulo">Editar Item</h2>
 
-                <!-- Edição Manual da Descrição -->
                 <div class="input-group">
                     <label for="editarDescricao">Descrição:</label>
                     <div class="input-with-mic">
@@ -141,56 +172,39 @@
                     </div>
                 </div>
 
-                <!-- NOVA Seção para Edição por Voz (Quantidade e Preço) -->
-                <hr class="modal-divider"> <!-- Linha divisória opcional -->
-                 <div class="input-group voice-input-modal"> <!-- Nova classe para possível estilo específico -->
-                    <label for="editarVozInput">Editar Qtd/Preço por Voz:</label>
-                    <div class="input-with-mic"> <!-- Reutiliza a classe para alinhamento -->
-                        <input type="text" id="editarVozInput" placeholder="Ex: qtd 5 preco 10,50" aria-label="Campo para editar quantidade e preço por voz">
+                <hr class="modal-divider"> <div class="input-group voice-input-modal"> <label for="editarVozInput">Editar Qtd/Preço por Voz:</label>
+                    <div class="input-with-mic"> <input type="text" id="editarVozInput" placeholder="Ex: qtd 5 preco 10,50" aria-label="Campo para editar quantidade e preço por voz">
                         <button id="editarVozMicBtn" class="mic-btn modal-mic-btn" data-target="editarVozInput" aria-label="Ativar Ditado para Editar Qtd/Preço" title="Ditar Alterações Qtd/Preço">
                             <i class="fas fa-microphone"></i>
                         </button>
                         <button id="processarEdicaoVoz" class="action-btn modal-action-btn" aria-label="Processar Comando de Voz" title="Aplicar alterações ditadas">
-                            <i class="fas fa-check"></i> <!-- Ícone de 'check' para processar -->
-                        </button>
+                            <i class="fas fa-check"></i> </button>
                         <button id="limparEdicaoVoz" class="action-btn modal-action-btn danger" aria-label="Limpar Comando de Voz" title="Limpar campo de comando">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    <div id="editarVozFeedback" class="voz-feedback modal-feedback"></div> <!-- Feedback específico para o modal -->
-                </div>
-                <hr class="modal-divider"> <!-- Linha divisória opcional -->
-
-                <!-- Edição Manual da Quantidade -->
-                <div class="input-group">
+                    <div id="editarVozFeedback" class="voz-feedback modal-feedback"></div> </div>
+                <hr class="modal-divider"> <div class="input-group">
                     <label for="editarQuantidade">Quantidade (Manual):</label>
-                     <div class="input-with-mic"> <!-- Removido mic daqui, já tem o global -->
-                        <input type="number" id="editarQuantidade" placeholder="Quantidade" min="1" inputmode="numeric">
-                        <!-- Removido botão de microfone específico daqui -->
-                    </div>
+                     <div class="input-with-mic"> <input type="number" id="editarQuantidade" placeholder="Quantidade" min="1" inputmode="numeric">
+                        </div>
                 </div>
 
-                <!-- Edição Manual do Valor -->
                 <div class="input-group">
                     <label for="editarValor">Valor Unitário (R$) (Manual):</label>
-                    <div class="input-with-mic"> <!-- Removido mic daqui, já tem o global -->
-                        <input type="text" id="editarValor" placeholder="0,00" inputmode="decimal">
-                        <!-- Removido botão de microfone específico daqui -->
-                    </div>
+                    <div class="input-with-mic"> <input type="text" id="editarValor" placeholder="0,00" inputmode="decimal">
+                        </div>
                 </div>
 
-                <!-- Botão Salvar (Aplica TODAS as alterações, manuais ou via voz processada) -->
                 <button id="salvarEdicao" class="button-green">
                     <i class="fas fa-save"></i> Salvar Alterações
                 </button>
             </div>
         </div>
 
-        <!-- Modal para Aviso de Importação XLSX -->
         <div id="modalImportInfo" class="modal import-info-modal" aria-labelledby="modalImportInfoTitulo" role="dialog" aria-modal="true">
             <div class="modal-content import-info-content">
-                 <!-- Botão Fechar Genérico (usa data-target) -->
-                <span class="fechar-modal" data-target="modalImportInfo" aria-label="Fechar Aviso de Importação" title="Fechar">×</span>
+                 <span class="fechar-modal" data-target="modalImportInfo" aria-label="Fechar Aviso de Importação" title="Fechar">×</span>
                 <h2 id="modalImportInfoTitulo">Importar via Planilha Excel (.xlsx)</h2>
                 <p>Para importar sua lista de compras via Excel, utilize o modelo de planilha abaixo. Certifique-se de que sua planilha tenha as seguintes colunas, exatamente nesta ordem (a primeira linha pode ser cabeçalho ou dados):</p>
                 <ul style="text-align:left; margin-left: 20px;">
@@ -206,11 +220,9 @@
             </div>
         </div>
 
-        <!-- NOVO: Modal de Escolha de Importação -->
         <div id="modalImportChoice" class="modal" aria-labelledby="modalImportChoiceTitulo" role="dialog" aria-modal="true">
             <div class="modal-content">
-                 <!-- Botão Fechar Genérico (usa data-target) -->
-                <span class="fechar-modal" data-target="modalImportChoice" aria-label="Fechar Escolha de Importação" title="Fechar">×</span>
+                 <span class="fechar-modal" data-target="modalImportChoice" aria-label="Fechar Escolha de Importação" title="Fechar">×</span>
                 <h2 id="modalImportChoiceTitulo">Como deseja importar?</h2>
                 <p>Selecione o método para adicionar itens à sua lista:</p>
                 <button id="importChoiceXlsx" class="button-gold" style="margin-bottom: 10px;">
@@ -222,11 +234,9 @@
             </div>
         </div>
 
-        <!-- NOVO: Modal para Importação por Texto -->
         <div id="modalTextImport" class="modal" aria-labelledby="modalTextImportTitulo" role="dialog" aria-modal="true">
             <div class="modal-content">
-                 <!-- Botão Fechar Genérico (usa data-target) -->
-                <span class="fechar-modal" data-target="modalTextImport" aria-label="Fechar Importação por Texto" title="Fechar">×</span>
+                 <span class="fechar-modal" data-target="modalTextImport" aria-label="Fechar Importação por Texto" title="Fechar">×</span>
                 <h2 id="modalTextImportTitulo">Importar Itens por Lista</h2>
                 <p>Digite ou cole os nomes dos itens separados por vírgula (,). Cada item será adicionado com quantidade 1 e sem preço definido.</p>
                 <div class="input-group">
@@ -239,13 +249,7 @@
             </div>
         </div>
 
-        <!-- ==================== FIM MODAIS ==================== -->
-
-    </div> <!-- Fim .container -->
-
-    <!-- ========== NAVEGADOR FLUTUANTE ========== -->
-    <div id="floating-navigator" class="hidden"> <!-- Começa escondido -->
-        <a href="#" class="nav-button top-button" aria-label="Ir para o Topo" title="Ir para o Topo">
+        </div> <div id="floating-navigator" class="hidden"> <a href="#" class="nav-button top-button" aria-label="Ir para o Topo" title="Ir para o Topo">
             <i class="fas fa-arrow-up"></i>
         </a>
         <a href="#listaPendentesContainer" class="nav-button pending-button" aria-label="Ir para Itens Pendentes" title="Ir para Itens Pendentes (sem preço)">
@@ -255,12 +259,8 @@
             <i class="fas fa-trash-alt"></i>
         </a>
     </div>
-    <!-- ========== FIM NAVEGADOR FLUTUANTE ========== -->
-
-    <!-- Bibliotecas externas (Carregadas no final para melhor performance) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
-    <!-- Script principal da aplicação -->
     <script src="script.js" defer></script>
 
 </body>
